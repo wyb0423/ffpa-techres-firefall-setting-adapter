@@ -1,0 +1,100 @@
+# Full top-level replacements based on Tech & Res 1.6' as shipped by
+# 2050: The Fire Falls 0.1.1. Only the modifier blocks intentionally differ.
+# Load this adapter after both upstream mods.
+
+transnational_activism = {
+	era = era_8
+	texture = "gfx/interface/icons/invention_icons/transnational_activism.dds"
+	category = society
+	modifier = {
+		interest_group_ig_intelligentsia_pol_str_mult = 0.25
+		interest_group_ig_trade_unions_pol_str_mult = 0.25
+		country_infamy_generation_against_unrecognized_mult = 0.1
+	}
+	unlocking_technologies = {
+		pop_art
+		neo_feminism
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
+global_stock_market = {
+	era = era_8
+	texture = "gfx/interface/icons/invention_icons/global_stock_market.dds"
+	category = society
+
+	modifier = {
+		country_minting_mult = 0.05
+		country_government_dividends_efficiency_add = 0.05
+		state_trade_capacity_mult = 0.05
+	}
+
+	unlocking_technologies = {
+		neoliberism
+		networking_protocols
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
+globalization = {
+	era = era_8
+	texture = "gfx/interface/icons/invention_icons/globalization.dds"
+	category = society
+
+	modifier = {
+		country_max_companies_add = 1
+		state_trade_capacity_mult = 0.05
+		state_market_access_price_impact = 0.05
+	}
+
+	unlocking_technologies = {
+		global_music
+		global_stock_market
+		multinational_corporations
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
+app_economy = {
+	era = era_10
+	texture = "gfx/interface/icons/invention_icons/app_economy.dds"
+	category = society
+
+	modifier = {
+		country_max_companies_add = 1
+		building_ecommerce_logistics_throughput_add = 0.05
+		building_office_throughput_add = 0.05
+	}
+	unlocking_technologies = {
+		social_media
+		interactive_media
+	}
+
+	ai_weight = { value = 1 }
+}
+
+social_media = {
+	era = era_9
+	texture = "gfx/interface/icons/invention_icons/social_media.dds"
+	category = society
+	modifier = {
+		country_influence_mult = 0.05
+		country_authority_mult = -0.05
+	}
+	unlocking_technologies = {
+		internet
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}

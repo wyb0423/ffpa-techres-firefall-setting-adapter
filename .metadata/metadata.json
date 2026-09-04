@@ -1,0 +1,31 @@
+{
+  "name": "FFPA — Tech & Res Firefall Setting Adapter",
+  "id": "com.wyb.ffpa-techres-firefall-setting-adapter",
+  "version": "0.1.0",
+  "supported_game_version": "1.13.*",
+  "short_description": "Reframes selected late Tech & Res society technologies for the post-nuclear world of 2050: The Fire Falls.",
+  "tags": [
+    "Gameplay",
+    "Technologies",
+    "Alternative History"
+  ],
+  "relationships": [
+    {
+      "rel_type": "dependency",
+      "id": "tech.res",
+      "display_name": "[1.13] Tech & Res",
+      "resource_type": "mod",
+      "version": "1.*"
+    },
+    {
+      "rel_type": "dependency",
+      "id": "alter_time_2050_fire_falls",
+      "display_name": "2050: The Fire Falls",
+      "resource_type": "mod",
+      "version": "0.1.*"
+    }
+  ],
+  "game_custom_data": {
+    "multiplayer_synchronized": true
+  }
+}
