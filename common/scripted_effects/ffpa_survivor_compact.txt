@@ -21,7 +21,7 @@ ffpa_sc_leave = {
 ffpa_sc_stop_task = {
  remove_variable = ffpa_sc_task
  remove_variable = ffpa_sc_works_window
- remove_modifier = ffpa_sc_works_modifier
+ if = { limit = { has_modifier = ffpa_sc_works_modifier } remove_modifier = ffpa_sc_works_modifier }
  # Preparation and retry timers intentionally survive abandonment and withdrawal.
  if = { limit = { NOT = { has_variable = ffpa_sc_education_served } } remove_variable = ffpa_sc_education_joined }
  if = { limit = { NOT = { has_variable = ffpa_sc_trade_served } } remove_variable = ffpa_sc_trade_joined }
@@ -102,6 +102,7 @@ ffpa_sc_leave_trade = {
 }
 
 ffpa_sc_refresh = {
+ # Guard removals so option tooltips never claim loss of an absent modifier.
 
  if = {
   limit = { has_variable = ffpa_sc_education_joined ffpa_sc_education_ready = yes ffpa_sc_operational = yes }
@@ -141,31 +142,31 @@ ffpa_sc_refresh = {
   limit = { ffpa_sc_member = yes ffpa_sc_operational = yes NOT = { has_variable = ffpa_sc_coordinator } }
   if = { limit = { NOT = { has_modifier = ztr_onu_member } } add_modifier = ztr_onu_member }
  }
- else = { remove_modifier = ztr_onu_member }
+ else = { if = { limit = { has_modifier = ztr_onu_member } remove_modifier = ztr_onu_member } }
 
  if = {
   limit = { ffpa_sc_member = yes ffpa_sc_operational = yes has_variable = ffpa_sc_coordinator }
   if = { limit = { NOT = { has_modifier = ztr_onu_permanent_member } } add_modifier = ztr_onu_permanent_member }
  }
- else = { remove_modifier = ztr_onu_permanent_member }
+ else = { if = { limit = { has_modifier = ztr_onu_permanent_member } remove_modifier = ztr_onu_permanent_member } }
 
  if = {
   limit = { ffpa_sc_member = yes ffpa_sc_operational = yes has_variable = ffpa_sc_education_joined has_variable = ffpa_sc_education_served ffpa_sc_education_ready = yes }
   if = { limit = { NOT = { has_modifier = ffpa_sc_education_modifier } } add_modifier = ffpa_sc_education_modifier }
  }
- else = { remove_modifier = ffpa_sc_education_modifier }
+ else = { if = { limit = { has_modifier = ffpa_sc_education_modifier } remove_modifier = ffpa_sc_education_modifier } }
 
  if = {
   limit = { ffpa_sc_member = yes ffpa_sc_operational = yes has_variable = ffpa_sc_trade_joined has_variable = ffpa_sc_trade_served ffpa_sc_trade_ready = yes }
   if = { limit = { NOT = { has_modifier = ffpa_sc_trade_modifier } } add_modifier = ffpa_sc_trade_modifier }
  }
- else = { remove_modifier = ffpa_sc_trade_modifier }
+ else = { if = { limit = { has_modifier = ffpa_sc_trade_modifier } remove_modifier = ffpa_sc_trade_modifier } }
 
  if = {
   limit = { ffpa_sc_member = yes ffpa_sc_operational = yes var:ffpa_sc_task = 3 has_variable = ffpa_sc_works_window }
   if = { limit = { NOT = { has_modifier = ffpa_sc_works_modifier } } add_modifier = ffpa_sc_works_modifier }
  }
- else = { remove_modifier = ffpa_sc_works_modifier }
+ else = { if = { limit = { has_modifier = ffpa_sc_works_modifier } remove_modifier = ffpa_sc_works_modifier } }
 }
 
 ffpa_sc_count_votes = {

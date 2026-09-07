@@ -90,3 +90,8 @@
  ffpa_sc.5.d: "The old UN has been migrated. Eligible members retain ordinary membership and existing institutions unlock optional protocols. Old ballots and institutional effects are cleared. Choose protocols and coordinating duties yourself. Existing domestic laws, territory, buildings and nuclear treaties are not rolled back."
  ffpa_sc_result_pass: "Passed"
  ffpa_sc_result_fail: "Failed"
+ ffpa_sc.1.f: "Envoys bring a proposal for reconstruction: members can exchange knowledge, improve trade, and undertake public works. Joining establishes contact; participation in each protocol remains a national choice."
+ ffpa_sc.2.f: "Delegates are considering a new channel of cooperation. Supporting its availability does not commit our country to participating."
+ ffpa_sc.3.f: "The delegates have concluded this session. Each country can review the available protocols and weigh their benefits against their costs."
+ ffpa_sc.4.f: "The original preparation deadline has passed. The Compact does not legislate for us; we can make a new commitment when the retry period ends."
+ ffpa_sc.5.f: "The former organization now supports voluntary reconstruction cooperation. Members must choose their projects anew, while existing domestic institutions and investments remain in place."

@@ -92,7 +92,9 @@ class State:
                 (self.g if k=='remove_global_variable' else self.v).pop(v,None)
                 self.expiry.pop(('set_global_variable' if k=='remove_global_variable' else 'set_variable',v),None)
             elif k=='add_modifier':self.mod.add(v)
-            elif k=='remove_modifier':self.mod.discard(v)
+            elif k=='remove_modifier':
+                assert v in self.mod,('attempt to remove absent modifier',v)
+                self.mod.remove(v)
             elif k in EFFECTS:self.run(k)
             else:raise AssertionError(('unsupported effect',k,v))
     def advance(self,months):
@@ -117,6 +119,15 @@ def check_states():
         s.run('ffpa_sc_monthly');assert 'ffpa_sc_vote' not in s.g and s.g['ffpa_sc_cooldown']==9
         for remaining in range(8,0,-1):s.run('ffpa_sc_monthly');assert s.g['ffpa_sc_cooldown']==remaining
         s.run('ffpa_sc_monthly');assert 'ffpa_sc_cooldown' not in s.g
+    # Empty state and repeated cleanup must not emit fictitious modifier removals.
+    s=State();s.run('ffpa_sc_refresh');s.run('ffpa_sc_stop_task');assert not s.mod
+    s.g['ffpa_sc_founded']=1;s.run('ffpa_sc_join')
+    assert s.mod=={'ztr_onu_member'}
+    s.v['ffpa_sc_coordinator']=1;s.run('ffpa_sc_refresh')
+    assert s.mod=={'ztr_onu_permanent_member'}
+    s.v.pop('ffpa_sc_coordinator');s.run('ffpa_sc_refresh')
+    assert s.mod=={'ztr_onu_member'}
+    s.run('ffpa_sc_leave');s.run('ffpa_sc_leave');assert not s.mod
     # Late joining opens no tasks; re-entry cannot refresh the five-year deadline.
     s=State();s.g.update(ffpa_sc_founded=1,ffpa_sc_education_open=1,ffpa_sc_trade_open=1,ffpa_sc_works_open=1)
     s.run('ffpa_sc_join');assert 'ffpa_sc_task' not in s.v
@@ -157,6 +168,16 @@ def check_static(workshop):
             assert isinstance(e.value,list),('undefined script reference',e.key)
         if e.op in ('>','<','>=','<=') and isinstance(e.value,str) and e.value.startswith('ffpa_sc_'):
             assert e.value in VALUES,('undefined script value',e.value)
+    # Cover migration/IG scopes too: every removal must check the same modifier first.
+    for key in ('ffpa_sc_refresh','ffpa_sc_stop_task','ffpa_sc_ensure_initialized'):
+        def check_removal_guards(nodes, guard=None):
+            for e in nodes:
+                if e.key=='remove_modifier':assert e.value==guard,(key,e.value)
+                if isinstance(e.value,list):
+                    limits=[x for x in e.value if x.key=='limit']
+                    checks=[x.value for limit in limits for x in limit.value if x.key=='has_modifier']
+                    check_removal_guards(e.value,checks[0] if e.key=='if' and len(checks)==1 else None)
+        check_removal_guards(EFFECTS[key].value)
     # No force-enacted domestic reform or revived sanctions in the delivered scripts.
     forbidden={'activate_law','change_infamy','end_play','set_country_type','set_institution_investment_level','cancel_enactment','add_enactment_modifier'}
     assert not forbidden.intersection(e.key for e in all_nodes)
@@ -194,6 +215,26 @@ def check_static(workshop):
     for folder in ('common/scripted_buttons','common/decisions','common/static_modifiers','common/journal_entries'):
         for k,e in load(folder).items():
             if k.startswith('ffpa_sc_'):assert k in locales['english'],k
+    # Event presentation is a separate contract from state effects and localization BOM.
+    events=load('events')
+    for k,e in events.items():
+        if not k.startswith('ffpa_sc.'):continue
+        assert child(e,'placement').value.lower()=='root',k
+        for field in ('title','desc','flavor'):
+            assert child(e,field).value in locales['english'],(k,field)
+        assert child(child(e,'event_image'),'video').value=='"unspecific_signed_contract"',k
+        options=[x for x in e.value if x.key=='option']
+        assert sum(any(x.key=='default_option' and x.value=='yes' for x in opt.value) for opt in options)==1,k
+        for opt in options:
+            assert child(opt,'name').value in locales['english'],k
+            assert not any(x.key=='trigger' for x in opt.value),(k,'hidden option')
+            chance=child(opt,'ai_chance')
+            assert all(x.key in ('base','modifier') for x in chance.value),(k,'event AI syntax')
+    invitation=events['ffpa_sc.1']
+    options=[x for x in invitation.value if x.key=='option']
+    assert [child(x,'name').value for x in options]==['ffpa_sc_accept','ffpa_sc_decline']
+    assert child(options[0],'ffpa_sc_join').value=='yes'
+    assert child(options[1],'default_option').value=='yes'
     assert SCALARS['ffpa_sc_vote_duration']==3 and SCALARS['ffpa_sc_cooldown_duration']==9
     meta=json.loads((ROOT/'.metadata/metadata.json').read_text());assert meta['supported_game_version']=='1.13.*'
     assert {r['id'] for r in meta['relationships']}=={'tech.res','alter_time_2050_fire_falls'}

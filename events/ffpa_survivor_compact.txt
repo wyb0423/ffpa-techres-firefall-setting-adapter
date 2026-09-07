@@ -1,38 +1,97 @@
 namespace = ffpa_sc
+
 ffpa_sc.1 = {
  type = country_event
+ placement = root
  title = ffpa_sc.1.t
  desc = ffpa_sc.1.d
+ flavor = ffpa_sc.1.f
+ event_image = { video = "unspecific_signed_contract" }
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
  duration = 3
- trigger = { ffpa_sc_eligible = yes NOT = { ffpa_sc_member = yes } has_global_variable = ffpa_sc_founded }
- option = { name = ffpa_sc_accept ffpa_sc_join = yes ai_chance = { value = 10 if = { limit = { OR = { influence < 0 scaled_debt > 0.25 } } multiply = 0 } } }
- option = { name = ffpa_sc_decline ai_chance = { value = 3 } }
+ trigger = {
+  ffpa_sc_eligible = yes
+  NOT = { ffpa_sc_member = yes }
+  has_global_variable = ffpa_sc_founded
+ }
+ option = {
+  name = ffpa_sc_accept
+  ffpa_sc_join = yes
+  ai_chance = {
+   base = 10
+   modifier = {
+    trigger = { OR = { influence < 0 scaled_debt > 0.25 } }
+    add = -10
+   }
+  }
+ }
+ option = {
+  name = ffpa_sc_decline
+  default_option = yes
+  ai_chance = { base = 3 }
+ }
 }
+
 ffpa_sc.2 = {
  type = country_event
+ placement = root
  title = ffpa_sc.2.t
  desc = ffpa_sc.2.d
+ flavor = ffpa_sc.2.f
+ event_image = { video = "unspecific_signed_contract" }
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
  duration = 3
- option = { name = ffpa_sc_ack ai_chance = { value = 1 } }
+ option = {
+  name = ffpa_sc_ack
+  default_option = yes
+  ai_chance = { base = 1 }
+ }
 }
+
 ffpa_sc.3 = {
  type = country_event
+ placement = root
  title = ffpa_sc.3.t
  desc = ffpa_sc.3.d
+ flavor = ffpa_sc.3.f
+ event_image = { video = "unspecific_signed_contract" }
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
  duration = 3
- option = { name = ffpa_sc_ack ai_chance = { value = 1 } }
+ option = {
+  name = ffpa_sc_ack
+  default_option = yes
+  ai_chance = { base = 1 }
+ }
 }
+
 ffpa_sc.4 = {
  type = country_event
+ placement = root
  title = ffpa_sc.4.t
  desc = ffpa_sc.4.d
+ flavor = ffpa_sc.4.f
+ event_image = { video = "unspecific_signed_contract" }
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
  duration = 3
- option = { name = ffpa_sc_ack ai_chance = { value = 1 } }
+ option = {
+  name = ffpa_sc_ack
+  default_option = yes
+  ai_chance = { base = 1 }
+ }
 }
+
 ffpa_sc.5 = {
  type = country_event
+ placement = root
  title = ffpa_sc.5.t
  desc = ffpa_sc.5.d
+ flavor = ffpa_sc.5.f
+ event_image = { video = "unspecific_signed_contract" }
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
  duration = 3
- option = { name = ffpa_sc_ack ai_chance = { value = 1 } }
+ option = {
+  name = ffpa_sc_ack
+  default_option = yes
+  ai_chance = { base = 1 }
+ }
 }

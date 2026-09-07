@@ -12,37 +12,37 @@ ffpa_sc_ensure_initialized = {
     if = { limit = { ffpa_sc_eligible = yes } set_variable = ffpa_sc_membership }
     if = { limit = { is_ai = no } trigger_event = ffpa_sc.5 }
    }
-   remove_modifier = imf_modernization_research_bonus_modifier
-   remove_modifier = extreme_imf_help_modifier
-   remove_modifier = big_imf_help_modifier
-   remove_modifier = medium_imf_help_modifier
-   remove_modifier = small_imf_help_modifier
-   remove_modifier = tiny_imf_help_modifier
-   remove_modifier = imf_modernization_commitment_modifier
-   remove_modifier = imf_scholarship_fund_modifier
-   remove_modifier = imf_emigration_restriction_modifier
-   remove_modifier = imf_brain_drain_modifier
-   remove_modifier = imf_austerity_accepted_modifier
-   remove_modifier = imf_partial_austerity_modifier
-   remove_modifier = imf_foreign_investment_modifier
-   remove_modifier = imf_joint_venture_modifier
-   remove_modifier = imf_nationalization_modifier
-   remove_modifier = imf_rural_schools_modifier
-   remove_modifier = imf_media_literacy_modifier
-   remove_modifier = imf_religious_education_modifier
-   remove_modifier = imf_political_repression_modifier
-   remove_modifier = imf_political_cooperation_modifier
-   remove_modifier = imf_public_consultation_modifier
-   remove_modifier = imf_technical_mission_modifier
-   remove_modifier = imf_development_plan_modifier
-   remove_modifier = imf_foreign_scholarships_modifier
-   remove_modifier = ztr_wto_member_modifier
-   remove_modifier = ztr_icc_member_modifier
-   remove_modifier = ztr_icc_investigation_modifier
-   remove_modifier = ztr_unesco_member_modifier
-   remove_modifier = ztr_onu_member
-   remove_modifier = ztr_onu_permanent_member
-   every_interest_group = { remove_modifier = imf_ig_repression_modifier remove_modifier = imf_ig_cooperation_modifier }
+   if = { limit = { has_modifier = imf_modernization_research_bonus_modifier } remove_modifier = imf_modernization_research_bonus_modifier }
+   if = { limit = { has_modifier = extreme_imf_help_modifier } remove_modifier = extreme_imf_help_modifier }
+   if = { limit = { has_modifier = big_imf_help_modifier } remove_modifier = big_imf_help_modifier }
+   if = { limit = { has_modifier = medium_imf_help_modifier } remove_modifier = medium_imf_help_modifier }
+   if = { limit = { has_modifier = small_imf_help_modifier } remove_modifier = small_imf_help_modifier }
+   if = { limit = { has_modifier = tiny_imf_help_modifier } remove_modifier = tiny_imf_help_modifier }
+   if = { limit = { has_modifier = imf_modernization_commitment_modifier } remove_modifier = imf_modernization_commitment_modifier }
+   if = { limit = { has_modifier = imf_scholarship_fund_modifier } remove_modifier = imf_scholarship_fund_modifier }
+   if = { limit = { has_modifier = imf_emigration_restriction_modifier } remove_modifier = imf_emigration_restriction_modifier }
+   if = { limit = { has_modifier = imf_brain_drain_modifier } remove_modifier = imf_brain_drain_modifier }
+   if = { limit = { has_modifier = imf_austerity_accepted_modifier } remove_modifier = imf_austerity_accepted_modifier }
+   if = { limit = { has_modifier = imf_partial_austerity_modifier } remove_modifier = imf_partial_austerity_modifier }
+   if = { limit = { has_modifier = imf_foreign_investment_modifier } remove_modifier = imf_foreign_investment_modifier }
+   if = { limit = { has_modifier = imf_joint_venture_modifier } remove_modifier = imf_joint_venture_modifier }
+   if = { limit = { has_modifier = imf_nationalization_modifier } remove_modifier = imf_nationalization_modifier }
+   if = { limit = { has_modifier = imf_rural_schools_modifier } remove_modifier = imf_rural_schools_modifier }
+   if = { limit = { has_modifier = imf_media_literacy_modifier } remove_modifier = imf_media_literacy_modifier }
+   if = { limit = { has_modifier = imf_religious_education_modifier } remove_modifier = imf_religious_education_modifier }
+   if = { limit = { has_modifier = imf_political_repression_modifier } remove_modifier = imf_political_repression_modifier }
+   if = { limit = { has_modifier = imf_political_cooperation_modifier } remove_modifier = imf_political_cooperation_modifier }
+   if = { limit = { has_modifier = imf_public_consultation_modifier } remove_modifier = imf_public_consultation_modifier }
+   if = { limit = { has_modifier = imf_technical_mission_modifier } remove_modifier = imf_technical_mission_modifier }
+   if = { limit = { has_modifier = imf_development_plan_modifier } remove_modifier = imf_development_plan_modifier }
+   if = { limit = { has_modifier = imf_foreign_scholarships_modifier } remove_modifier = imf_foreign_scholarships_modifier }
+   if = { limit = { has_modifier = ztr_wto_member_modifier } remove_modifier = ztr_wto_member_modifier }
+   if = { limit = { has_modifier = ztr_icc_member_modifier } remove_modifier = ztr_icc_member_modifier }
+   if = { limit = { has_modifier = ztr_icc_investigation_modifier } remove_modifier = ztr_icc_investigation_modifier }
+   if = { limit = { has_modifier = ztr_unesco_member_modifier } remove_modifier = ztr_unesco_member_modifier }
+   if = { limit = { has_modifier = ztr_onu_member } remove_modifier = ztr_onu_member }
+   if = { limit = { has_modifier = ztr_onu_permanent_member } remove_modifier = ztr_onu_permanent_member }
+   every_interest_group = { if = { limit = { has_modifier = imf_ig_repression_modifier } remove_modifier = imf_ig_repression_modifier } if = { limit = { has_modifier = imf_ig_cooperation_modifier } remove_modifier = imf_ig_cooperation_modifier } }
    remove_variable = ztr_un_vote_choice_against
    remove_variable = ztr_un_vote_choice_neutral
    remove_variable = ztr_un_vote_choice_support
