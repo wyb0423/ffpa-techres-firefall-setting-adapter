@@ -1,0 +1,5 @@
+# Append a child hook, never restore the upstream T&R on_action file.
+on_game_started = { on_actions = { ffpa_sc_initialize_on_action } }
+on_monthly_pulse = { on_actions = { ffpa_sc_monthly_on_action } }
+ffpa_sc_initialize_on_action = { effect = { ffpa_sc_ensure_initialized = yes } }
+ffpa_sc_monthly_on_action = { effect = { ffpa_sc_monthly = yes } }

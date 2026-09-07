@@ -1,0 +1,35 @@
+# 0.3.0: approved compact effects. Identity lives in country variables.
+ztr_onu_member = {
+ icon = gfx/interface/icons/timed_modifier_icons/tech_agreement.dds
+ country_tech_spread_mult = 0.10
+ country_influence_mult = -0.10
+}
+ztr_onu_permanent_member = {
+ icon = gfx/interface/icons/timed_modifier_icons/tech_agreement.dds
+ country_tech_spread_mult = 0.10
+ country_influence_mult = -0.15
+}
+ffpa_sc_education_modifier = {
+ icon = gfx/interface/icons/timed_modifier_icons/modifier_book_positive.dds
+ country_tech_spread_mult = 0.25
+ state_education_access_add = 0.05
+ state_pop_qualifications_mult = 0.25
+ country_institution_cost_institution_schools_mult = 0.25
+ country_government_wages_mult = 0.10
+}
+ffpa_sc_trade_modifier = {
+ icon = gfx/interface/icons/timed_modifier_icons/modifier_trade_positive.dds
+ state_import_advantage_mult = 0.25
+ state_export_advantage_mult = 0.25
+ state_trade_capacity_mult = 0.20
+ state_tariff_import_add = -0.10
+ state_tariff_export_add = -0.10
+ country_bureaucracy_mult = -0.05
+}
+ffpa_sc_works_modifier = {
+ icon = gfx/interface/icons/timed_modifier_icons/modifier_industry_positive.dds
+ state_construction_mult = 0.20
+ state_devastation_decay_mult = 0.25
+ country_construction_goods_cost_mult = 0.10
+ country_bureaucracy_mult = -0.05
+}

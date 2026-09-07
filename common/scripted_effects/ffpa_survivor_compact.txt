@@ -1,0 +1,410 @@
+# Country state owns membership/commitment. Global monthly pulse owns the clock.
+ffpa_sc_join = {
+ ffpa_sc_ensure_initialized = yes
+ if = {
+  limit = { ffpa_sc_eligible = yes NOT = { ffpa_sc_member = yes } has_global_variable = ffpa_sc_founded }
+  set_variable = ffpa_sc_membership
+  ffpa_sc_refresh = yes
+ }
+}
+ffpa_sc_leave = {
+ remove_variable = ffpa_sc_membership
+ remove_variable = ffpa_sc_coordinator
+ remove_variable = ffpa_sc_willing
+ remove_variable = ffpa_sc_ballot_eligible
+ remove_variable = ffpa_sc_choice
+ remove_variable = ffpa_sc_education_joined
+ remove_variable = ffpa_sc_trade_joined
+ ffpa_sc_stop_task = yes
+ ffpa_sc_refresh = yes
+}
+ffpa_sc_stop_task = {
+ remove_variable = ffpa_sc_task
+ remove_variable = ffpa_sc_works_window
+ remove_modifier = ffpa_sc_works_modifier
+ # Preparation and retry timers intentionally survive abandonment and withdrawal.
+ if = { limit = { NOT = { has_variable = ffpa_sc_education_served } } remove_variable = ffpa_sc_education_joined }
+ if = { limit = { NOT = { has_variable = ffpa_sc_trade_served } } remove_variable = ffpa_sc_trade_joined }
+}
+ffpa_sc_reform = {
+ if = {
+  limit = { ffpa_sc_can_reform = yes }
+  random_law = {
+   limit = { ffpa_sc_reform_law = yes }
+   owner = { start_enactment = prev.type }
+  }
+  set_variable = { name = ffpa_sc_reform_retry months = 6 }
+ }
+}
+ffpa_sc_start_works = {
+ if = {
+  limit = {
+   ffpa_sc_member = yes ffpa_sc_operational = yes
+   has_global_variable = ffpa_sc_works_open
+   NOT = { has_variable = ffpa_sc_task }
+   NOT = { has_variable = ffpa_sc_works_retry }
+   ffpa_sc_has_work = yes
+  }
+  set_variable = { name = ffpa_sc_task value = 3 }
+  set_variable = { name = ffpa_sc_works_window years = 3 }
+  set_variable = { name = ffpa_sc_works_months_left value = 36 }
+  set_variable = { name = ffpa_sc_works_retry years = 5 }
+  ffpa_sc_refresh = yes
+ }
+}
+
+ffpa_sc_join_education = {
+ if = {
+  limit = { ffpa_sc_can_join_education = yes }
+  set_variable = ffpa_sc_education_joined
+  if = {
+   limit = { ffpa_sc_education_ready = no NOT = { has_variable = ffpa_sc_education_served } }
+   set_variable = { name = ffpa_sc_task value = 1 }
+   if = {
+    limit = { NOT = { has_variable = ffpa_sc_education_window } NOT = { has_variable = ffpa_sc_education_served } }
+    set_variable = { name = ffpa_sc_education_window years = 5 }
+    set_variable = { name = ffpa_sc_education_months_left value = 60 }
+    # Eight years from first commitment = five preparation + three retry cooldown.
+    set_variable = { name = ffpa_sc_education_retry years = 8 }
+   }
+  }
+  ffpa_sc_refresh = yes
+ }
+}
+ffpa_sc_leave_education = {
+ remove_variable = ffpa_sc_education_joined
+ if = { limit = { var:ffpa_sc_task = 1 } remove_variable = ffpa_sc_task }
+ ffpa_sc_refresh = yes
+}
+
+ffpa_sc_join_trade = {
+ if = {
+  limit = { ffpa_sc_can_join_trade = yes }
+  set_variable = ffpa_sc_trade_joined
+  if = {
+   limit = { ffpa_sc_trade_ready = no NOT = { has_variable = ffpa_sc_trade_served } }
+   set_variable = { name = ffpa_sc_task value = 2 }
+   if = {
+    limit = { NOT = { has_variable = ffpa_sc_trade_window } NOT = { has_variable = ffpa_sc_trade_served } }
+    set_variable = { name = ffpa_sc_trade_window years = 5 }
+    set_variable = { name = ffpa_sc_trade_months_left value = 60 }
+    # Eight years from first commitment = five preparation + three retry cooldown.
+    set_variable = { name = ffpa_sc_trade_retry years = 8 }
+   }
+  }
+  ffpa_sc_refresh = yes
+ }
+}
+ffpa_sc_leave_trade = {
+ remove_variable = ffpa_sc_trade_joined
+ if = { limit = { var:ffpa_sc_task = 2 } remove_variable = ffpa_sc_task }
+ ffpa_sc_refresh = yes
+}
+
+ffpa_sc_refresh = {
+
+ if = {
+  limit = { has_variable = ffpa_sc_education_joined ffpa_sc_education_ready = yes ffpa_sc_operational = yes }
+  set_variable = ffpa_sc_education_served
+  remove_variable = ffpa_sc_education_window
+  remove_variable = ffpa_sc_education_retry
+  if = { limit = { var:ffpa_sc_task = 1 } remove_variable = ffpa_sc_task }
+ }
+ else_if = {
+  limit = { var:ffpa_sc_task = 1 NOT = { has_variable = ffpa_sc_education_window } NOT = { has_variable = ffpa_sc_education_served } }
+  remove_variable = ffpa_sc_task
+  remove_variable = ffpa_sc_education_joined
+  if = { limit = { is_ai = no ffpa_sc_member = yes } trigger_event = ffpa_sc.4 }
+ }
+
+ if = {
+  limit = { has_variable = ffpa_sc_trade_joined ffpa_sc_trade_ready = yes ffpa_sc_operational = yes }
+  set_variable = ffpa_sc_trade_served
+  remove_variable = ffpa_sc_trade_window
+  remove_variable = ffpa_sc_trade_retry
+  if = { limit = { var:ffpa_sc_task = 2 } remove_variable = ffpa_sc_task }
+ }
+ else_if = {
+  limit = { var:ffpa_sc_task = 2 NOT = { has_variable = ffpa_sc_trade_window } NOT = { has_variable = ffpa_sc_trade_served } }
+  remove_variable = ffpa_sc_task
+  remove_variable = ffpa_sc_trade_joined
+  if = { limit = { is_ai = no ffpa_sc_member = yes } trigger_event = ffpa_sc.4 }
+ }
+
+ if = {
+  limit = { var:ffpa_sc_task = 3 OR = { NOT = { has_variable = ffpa_sc_works_window } ffpa_sc_operational = no } }
+  remove_variable = ffpa_sc_task
+  remove_variable = ffpa_sc_works_window
+ }
+
+ if = {
+  limit = { ffpa_sc_member = yes ffpa_sc_operational = yes NOT = { has_variable = ffpa_sc_coordinator } }
+  if = { limit = { NOT = { has_modifier = ztr_onu_member } } add_modifier = ztr_onu_member }
+ }
+ else = { remove_modifier = ztr_onu_member }
+
+ if = {
+  limit = { ffpa_sc_member = yes ffpa_sc_operational = yes has_variable = ffpa_sc_coordinator }
+  if = { limit = { NOT = { has_modifier = ztr_onu_permanent_member } } add_modifier = ztr_onu_permanent_member }
+ }
+ else = { remove_modifier = ztr_onu_permanent_member }
+
+ if = {
+  limit = { ffpa_sc_member = yes ffpa_sc_operational = yes has_variable = ffpa_sc_education_joined has_variable = ffpa_sc_education_served ffpa_sc_education_ready = yes }
+  if = { limit = { NOT = { has_modifier = ffpa_sc_education_modifier } } add_modifier = ffpa_sc_education_modifier }
+ }
+ else = { remove_modifier = ffpa_sc_education_modifier }
+
+ if = {
+  limit = { ffpa_sc_member = yes ffpa_sc_operational = yes has_variable = ffpa_sc_trade_joined has_variable = ffpa_sc_trade_served ffpa_sc_trade_ready = yes }
+  if = { limit = { NOT = { has_modifier = ffpa_sc_trade_modifier } } add_modifier = ffpa_sc_trade_modifier }
+ }
+ else = { remove_modifier = ffpa_sc_trade_modifier }
+
+ if = {
+  limit = { ffpa_sc_member = yes ffpa_sc_operational = yes var:ffpa_sc_task = 3 has_variable = ffpa_sc_works_window }
+  if = { limit = { NOT = { has_modifier = ffpa_sc_works_modifier } } add_modifier = ffpa_sc_works_modifier }
+ }
+ else = { remove_modifier = ffpa_sc_works_modifier }
+}
+
+ffpa_sc_count_votes = {
+ set_global_variable = { name = ffpa_sc_support value = 0 }
+ set_global_variable = { name = ffpa_sc_against value = 0 }
+ set_global_variable = { name = ffpa_sc_electorate value = 0 }
+ every_country = {
+  limit = { ffpa_sc_can_vote = yes ffpa_sc_eligible = yes }
+  change_global_variable = { name = ffpa_sc_electorate add = 1 }
+  if = { limit = { var:ffpa_sc_choice = 1 } change_global_variable = { name = ffpa_sc_support add = 1 } }
+  else_if = { limit = { var:ffpa_sc_choice = -1 } change_global_variable = { name = ffpa_sc_against add = 1 } }
+ }
+ set_global_variable = { name = ffpa_sc_quorum_support value = global_var:ffpa_sc_support }
+ change_global_variable = { name = ffpa_sc_quorum_support multiply = ffpa_sc_quorum_divisor }
+}
+ffpa_sc_ai_vote = {
+ if = {
+  limit = { is_ai = yes ffpa_sc_can_vote = yes }
+  if = { limit = { global_var:ffpa_sc_vote = 1 } set_variable = { name = ffpa_sc_vote_score value = ffpa_sc_education_score } }
+  else_if = { limit = { global_var:ffpa_sc_vote = 2 } set_variable = { name = ffpa_sc_vote_score value = ffpa_sc_trade_score } }
+  else_if = { limit = { global_var:ffpa_sc_vote = 3 } set_variable = { name = ffpa_sc_vote_score value = ffpa_sc_works_score } }
+  if = { limit = { var:ffpa_sc_vote_score > 2 } set_variable = { name = ffpa_sc_choice value = 1 } }
+  else_if = { limit = { var:ffpa_sc_vote_score < -2 } set_variable = { name = ffpa_sc_choice value = -1 } }
+  else = { set_variable = { name = ffpa_sc_choice value = 0 } }
+ }
+}
+ffpa_sc_clear_vote = {
+ remove_global_variable = ffpa_sc_vote
+ remove_global_variable = ffpa_sc_months_left
+ remove_global_variable = ffpa_sc_pending
+ every_country = {
+  remove_variable = ffpa_sc_ballot_eligible
+  remove_variable = ffpa_sc_choice
+  remove_variable = ffpa_sc_proposer
+ }
+}
+ffpa_sc_begin_vote = {
+ if = {
+  limit = { has_global_variable = ffpa_sc_pending ffpa_sc_operational = yes }
+  set_global_variable = { name = ffpa_sc_vote value = global_var:ffpa_sc_pending }
+  remove_global_variable = ffpa_sc_pending
+  set_global_variable = { name = ffpa_sc_months_left value = ffpa_sc_vote_duration }
+  every_country = {
+   limit = { ffpa_sc_member = yes ffpa_sc_eligible = yes }
+   set_variable = ffpa_sc_ballot_eligible
+   set_variable = { name = ffpa_sc_choice value = 0 }
+   ffpa_sc_ai_vote = yes
+   if = { limit = { is_ai = no } trigger_event = ffpa_sc.2 }
+  }
+  ffpa_sc_count_votes = yes
+ }
+}
+ffpa_sc_resolve_vote = {
+ every_country = { limit = { ffpa_sc_can_vote = yes } ffpa_sc_ai_vote = yes }
+ ffpa_sc_count_votes = yes
+ if = {
+  limit = {
+   global_var:ffpa_sc_support > global_var:ffpa_sc_against
+   global_var:ffpa_sc_support >= ffpa_sc_vote_minimum
+   global_var:ffpa_sc_quorum_support >= global_var:ffpa_sc_electorate
+  }
+  if = { limit = { global_var:ffpa_sc_vote = 1 } set_global_variable = ffpa_sc_education_open }
+  else_if = { limit = { global_var:ffpa_sc_vote = 2 } set_global_variable = ffpa_sc_trade_open }
+  else_if = { limit = { global_var:ffpa_sc_vote = 3 } set_global_variable = ffpa_sc_works_open }
+  set_global_variable = { name = ffpa_sc_last_result value = 1 }
+ }
+ else = { set_global_variable = { name = ffpa_sc_last_result value = 0 } }
+ every_country = { limit = { ffpa_sc_member = yes is_ai = no } trigger_event = ffpa_sc.3 }
+ ffpa_sc_clear_vote = yes
+ set_global_variable = { name = ffpa_sc_cooldown value = ffpa_sc_cooldown_duration }
+}
+ffpa_sc_select_seats = {
+ # Remember incumbents for equal-prestige tie breaking; no per-country election loop.
+ every_country = {
+  limit = { ffpa_sc_member = yes }
+  set_variable = { name = ffpa_sc_seat_score value = prestige }
+  if = { limit = { has_variable = ffpa_sc_coordinator } change_variable = { name = ffpa_sc_seat_score add = 0.00001 } }
+  remove_variable = ffpa_sc_coordinator
+ }
+ ordered_country = {
+  limit = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_willing }
+  order_by = var:ffpa_sc_seat_score
+  max = 3
+  check_range_bounds = no
+  set_variable = ffpa_sc_coordinator
+ }
+ every_country = { limit = { ffpa_sc_member = yes } ffpa_sc_refresh = yes }
+ set_global_variable = { name = ffpa_sc_seats_reviewed years = 1 }
+}
+ffpa_sc_fill_seats = {
+ set_global_variable = { name = ffpa_sc_occupied_seats value = 0 }
+ every_country = {
+  limit = { ffpa_sc_member = yes has_variable = ffpa_sc_coordinator }
+  change_global_variable = { name = ffpa_sc_occupied_seats add = 1 }
+ }
+ ordered_country = {
+  limit = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_willing NOT = { has_variable = ffpa_sc_coordinator } }
+  order_by = prestige
+  if = {
+   limit = { global_var:ffpa_sc_occupied_seats < ffpa_sc_seat_limit }
+   set_variable = ffpa_sc_coordinator
+   change_global_variable = { name = ffpa_sc_occupied_seats add = 1 }
+   ffpa_sc_refresh = yes
+  }
+ }
+ remove_global_variable = ffpa_sc_occupied_seats
+}
+ffpa_sc_ai_propose = {
+ if = {
+  limit = { is_ai = yes ffpa_sc_can_propose = yes }
+  set_variable = { name = ffpa_sc_best_score value = 2 }
+  remove_variable = ffpa_sc_best_proposal
+
+  if = {
+   limit = { NOT = { has_global_variable = ffpa_sc_education_open } ffpa_sc_education_score > var:ffpa_sc_best_score }
+   set_variable = { name = ffpa_sc_best_score value = ffpa_sc_education_score }
+   set_variable = { name = ffpa_sc_best_proposal value = 1 }
+  }
+
+  if = {
+   limit = { NOT = { has_global_variable = ffpa_sc_trade_open } ffpa_sc_trade_score > var:ffpa_sc_best_score }
+   set_variable = { name = ffpa_sc_best_score value = ffpa_sc_trade_score }
+   set_variable = { name = ffpa_sc_best_proposal value = 2 }
+  }
+
+  if = {
+   limit = { NOT = { has_global_variable = ffpa_sc_works_open } ffpa_sc_works_score > var:ffpa_sc_best_score }
+   set_variable = { name = ffpa_sc_best_score value = ffpa_sc_works_score }
+   set_variable = { name = ffpa_sc_best_proposal value = 3 }
+  }
+
+  if = {
+   limit = { has_variable = ffpa_sc_best_proposal }
+   set_global_variable = { name = ffpa_sc_pending value = var:ffpa_sc_best_proposal }
+   set_variable = ffpa_sc_proposer
+  }
+ }
+}
+ffpa_sc_monthly = {
+ ffpa_sc_ensure_initialized = yes
+ every_country = {
+  limit = { has_variable = ffpa_sc_education_window var:ffpa_sc_education_months_left > 0 }
+  change_variable = { name = ffpa_sc_education_months_left add = -1 }
+ }
+ every_country = {
+  limit = { has_variable = ffpa_sc_trade_window var:ffpa_sc_trade_months_left > 0 }
+  change_variable = { name = ffpa_sc_trade_months_left add = -1 }
+ }
+ every_country = {
+  limit = { has_variable = ffpa_sc_works_window var:ffpa_sc_works_months_left > 0 }
+  change_variable = { name = ffpa_sc_works_months_left add = -1 }
+ }
+ every_country = {
+  limit = { ffpa_sc_member = yes }
+  if = { limit = { ffpa_sc_eligible = no } ffpa_sc_leave = yes }
+ }
+ every_country = { limit = { ffpa_sc_member = yes } ffpa_sc_refresh = yes ffpa_sc_ai_manage = yes }
+ # Cooldown decrements before resolution, so a new nine-month cooldown is not shortened.
+ if = {
+  limit = { has_global_variable = ffpa_sc_cooldown }
+  change_global_variable = { name = ffpa_sc_cooldown add = -1 }
+  if = { limit = { global_var:ffpa_sc_cooldown <= 0 } remove_global_variable = ffpa_sc_cooldown }
+ }
+ if = {
+  limit = { ffpa_sc_operational = yes }
+  if = {
+   limit = { has_global_variable = ffpa_sc_vote }
+   every_country = { limit = { ffpa_sc_can_vote = yes } ffpa_sc_ai_vote = yes }
+   ffpa_sc_count_votes = yes
+   change_global_variable = { name = ffpa_sc_months_left add = -1 }
+   if = { limit = { global_var:ffpa_sc_months_left <= 0 } ffpa_sc_resolve_vote = yes }
+  }
+  if = {
+   limit = {
+    NOT = { has_global_variable = ffpa_sc_vote }
+    NOT = { has_global_variable = ffpa_sc_seats_reviewed }
+   }
+   ffpa_sc_select_seats = yes
+  }
+  if = { limit = { NOT = { has_global_variable = ffpa_sc_vote } } ffpa_sc_fill_seats = yes }
+  ordered_country = {
+   limit = { ffpa_sc_member = yes has_variable = ffpa_sc_coordinator is_ai = yes }
+   order_by = prestige
+   ffpa_sc_ai_propose = yes
+  }
+  # ponytail: sessions open on the monthly agenda; this gives three full global months
+  # without a fragile delayed country event whose host can be annexed.
+  ffpa_sc_begin_vote = yes
+ }
+ else = { ffpa_sc_clear_vote = yes }
+}
+
+ffpa_sc_ai_manage = {
+ if = {
+  limit = { is_ai = yes ffpa_sc_member = yes }
+  # A conservative proxy, not a prediction of future revenue. Existing modifiers are
+  # already included in relative_bureaucracy, so each subsequent choice sees prior costs.
+  if = {
+   limit = { influence > 0 scaled_debt < 0.25 NOT = { has_variable = ffpa_sc_seat_rest } }
+   set_variable = ffpa_sc_willing
+  }
+  else_if = {
+   limit = { influence < 0 }
+   remove_variable = ffpa_sc_willing
+   remove_variable = ffpa_sc_coordinator
+   set_variable = { name = ffpa_sc_seat_rest years = 1 }
+   ffpa_sc_refresh = yes
+  }
+  if = {
+   limit = { OR = { relative_bureaucracy < -0.10 scaled_debt > 0.60 } }
+   ffpa_sc_stop_task = yes
+   ffpa_sc_leave_trade = yes
+   ffpa_sc_leave_education = yes
+   set_variable = { name = ffpa_sc_ai_rest months = 12 }
+  }
+  else_if = {
+   limit = { ffpa_sc_ai_solvent = yes NOT = { has_variable = ffpa_sc_ai_rest } }
+   if = {
+    limit = {
+     ffpa_sc_can_join_education = yes ffpa_sc_education_feasible = yes
+     relative_bureaucracy >= 0.35
+     OR = { ffpa_sc_education_ready = yes enacting_any_law = no }
+    }
+    ffpa_sc_join_education = yes
+   }
+   if = {
+    limit = {
+     ffpa_sc_can_join_trade = yes ffpa_sc_trade_feasible = yes
+     ffpa_sc_ai_solvent = yes
+     OR = { total_trade_value > 0 ffpa_sc_has_work = yes }
+     OR = { ffpa_sc_trade_ready = yes enacting_any_law = no }
+    }
+    ffpa_sc_join_trade = yes
+   }
+   if = {
+    limit = { ffpa_sc_ai_solvent = yes ffpa_sc_has_work = yes NOT = { has_variable = ffpa_sc_task } }
+    ffpa_sc_start_works = yes
+   }
+   if = { limit = { legitimacy >= 40 } ffpa_sc_reform = yes }
+  }
+ }
+}

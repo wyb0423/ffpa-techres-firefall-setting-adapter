@@ -1,0 +1,23 @@
+{
+  "3472248460/common/decisions/ztr_decolonization_decisions.txt": "1dd2403e7f4b965cfc6cb726f0218037aa4d62a0e0fb18031e16fd6d6c93d60b",
+  "3472248460/common/decisions/ztr_un_decisions.txt": "897c65e4c6157deae2f213743df6ccf8cfdb2c39a18a3c62bcfe98d32deda666",
+  "3472248460/common/journal_entries/ztr_je_decolonization.txt": "48b3a42f9b24c9a222f8f7d271f2b040cb31c99eb48e5e8cd5b628f7c70cea17",
+  "3472248460/common/journal_entries/ztr_je_un.txt": "ad5b4283a0826700a14ef779fae99646e66b98e8546f8dbd33ae7bb090cbeca6",
+  "3472248460/common/journal_entries/ztr_je_un_institutions.txt": "b1f6748e4f80c6857a572cfb4223a5d5aa34c4c66ca1170fc41619deb4285ae2",
+  "3472248460/common/script_values/ztr_decolonization_values.txt": "87a2966d00d41a860f773cf1a1641b843d3f77935aca1924745401cc005542f8",
+  "3472248460/common/scripted_buttons/ztr_imf_buttons.txt": "5a2bd97403387dd6d3784bfa2ac3bbeae2fdf405b3f2b4a4e8e0481d95e47acb",
+  "3472248460/common/scripted_buttons/ztr_un_buttons.txt": "260d2141ebf893d103c22a249e7837f5334142349e602007b225771b99153953",
+  "3472248460/common/scripted_effects/ztr_un_institutions_scripts.txt": "5f720a8d76091f19b512d6ef52b906b4339b0263f000d984e6f8b4e867b3007f",
+  "3472248460/common/scripted_effects/ztr_un_law_opinion_functions.txt": "a2e8dc9d54e0f9aa5eb2c7f37f677749626561e903786a46288bc2595505ece7",
+  "3472248460/common/scripted_effects/ztr_un_scripts.txt": "6e9be36b33972c94082ecb908c7e1b8e95dba62899a9713ca4445caa2c797eb1",
+  "3472248460/common/static_modifiers/ztr_un_institutions_modifiers.txt": "c229709eacfddc57a36f1f294a38a93d017b6581f4093e52d0474b0aa99276e8",
+  "3472248460/events/decolonization/colony_pop.txt": "f146d33d793e134a6478713889aa4843773573bbbbf7dafa80fd0cb8d551dba9",
+  "3472248460/events/decolonization/ztr_decolonization.txt": "708e03877149706ece4c72462121dc89c77c9993b887d73f1529f1e299c9c53f",
+  "3472248460/events/decolonization/ztr_decolonization_phases.txt": "a8e445a558cfea0fc295891679d06af7d20280adb18e8de2bedf3e714ec1dfbf",
+  "3472248460/events/decolonization/ztr_decolonization_slavery.txt": "dac2022d91e6fd8044afb2b8aea9b806c403c3420048760ba09176605a7c9238",
+  "3472248460/events/international_organizations/imf_events.txt": "e649ddcfd27efc36eaef5344a3c85ed723b1bb9573179ee715ca9312b1e43630",
+  "3472248460/events/international_organizations/imf_modernization.txt": "d026777df8f72c7bdb73363f3be2e1386aa29071e54376fc9f1ff8ba854d39a7",
+  "3472248460/events/international_organizations/un_events.txt": "c034055f19f4c79fa75b02b83b8c43ac25688d812ba2b23f681e2fbbaf67e20a",
+  "3768192009/common/ai_strategies/ztr_default_strategy.txt": "832d4a32e81a7e1196d90a0a4d5553575da8b154319673f7bd5fd76abb517121",
+  "3768192009/common/ai_strategies/ztr_diplomatic_strategies.txt": "218028090f64a1dd625c79d42979aa3e5a342820e745c8242ee2e7e13b24d551"
+}

@@ -1,0 +1,55 @@
+ffpa_sc_overview = {
+ # Ranking helpers require a country ROOT, supplied by this journal entry.
+ immediate = { ztr_un_permanent_member_ranking_variables = yes ztr_un_permanent_member_ranking_effect = yes }
+ on_yearly_pulse = { effect = { ztr_un_permanent_member_ranking_variables = yes ztr_un_permanent_member_ranking_effect = yes } }
+ icon = "gfx/interface/icons/event_icons/united_nations.dds"
+ group = je_group_foreign_affairs
+ is_shown_when_inactive = { ffpa_sc_member = yes }
+ possible = { ffpa_sc_member = yes }
+ can_deactivate = yes
+ transferable = no
+ progressbar = no
+ weight = 100
+ scripted_button = ffpa_sc_propose_education
+ scripted_button = ffpa_sc_propose_trade
+ scripted_button = ffpa_sc_propose_works
+ scripted_button = ffpa_sc_vote_support
+ scripted_button = ffpa_sc_vote_against
+ scripted_button = ffpa_sc_vote_abstain
+ scripted_button = ffpa_sc_join_education
+ scripted_button = ffpa_sc_leave_education
+ scripted_button = ffpa_sc_join_trade
+ scripted_button = ffpa_sc_leave_trade
+ scripted_button = ffpa_sc_start_works
+ status_desc = {
+  first_valid = {
+   triggered_desc = { trigger = { ffpa_sc_operational = no } desc = ffpa_sc_status_dormant }
+   triggered_desc = { trigger = { has_global_variable = ffpa_sc_vote } desc = ffpa_sc_status_voting }
+   triggered_desc = { trigger = { has_global_variable = ffpa_sc_pending } desc = ffpa_sc_status_pending }
+   triggered_desc = { trigger = { has_global_variable = ffpa_sc_cooldown } desc = ffpa_sc_status_cooldown }
+   triggered_desc = { trigger = { always = yes } desc = ffpa_sc_status_ready }
+  }
+ }
+}
+ffpa_sc_task_journal = {
+ icon = "gfx/interface/icons/event_icons/academia.dds"
+ group = je_group_foreign_affairs
+ is_shown_when_inactive = { ffpa_sc_member = yes has_variable = ffpa_sc_task }
+ possible = { ffpa_sc_member = yes has_variable = ffpa_sc_task }
+ can_deactivate = yes
+ transferable = no
+ progressbar = no
+ weight = 100
+ scripted_button = ffpa_sc_reform
+ scripted_button = ffpa_sc_stop_task
+ status_desc = {
+  first_valid = {
+   triggered_desc = { trigger = { var:ffpa_sc_task = 3 } desc = ffpa_sc_task_works }
+   triggered_desc = { trigger = { enacting_any_law = yes } desc = ffpa_sc_task_enacting }
+   triggered_desc = { trigger = { relative_bureaucracy < 0.20 } desc = ffpa_sc_task_budget }
+   triggered_desc = { trigger = { var:ffpa_sc_task = 1 ffpa_sc_child_law_ready = no } desc = ffpa_sc_task_children }
+   triggered_desc = { trigger = { var:ffpa_sc_task = 1 } desc = ffpa_sc_task_schools }
+   triggered_desc = { trigger = { always = yes } desc = ffpa_sc_task_trade }
+  }
+ }
+}

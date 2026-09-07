@@ -1,0 +1,14 @@
+# Retired OTL subsystem. Keep IDs to safely consume old queued events.
+namespace = ztr_decolonization_phases
+ztr_decolonization_phases.1 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.2 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.3 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.4 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.5 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.6 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.7 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.8 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.9 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.10 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.11 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_decolonization_phases.12 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }

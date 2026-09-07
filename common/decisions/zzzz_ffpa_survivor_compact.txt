@@ -1,0 +1,54 @@
+ffpa_sc_found_decision = {
+ is_shown = { NOT = { has_global_variable = ffpa_sc_founded } NOT = { has_global_variable = un_founded_var } ffpa_sc_eligible = yes has_technology_researched = international_organizations }
+ possible = { always = yes }
+ when_taken = {
+  ffpa_sc_ensure_initialized = yes
+  set_global_variable = ffpa_sc_founded
+  set_global_variable = un_founded_var
+  ffpa_sc_join = yes
+  set_variable = ffpa_sc_willing
+  set_variable = ffpa_sc_coordinator
+  ffpa_sc_refresh = yes
+  every_country = {
+   limit = { ffpa_sc_eligible = yes NOT = { ffpa_sc_member = yes } }
+   trigger_event = ffpa_sc.1
+  }
+ }
+ ai_chance = {
+  value = 0
+  if = {
+   limit = {
+    ffpa_sc_ai_solvent = yes influence > 0
+    any_country = { ffpa_sc_eligible = yes NOT = { this = root } relations:root >= relations_threshold:cordial scaled_debt < 0.25 influence > 0 }
+   }
+   add = 10
+  }
+ }
+}
+ffpa_sc_join_decision = {
+ is_shown = { has_global_variable = ffpa_sc_founded ffpa_sc_eligible = yes NOT = { ffpa_sc_member = yes } }
+ possible = { always = yes }
+ when_taken = { ffpa_sc_join = yes }
+ ai_chance = { value = 0 if = { limit = { influence > 0 scaled_debt < 0.25 } add = 10 } }
+}
+ffpa_sc_leave_decision = {
+ is_shown = { ffpa_sc_member = yes }
+ possible = { always = yes }
+ when_taken = { ffpa_sc_leave = yes ffpa_sc_count_votes = yes }
+ ai_chance = { value = 0 if = { limit = { influence < 0 scaled_debt > 0.50 } add = 5 } }
+}
+ffpa_sc_volunteer_decision = {
+ is_shown = { ffpa_sc_member = yes NOT = { has_variable = ffpa_sc_willing } }
+ possible = { always = yes }
+ when_taken = {
+  set_variable = ffpa_sc_willing
+  if = { limit = { NOT = { has_global_variable = ffpa_sc_vote } } ffpa_sc_fill_seats = yes }
+ }
+ ai_chance = { value = 0 }
+}
+ffpa_sc_resign_decision = {
+ is_shown = { ffpa_sc_member = yes has_variable = ffpa_sc_willing }
+ possible = { always = yes }
+ when_taken = { remove_variable = ffpa_sc_willing remove_variable = ffpa_sc_coordinator ffpa_sc_refresh = yes }
+ ai_chance = { value = 0 }
+}

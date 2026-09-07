@@ -1,0 +1,174 @@
+# Scoped overlays only; no settlement/war logic copied.
+INJECT:ai_strategy_territorial_expansion = {
+	weight = {
+		value = 10
+
+		if = {
+			limit = {
+				exists = c:FRA
+				c:FRA = this
+				ruler = {
+					has_variable = house_bonaparte
+				}
+			}
+			add = 5
+		}
+
+		# AI implications for Power Blocs: 'Territorial Expansion' strategy is more likely for Blocs with Aggressive Coordination
+		if = {
+			limit = {
+				power_bloc ?= {
+					has_principle_group = principle_group:principle_group_aggressive_coordination
+				}
+			}
+			add = 5
+		}
+
+		# High-fervour AI is inclined to take its homelands
+		if = {
+			limit = {
+				country_fervor_primary_culture > 10
+			}
+			add = {
+				value = country_fervor_primary_culture
+				divide = 2
+			}
+		}
+
+		if = {
+			limit = { ig:ig_armed_forces ?= { is_powerful = yes } }
+			multiply = 1.5
+		}
+
+		if = {
+			limit = { is_in_geographic_region = geographic_region_europe }
+			multiply = 0.25
+		}
+
+		if = {
+			limit = { has_radical_leftist_government = yes }
+			multiply = 0.5
+		}
+
+		#T&R: After 1945 territorial expansion is less available with UN
+		# Removed technology/member-based UN restriction.
+
+	}
+}
+INJECT:ai_strategy_colonial_expansion = {
+	weight = {
+		value = 10
+
+		if = {
+			limit = {
+				exists = c:FRA
+				c:FRA = this
+				ruler = {
+					has_variable = house_bonaparte
+				}
+			}
+			add = 10
+		}
+
+		if = {
+			limit = {
+				has_journal_entry = je_scramble_for_africa
+			}
+			add = 20
+		}
+
+		if = {
+			limit = { country_rank = rank_value:major_power }
+			add = 5
+		}
+
+		if = {
+			limit = { country_rank = rank_value:great_power }
+			add = 5
+		}
+
+		# AI implications for Power Blocs: 'Colonial Expansion' strategy is more likely for Blocs with Colonial Offices
+		if = {
+			limit = {
+				power_bloc ?= {
+					has_principle_group = principle_group:principle_group_colonial_offices
+				}
+			}
+			add = 5
+		}
+
+		if = {
+			limit = { navy_size < 50 }
+			multiply = 0.5
+		}
+
+		if = {
+			limit = { navy_size >= 75 }
+			multiply = 1.5
+		}
+
+		if = {
+			limit = { has_technology_researched = civilizing_mission }
+			multiply = 1.5
+		}
+
+		if = {
+			limit = {
+				power_bloc ?= { has_principle_group = principle_group:principle_group_colonial_offices }
+			}
+			multiply = 1.5
+		}
+
+		if = {
+			limit = {
+				has_journal_entry = je_hispanoamerica
+			}
+			multiply = 0.5
+		}
+
+		if = {
+			limit = { has_radical_leftist_government = yes }
+			multiply = 0.01
+		}
+
+		#T&R: After this colonial expansion is not possible
+		# Removed technology/member-based UN restriction.
+
+	}
+}
+
+INJECT:ai_strategy_default = {
+institution_scores = {
+		institution_colonial_affairs = {
+			value = 10
+		}
+		institution_social_security = {
+			value = 10
+		}
+		institution_workplace_safety = {
+			value = 10
+		}
+		institution_schools = {
+   value = 10
+   if = {
+    limit = { var:ffpa_sc_task = 1 ffpa_sc_member = yes relative_bureaucracy >= 0.20 NOT = { institution_investment_level = { institution = institution_schools value >= 1 } } }
+    add = 100
+   }
+
+
+		}
+		institution_police = {
+			value = 10
+		}
+		institution_health_system = {
+			value = 10
+		}
+		institution_home_affairs = {
+			value = 10
+		}
+		#T&R
+		institution_environmental_policy = {
+			value = 10
+		}
+	}
+}

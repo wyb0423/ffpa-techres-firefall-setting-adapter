@@ -1,0 +1,38 @@
+namespace = ffpa_sc
+ffpa_sc.1 = {
+ type = country_event
+ title = ffpa_sc.1.t
+ desc = ffpa_sc.1.d
+ duration = 3
+ trigger = { ffpa_sc_eligible = yes NOT = { ffpa_sc_member = yes } has_global_variable = ffpa_sc_founded }
+ option = { name = ffpa_sc_accept ffpa_sc_join = yes ai_chance = { value = 10 if = { limit = { OR = { influence < 0 scaled_debt > 0.25 } } multiply = 0 } } }
+ option = { name = ffpa_sc_decline ai_chance = { value = 3 } }
+}
+ffpa_sc.2 = {
+ type = country_event
+ title = ffpa_sc.2.t
+ desc = ffpa_sc.2.d
+ duration = 3
+ option = { name = ffpa_sc_ack ai_chance = { value = 1 } }
+}
+ffpa_sc.3 = {
+ type = country_event
+ title = ffpa_sc.3.t
+ desc = ffpa_sc.3.d
+ duration = 3
+ option = { name = ffpa_sc_ack ai_chance = { value = 1 } }
+}
+ffpa_sc.4 = {
+ type = country_event
+ title = ffpa_sc.4.t
+ desc = ffpa_sc.4.d
+ duration = 3
+ option = { name = ffpa_sc_ack ai_chance = { value = 1 } }
+}
+ffpa_sc.5 = {
+ type = country_event
+ title = ffpa_sc.5.t
+ desc = ffpa_sc.5.d
+ duration = 3
+ option = { name = ffpa_sc_ack ai_chance = { value = 1 } }
+}

@@ -1,0 +1,6 @@
+# Retired controls; the compact has guarded replacements.
+ztr_un_open_governance_menu = { name = ztr_un_open_governance_menu desc = ztr_un_open_governance_menu_desc visible = { always = no } possible = { always = no } effect = { } ai_chance = { value = 0 } }
+ztr_un_open_human_rights_menu = { name = ztr_un_open_human_rights_menu desc = ztr_un_open_human_rights_menu_desc visible = { always = no } possible = { always = no } effect = { } ai_chance = { value = 0 } }
+ztr_un_open_institutions_menu = { name = ztr_un_open_institutions_menu desc = ztr_un_open_institutions_menu_desc visible = { always = no } possible = { always = no } effect = { } ai_chance = { value = 0 } }
+ztr_un_vote_for_statement = { name = ztr_un_vote_for_statement desc = ztr_un_vote_for_statement_desc visible = { always = no } possible = { always = no } effect = { } ai_chance = { value = 0 } }
+ztr_un_vote_against_statement = { name = ztr_un_vote_against_statement desc = ztr_un_vote_against_statement_desc visible = { always = no } possible = { always = no } effect = { } ai_chance = { value = 0 } }

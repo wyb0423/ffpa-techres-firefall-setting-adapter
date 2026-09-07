@@ -1,0 +1,3 @@
+# Retired journals. New overview/tasks are in ffpa_survivor_compact.txt.
+je_un_info_panel = { icon = "gfx/interface/icons/event_icons/united_nations.dds" possible = { always = no } is_shown_when_inactive = { always = no } invalid = { always = yes } can_deactivate = yes }
+je_un_votations = { icon = "gfx/interface/icons/event_icons/united_nations.dds" possible = { always = no } is_shown_when_inactive = { always = no } invalid = { always = yes } can_deactivate = yes }

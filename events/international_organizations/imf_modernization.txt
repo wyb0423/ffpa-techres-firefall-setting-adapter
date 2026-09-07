@@ -1,0 +1,9 @@
+# Retired OTL subsystem. Keep IDs to safely consume old queued events.
+namespace = ztr_imf_modernization
+ztr_imf_modernization.10 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_imf_modernization.11 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_imf_modernization.12 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_imf_modernization.13 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_imf_modernization.14 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_imf_modernization.15 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+ztr_imf_modernization.20 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }

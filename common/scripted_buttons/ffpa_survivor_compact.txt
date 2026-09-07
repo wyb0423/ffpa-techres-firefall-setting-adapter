@@ -1,0 +1,126 @@
+ffpa_sc_propose_education = {
+ name = ffpa_sc_propose_education
+ desc = ffpa_sc_propose_education_desc
+ visible = { has_variable = ffpa_sc_coordinator NOT = { has_global_variable = ffpa_sc_education_open } }
+ possible = { ffpa_sc_can_propose = yes }
+ effect = { if = { limit = { ffpa_sc_can_propose = yes NOT = { has_global_variable = ffpa_sc_education_open } }
+ set_global_variable = { name = ffpa_sc_pending value = 1 }
+ set_variable = ffpa_sc_proposer
+ } }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_propose_trade = {
+ name = ffpa_sc_propose_trade
+ desc = ffpa_sc_propose_trade_desc
+ visible = { has_variable = ffpa_sc_coordinator NOT = { has_global_variable = ffpa_sc_trade_open } }
+ possible = { ffpa_sc_can_propose = yes }
+ effect = { if = { limit = { ffpa_sc_can_propose = yes NOT = { has_global_variable = ffpa_sc_trade_open } }
+ set_global_variable = { name = ffpa_sc_pending value = 2 }
+ set_variable = ffpa_sc_proposer
+ } }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_propose_works = {
+ name = ffpa_sc_propose_works
+ desc = ffpa_sc_propose_works_desc
+ visible = { has_variable = ffpa_sc_coordinator NOT = { has_global_variable = ffpa_sc_works_open } }
+ possible = { ffpa_sc_can_propose = yes }
+ effect = { if = { limit = { ffpa_sc_can_propose = yes NOT = { has_global_variable = ffpa_sc_works_open } }
+ set_global_variable = { name = ffpa_sc_pending value = 3 }
+ set_variable = ffpa_sc_proposer
+ } }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_vote_support = {
+ name = ffpa_sc_vote_support
+ desc = ffpa_sc_vote_support_desc
+ visible = { ffpa_sc_can_vote = yes }
+ possible = { ffpa_sc_can_vote = yes }
+ effect = { if = { limit = { ffpa_sc_can_vote = yes } set_variable = { name = ffpa_sc_choice value = 1 } ffpa_sc_count_votes = yes } }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_vote_against = {
+ name = ffpa_sc_vote_against
+ desc = ffpa_sc_vote_against_desc
+ visible = { ffpa_sc_can_vote = yes }
+ possible = { ffpa_sc_can_vote = yes }
+ effect = { if = { limit = { ffpa_sc_can_vote = yes } set_variable = { name = ffpa_sc_choice value = -1 } ffpa_sc_count_votes = yes } }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_vote_abstain = {
+ name = ffpa_sc_vote_abstain
+ desc = ffpa_sc_vote_abstain_desc
+ visible = { ffpa_sc_can_vote = yes }
+ possible = { ffpa_sc_can_vote = yes }
+ effect = { if = { limit = { ffpa_sc_can_vote = yes } set_variable = { name = ffpa_sc_choice value = 0 } ffpa_sc_count_votes = yes } }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_join_education = {
+ name = ffpa_sc_join_education
+ desc = ffpa_sc_join_education_desc
+ visible = { has_global_variable = ffpa_sc_education_open NOT = { has_variable = ffpa_sc_education_joined } }
+ possible = { ffpa_sc_can_join_education = yes }
+ effect = { ffpa_sc_join_education = yes }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_leave_education = {
+ name = ffpa_sc_leave_education
+ desc = ffpa_sc_leave_education_desc
+ visible = { has_variable = ffpa_sc_education_joined }
+ possible = { always = yes }
+ effect = { ffpa_sc_leave_education = yes }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_join_trade = {
+ name = ffpa_sc_join_trade
+ desc = ffpa_sc_join_trade_desc
+ visible = { has_global_variable = ffpa_sc_trade_open NOT = { has_variable = ffpa_sc_trade_joined } }
+ possible = { ffpa_sc_can_join_trade = yes }
+ effect = { ffpa_sc_join_trade = yes }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_leave_trade = {
+ name = ffpa_sc_leave_trade
+ desc = ffpa_sc_leave_trade_desc
+ visible = { has_variable = ffpa_sc_trade_joined }
+ possible = { always = yes }
+ effect = { ffpa_sc_leave_trade = yes }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_start_works = {
+ name = ffpa_sc_start_works
+ desc = ffpa_sc_start_works_desc
+ visible = { has_global_variable = ffpa_sc_works_open NOT = { var:ffpa_sc_task = 3 } }
+ possible = { ffpa_sc_member = yes ffpa_sc_operational = yes NOT = { has_variable = ffpa_sc_task } NOT = { has_variable = ffpa_sc_works_retry } ffpa_sc_has_work = yes }
+ effect = { ffpa_sc_start_works = yes }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_reform = {
+ name = ffpa_sc_reform
+ desc = ffpa_sc_reform_desc
+ visible = { OR = { var:ffpa_sc_task = 1 var:ffpa_sc_task = 2 } }
+ possible = { ffpa_sc_can_reform = yes }
+ effect = { ffpa_sc_reform = yes }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}
+ffpa_sc_stop_task = {
+ name = ffpa_sc_stop_task
+ desc = ffpa_sc_stop_task_desc
+ visible = { has_variable = ffpa_sc_task }
+ possible = { always = yes }
+ effect = { ffpa_sc_stop_task = yes ffpa_sc_refresh = yes }
+ # AI calls the same guarded effects from the global monthly management pass.
+ ai_chance = { value = 0 }
+}

@@ -1,0 +1,5 @@
+# Retired OTL subsystem. Keep IDs to safely consume old queued events.
+namespace = colony_pop
+colony_pop.1 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+colony_pop.2 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }
+colony_pop.3 = { type = country_event hidden = yes trigger = { always = no } immediate = { } }

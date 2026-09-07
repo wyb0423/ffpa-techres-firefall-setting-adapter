@@ -1,0 +1,4 @@
+# Compatibility no-ops: prevent old GUI/buttons/on_actions from restoring OTL rules.
+remove_imf_modifier = { }
+ztr_un_apply_member_institution_modifiers = { }
+ztr_un_remove_member_institution_modifiers = { }

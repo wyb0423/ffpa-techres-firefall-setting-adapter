@@ -1,0 +1,44 @@
+ffpa_sc_education_status = {
+ type = country
+ text = { trigger = { has_modifier = ffpa_sc_education_modifier } localization_key = ffpa_sc_label_active }
+ text = { trigger = { var:ffpa_sc_task = 1 } localization_key = ffpa_sc_label_preparing }
+ text = { trigger = { has_variable = ffpa_sc_education_joined } localization_key = ffpa_sc_label_paused }
+ text = { trigger = { has_variable = ffpa_sc_education_retry NOT = { has_variable = ffpa_sc_education_window } } localization_key = ffpa_sc_label_retry }
+ text = { trigger = { has_global_variable = ffpa_sc_education_open } localization_key = ffpa_sc_label_available }
+ text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }
+}
+ffpa_sc_trade_status = {
+ type = country
+ text = { trigger = { has_modifier = ffpa_sc_trade_modifier } localization_key = ffpa_sc_label_active }
+ text = { trigger = { var:ffpa_sc_task = 2 } localization_key = ffpa_sc_label_preparing }
+ text = { trigger = { has_variable = ffpa_sc_trade_joined } localization_key = ffpa_sc_label_paused }
+ text = { trigger = { has_variable = ffpa_sc_trade_retry NOT = { has_variable = ffpa_sc_trade_window } } localization_key = ffpa_sc_label_retry }
+ text = { trigger = { has_global_variable = ffpa_sc_trade_open } localization_key = ffpa_sc_label_available }
+ text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }
+}
+ffpa_sc_works_status = {
+ type = country
+ text = { trigger = { var:ffpa_sc_task = 3 } localization_key = ffpa_sc_label_active }
+ text = { trigger = { has_variable = ffpa_sc_works_retry } localization_key = ffpa_sc_label_retry }
+ text = { trigger = { has_global_variable = ffpa_sc_works_open } localization_key = ffpa_sc_label_available }
+ text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }
+}
+ffpa_sc_vote_subject = {
+ type = country
+ text = { trigger = { global_var:ffpa_sc_vote = 1 } localization_key = ffpa_sc_label_education }
+ text = { trigger = { global_var:ffpa_sc_vote = 2 } localization_key = ffpa_sc_label_trade }
+ text = { trigger = { global_var:ffpa_sc_vote = 3 } localization_key = ffpa_sc_label_works }
+ text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }
+}
+ffpa_sc_my_vote = {
+ type = country
+ text = { trigger = { NOT = { has_variable = ffpa_sc_ballot_eligible } } localization_key = ffpa_sc_label_ineligible }
+ text = { trigger = { var:ffpa_sc_choice = 1 } localization_key = ffpa_sc_label_yes }
+ text = { trigger = { var:ffpa_sc_choice = -1 } localization_key = ffpa_sc_label_no }
+ text = { trigger = { always = yes } localization_key = ffpa_sc_label_neutral }
+}
+ffpa_sc_vote_result = {
+ type = country
+ text = { trigger = { global_var:ffpa_sc_last_result = 1 } localization_key = ffpa_sc_result_pass }
+ text = { trigger = { always = yes } localization_key = ffpa_sc_result_fail }
+}

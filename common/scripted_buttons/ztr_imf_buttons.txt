@@ -1,0 +1,4 @@
+# Retired controls; the compact has guarded replacements.
+ztr_imf_request_technical_mission = { name = ztr_imf_request_technical_mission desc = ztr_imf_request_technical_mission_desc visible = { always = no } possible = { always = no } effect = { } ai_chance = { value = 0 } }
+ztr_imf_launch_development_plan = { name = ztr_imf_launch_development_plan desc = ztr_imf_launch_development_plan_desc visible = { always = no } possible = { always = no } effect = { } ai_chance = { value = 0 } }
+ztr_imf_seek_scholarships = { name = ztr_imf_seek_scholarships desc = ztr_imf_seek_scholarships_desc visible = { always = no } possible = { always = no } effect = { } ai_chance = { value = 0 } }

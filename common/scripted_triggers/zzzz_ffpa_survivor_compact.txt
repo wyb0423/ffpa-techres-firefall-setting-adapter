@@ -1,0 +1,116 @@
+ffpa_sc_eligible = {
+ is_subject = no
+ is_revolutionary = no
+ is_secessionist = no
+ NOT = { is_country_type = decentralized }
+ exists = capital
+}
+ffpa_sc_member = { has_variable = ffpa_sc_membership }
+# Preserve nuclear-treaty membership checks without preserving obsolete modifiers.
+ztr_is_un_member = { ffpa_sc_member = yes }
+ffpa_sc_operational = {
+ has_global_variable = ffpa_sc_founded
+ any_country = { count >= 2 ffpa_sc_member = yes ffpa_sc_eligible = yes }
+}
+ffpa_sc_child_law_ready = {
+ OR = {
+  has_law_or_variant = law_type:law_restricted_child_labor
+  has_law_or_variant = law_type:law_compulsory_primary_school
+ }
+}
+ffpa_sc_education_ready = {
+ ffpa_sc_child_law_ready = yes
+ institution_investment_level = { institution = institution_schools value >= 1 }
+}
+# Evaluate the actual trade prohibition; canton-system variants can trade.
+ffpa_sc_trade_ready = { modifier:country_disallow_trade_bool = no }
+ffpa_sc_can_propose = {
+ ffpa_sc_operational = yes
+ has_variable = ffpa_sc_coordinator
+ NOT = { has_global_variable = ffpa_sc_vote }
+ NOT = { has_global_variable = ffpa_sc_pending }
+ NOT = { has_global_variable = ffpa_sc_cooldown }
+}
+ffpa_sc_can_vote = {
+ ffpa_sc_member = yes
+ has_variable = ffpa_sc_ballot_eligible
+ has_global_variable = ffpa_sc_vote
+}
+ffpa_sc_ai_solvent = {
+ relative_bureaucracy >= 0.20
+ scaled_debt < 0.25
+ is_at_war = no
+}
+ffpa_sc_has_work = {
+ any_scope_building = { is_under_construction = yes }
+}
+# Law scope. Availability checks engine technology, exclusions and visibility.
+ffpa_sc_reform_law = {
+ law_is_available = yes
+ owner = {
+  enacting_any_law = no
+  NOT = { has_law = prev.type }
+  "enactment_chance_for_law(prev.type)" > 0.10
+ }
+ OR = {
+  AND = {
+   owner = { var:ffpa_sc_task = 1 ffpa_sc_child_law_ready = no }
+   OR = { type = law_type:law_restricted_child_labor type = law_type:law_compulsory_primary_school }
+  }
+  AND = {
+   owner = { var:ffpa_sc_task = 1 NOT = { institution_investment_level = { institution = institution_schools value >= 1 } } }
+   OR = { type = law_type:law_religious_schools type = law_type:law_private_schools type = law_type:law_public_schools }
+  }
+  AND = {
+   owner = { var:ffpa_sc_task = 2 ffpa_sc_trade_ready = no }
+   OR = { type = law_type:law_mercantilism type = law_type:law_protectionism type = law_type:law_free_trade }
+  }
+ }
+}
+ffpa_sc_can_reform = {
+ ffpa_sc_member = yes
+ ffpa_sc_operational = yes
+ OR = { var:ffpa_sc_task = 1 var:ffpa_sc_task = 2 }
+ enacting_any_law = no
+ NOT = { has_variable = ffpa_sc_reform_retry }
+ any_law = { ffpa_sc_reform_law = yes }
+}
+
+ffpa_sc_can_join_education = {
+ ffpa_sc_member = yes ffpa_sc_operational = yes
+ has_global_variable = ffpa_sc_education_open
+ NOT = { has_variable = ffpa_sc_education_joined }
+ OR = { NOT = { has_variable = ffpa_sc_education_retry } has_variable = ffpa_sc_education_window }
+ OR = { ffpa_sc_education_ready = yes NOT = { has_variable = ffpa_sc_task } }
+}
+
+ffpa_sc_can_join_trade = {
+ ffpa_sc_member = yes ffpa_sc_operational = yes
+ has_global_variable = ffpa_sc_trade_open
+ NOT = { has_variable = ffpa_sc_trade_joined }
+ OR = { NOT = { has_variable = ffpa_sc_trade_retry } has_variable = ffpa_sc_trade_window }
+ OR = { ffpa_sc_trade_ready = yes NOT = { has_variable = ffpa_sc_task } }
+}
+
+ffpa_sc_education_feasible = {
+ OR = { ffpa_sc_child_law_ready = yes
+  any_law = { law_is_available = yes OR = { type = law_type:law_restricted_child_labor type = law_type:law_compulsory_primary_school }
+   owner = { "enactment_chance_for_law(prev.type)" > 0.10 }
+  }
+ }
+ OR = { institution_investment_level = { institution = institution_schools value >= 1 } OR = { has_law_or_variant = law_type:law_religious_schools has_law_or_variant = law_type:law_private_schools has_law_or_variant = law_type:law_public_schools }
+  any_law = { law_is_available = yes OR = { type = law_type:law_religious_schools type = law_type:law_private_schools type = law_type:law_public_schools }
+   owner = { "enactment_chance_for_law(prev.type)" > 0.10 }
+  }
+ }
+}
+
+ffpa_sc_trade_feasible = {
+ OR = { ffpa_sc_trade_ready = yes
+  any_law = { law_is_available = yes OR = { type = law_type:law_mercantilism type = law_type:law_protectionism type = law_type:law_free_trade }
+   owner = { "enactment_chance_for_law(prev.type)" > 0.10 }
+  }
+ }
+}
+
+ztr_decolonization_age_active = { always = no }

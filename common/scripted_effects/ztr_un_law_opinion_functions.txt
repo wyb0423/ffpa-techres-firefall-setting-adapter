@@ -1,0 +1,11 @@
+# Compatibility no-ops: prevent old GUI/buttons/on_actions from restoring OTL rules.
+ztr_un_random_subject_and_law_extraction = { }
+ztr_un_prioritize_first_institution_establishment_vote = { }
+ztr_un_set_possible_law_as_considered = { }
+ztr_un_set_current_law_as_considered = { }
+ztr_un_set_vote_proposal_as_considered = { }
+ztr_un_set_current_vote_law_as_considered = { }
+ztr_un_ai_try_start_possible_vote = { }
+ztr_un_ai_take_neutral_vote_position = { }
+ztr_un_value_law_prepare_country_context = { }
+ztr_un_value_law = { }

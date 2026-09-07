@@ -1,0 +1,91 @@
+ffpa_sc_ensure_initialized = {
+ if = {
+  limit = { NOT = { has_global_variable = ffpa_sc_schema_1 } }
+  set_global_variable = ffpa_sc_schema_1
+  if = { limit = { has_global_variable = un_founded_var } set_global_variable = ffpa_sc_founded }
+  if = { limit = { global_var:ztr_un_institution_unesco = 1 } set_global_variable = ffpa_sc_education_open }
+  if = { limit = { global_var:ztr_un_institution_wto = 1 } set_global_variable = ffpa_sc_trade_open }
+  if = { limit = { global_var:ztr_un_institution_imf = 1 } set_global_variable = ffpa_sc_works_open }
+  every_country = {
+   if = {
+    limit = { OR = { has_modifier = ztr_onu_member has_modifier = ztr_onu_permanent_member } }
+    if = { limit = { ffpa_sc_eligible = yes } set_variable = ffpa_sc_membership }
+    if = { limit = { is_ai = no } trigger_event = ffpa_sc.5 }
+   }
+   remove_modifier = imf_modernization_research_bonus_modifier
+   remove_modifier = extreme_imf_help_modifier
+   remove_modifier = big_imf_help_modifier
+   remove_modifier = medium_imf_help_modifier
+   remove_modifier = small_imf_help_modifier
+   remove_modifier = tiny_imf_help_modifier
+   remove_modifier = imf_modernization_commitment_modifier
+   remove_modifier = imf_scholarship_fund_modifier
+   remove_modifier = imf_emigration_restriction_modifier
+   remove_modifier = imf_brain_drain_modifier
+   remove_modifier = imf_austerity_accepted_modifier
+   remove_modifier = imf_partial_austerity_modifier
+   remove_modifier = imf_foreign_investment_modifier
+   remove_modifier = imf_joint_venture_modifier
+   remove_modifier = imf_nationalization_modifier
+   remove_modifier = imf_rural_schools_modifier
+   remove_modifier = imf_media_literacy_modifier
+   remove_modifier = imf_religious_education_modifier
+   remove_modifier = imf_political_repression_modifier
+   remove_modifier = imf_political_cooperation_modifier
+   remove_modifier = imf_public_consultation_modifier
+   remove_modifier = imf_technical_mission_modifier
+   remove_modifier = imf_development_plan_modifier
+   remove_modifier = imf_foreign_scholarships_modifier
+   remove_modifier = ztr_wto_member_modifier
+   remove_modifier = ztr_icc_member_modifier
+   remove_modifier = ztr_icc_investigation_modifier
+   remove_modifier = ztr_unesco_member_modifier
+   remove_modifier = ztr_onu_member
+   remove_modifier = ztr_onu_permanent_member
+   every_interest_group = { remove_modifier = imf_ig_repression_modifier remove_modifier = imf_ig_cooperation_modifier }
+   remove_variable = ztr_un_vote_choice_against
+   remove_variable = ztr_un_vote_choice_neutral
+   remove_variable = ztr_un_vote_choice_support
+   remove_variable = ztr_un_vote_eligible
+   remove_variable = ztr_un_vote_proposer
+   remove_variable = ztr_un_vote_weight
+   remove_variable = ztr_decolonization_pressure_var
+  }
+  remove_global_variable = ztr_global_decolonization_pressure_var
+  remove_global_variable = ztr_un_button_opened
+  remove_global_variable = ztr_un_hr_children_rights
+  remove_global_variable = ztr_un_hr_decolonization
+  remove_global_variable = ztr_un_hr_slavery
+  remove_global_variable = ztr_un_hr_women_rights
+  remove_global_variable = ztr_un_institution_icc
+  remove_global_variable = ztr_un_institution_imf
+  remove_global_variable = ztr_un_institution_unesco
+  remove_global_variable = ztr_un_institution_wto
+  remove_global_variable = ztr_un_law_member_selection
+  remove_global_variable = ztr_un_law_veto_right
+  remove_global_variable = ztr_un_law_voting_model
+  remove_global_variable = ztr_un_vote_active
+  remove_global_variable = ztr_un_vote_against_count
+  remove_global_variable = ztr_un_vote_against_percent
+  remove_global_variable = ztr_un_vote_cd
+  remove_global_variable = ztr_un_vote_in_progress
+  remove_global_variable = ztr_un_vote_months_remaining
+  remove_global_variable = ztr_un_vote_neutral_count
+  remove_global_variable = ztr_un_vote_neutral_percent
+  remove_global_variable = ztr_un_vote_proposal
+  remove_global_variable = ztr_un_vote_subject
+  remove_global_variable = ztr_un_vote_support_count
+  remove_global_variable = ztr_un_vote_support_percent
+  remove_global_variable = ztr_un_vote_total_count
+  set_global_variable = { name = ztr_un_hr_decolonization value = 0 }
+  set_global_variable = { name = ztr_un_hr_slavery value = 0 }
+  set_global_variable = { name = ztr_un_hr_children_rights value = 0 }
+  set_global_variable = { name = ztr_un_hr_women_rights value = 0 }
+  set_global_variable = { name = ztr_un_institution_imf value = 0 }
+  set_global_variable = { name = ztr_un_institution_wto value = 0 }
+  set_global_variable = { name = ztr_un_institution_icc value = 0 }
+  set_global_variable = { name = ztr_un_institution_unesco value = 0 }
+  # No reliable remaining-time accessor for the old four-year marker: clear it once.
+  every_country = { limit = { ffpa_sc_member = yes } ffpa_sc_refresh = yes }
+ }
+}

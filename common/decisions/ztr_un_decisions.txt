@@ -1,0 +1,9 @@
+# Replaced by voluntary compact decisions.
+firm_ztr_geneva_convention = { is_shown = { always = no } possible = { always = no } when_taken = { } ai_chance = { value = 0 } }
+withdraw_ztr_geneva_convention = { is_shown = { always = no } possible = { always = no } when_taken = { } ai_chance = { value = 0 } }
+enter_ztr_society_of_nations = { is_shown = { always = no } possible = { always = no } when_taken = { } ai_chance = { value = 0 } }
+withdraw_ztr_society_of_nations = { is_shown = { always = no } possible = { always = no } when_taken = { } ai_chance = { value = 0 } }
+un_foundation = { is_shown = { always = no } possible = { always = no } when_taken = { } ai_chance = { value = 0 } }
+become_member_united_nations = { is_shown = { always = no } possible = { always = no } when_taken = { } ai_chance = { value = 0 } }
+withdraw_united_nations = { is_shown = { always = no } possible = { always = no } when_taken = { } ai_chance = { value = 0 } }
+become_permanent_member_united_nations = { is_shown = { always = no } possible = { always = no } when_taken = { } ai_chance = { value = 0 } }

@@ -1,0 +1,12 @@
+# Compatibility no-ops: prevent old GUI/buttons/on_actions from restoring OTL rules.
+ztr_un_vote_clear_results = { }
+join_un_law_changes = { }
+ztr_un_vote_recalculate_results = { }
+ztr_un_vote_refresh_results = { }
+ztr_un_vote_update_neutral_ai_positions = { }
+ztr_un_vote_update_results = { }
+ztr_un_init_governance_laws = { }
+ztr_un_start_governance_vote = { }
+ztr_un_apply_governance_vote = { }
+ztr_un_select_new_permanent_members = { }
+ztr_un_vote_cleanup_all_members = { }
