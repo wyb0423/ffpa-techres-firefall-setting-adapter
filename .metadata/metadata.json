@@ -1,7 +1,7 @@
 {
   "name": "FFPA — Tech & Res Firefall Setting Adapter",
   "id": "com.wyb.ffpa-techres-firefall-setting-adapter",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "supported_game_version": "1.13.*",
   "short_description": "Reframes selected late Tech & Res society technologies for the post-nuclear world of 2050: The Fire Falls.",
   "tags": [

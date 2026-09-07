@@ -2,6 +2,64 @@
 # 2050: The Fire Falls 0.1.1. Only the modifier blocks intentionally differ.
 # Load this adapter after both upstream mods.
 
+international_organizations = {
+	era = era_5
+	texture = "gfx/interface/icons/invention_icons/onu.dds"
+	category = society
+	modifier = {
+		country_infamy_generation_against_unrecognized_mult = 0.1
+		country_infamy_generation_mult = 0.05
+		country_influence_mult = 0.05
+		country_allow_int_org_participation_bool = yes
+	}
+	unlocking_technologies = {
+		feminism
+		international_exchange_standards
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
+decolonization = {
+	era = era_6
+	texture = "gfx/interface/icons/invention_icons/decolonization.dds"
+	category = society
+	modifier = {
+		country_prestige_mult = 0.1
+		country_infamy_generation_against_unrecognized_mult = 0.1
+		country_allow_decolonization_mechanics_bool = yes
+	}
+	unlocking_technologies = {
+		international_organizations
+		antibiotics
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
+neoimperialism = {
+	era = era_6
+	texture = "gfx/interface/icons/invention_icons/neoimperialism.dds"
+	category = society
+	modifier = {
+		country_influence_mult = 0.1
+		country_institution_cost_institution_police_mult = -0.1
+		country_infamy_generation_mult = 0.05
+		country_allow_superpower_mechanics_bool = yes
+	}
+	unlocking_technologies = {
+		socialdemocracy
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
 transnational_activism = {
 	era = era_8
 	texture = "gfx/interface/icons/invention_icons/transnational_activism.dds"

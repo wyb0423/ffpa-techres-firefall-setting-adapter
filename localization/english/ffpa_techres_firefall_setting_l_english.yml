@@ -1,4 +1,10 @@
 ﻿l_english:
+ international_organizations:0 "Survivor Accord System"
+ international_organizations_desc:0 "Scattered enclaves and successor governments can no longer rely on the old world's institutions to settle their disputes. Permanent delegations and negotiated accords give them a common language for recognition, mediation, and collective action. Cooperation extends their diplomatic reach, while shared rules make expansion harder to justify to their neighbours."
+ decolonization:0 "Recognition of Successor States"
+ decolonization_desc:0 "An old flag is no longer enough to establish authority over the people living beneath it. City councils, settlement assemblies, and successor governments press competing claims to sovereignty. A framework for recognising these claims gives the new states international standing and lends weight to demands for self-government against would-be restorers of empire."
+ neoimperialism:0 "Reconstruction Hegemony"
+ neoimperialism_desc:0 "States able to offer protection, aid, and administrative expertise gain influence over neighbours still struggling to survive. Shared policing arrangements reduce the cost of maintaining order, while garrisons and dependent administrations extend the patron's reach. Each assertion of power also deepens suspicion that reconstruction is becoming another name for empire."
  transnational_activism:0 "Cross-Border Solidarity Networks"
  transnational_activism_desc:0 "The fire erased many borders without erasing the need for cooperation. Radio relays, caravan couriers, and recovering data links let unions, scholars, and local associations exchange warnings, coordinate relief, and restrain new powers across the scattered settlements."
  global_stock_market:0 "Interregional Clearing Network"
