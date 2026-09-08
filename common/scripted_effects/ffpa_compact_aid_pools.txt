@@ -1,0 +1,249 @@
+# Shared engine for five real categories, not a second parliament clock.
+# POOL: stable category suffix; ID: task id above 3; READY: country trigger.
+# BENEFIT, COST, INCOME: category-specific static modifier IDs.
+# Concrete callers: ffpa_compact_aid_integration.txt; monthly owner is ffpa_sc_monthly.
+
+ffpa_sc_aid_collect_providers = {
+ set_global_variable = { name = ffpa_sc_aid_$POOL$_providers value = 0 }
+ every_country = {
+  remove_variable = ffpa_sc_aid_$POOL$_provider
+  if = {
+   limit = {
+    ffpa_sc_member = yes ffpa_sc_eligible = yes $READY$ = yes
+    NOT = { var:ffpa_sc_aid_kind = $ID$ }
+   }
+   set_variable = ffpa_sc_aid_$POOL$_provider
+   change_global_variable = { name = ffpa_sc_aid_$POOL$_providers add = 1 }
+  }
+ }
+}
+
+ffpa_sc_aid_open_registration = {
+ if = {
+  limit = { ffpa_sc_operational = yes NOT = { has_global_variable = ffpa_sc_aid_$POOL$_phase } }
+  ffpa_sc_aid_collect_providers = { POOL = $POOL$ ID = $ID$ READY = $READY$ }
+  set_global_variable = { name = ffpa_sc_aid_$POOL$_result value = 0 }
+  if = {
+   limit = { global_var:ffpa_sc_aid_$POOL$_providers > 0 }
+   set_global_variable = { name = ffpa_sc_aid_$POOL$_phase value = 1 }
+   set_global_variable = { name = ffpa_sc_aid_$POOL$_months value = 1 }
+  }
+ }
+}
+
+ffpa_sc_aid_register = {
+ if = {
+  limit = {
+   ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_operational = yes
+   global_var:ffpa_sc_aid_$POOL$_phase = 1
+   NOT = { has_variable = ffpa_sc_task }
+   NOT = { has_variable = ffpa_sc_aid_kind }
+   NOT = { has_variable = ffpa_sc_works_retry }
+   $READY$ = no in_default = no gdp > 0
+  }
+  set_variable = { name = ffpa_sc_aid_annual_rate value = $RATE$ }
+  if = {
+   limit = { ffpa_sc_aid_full_quote > 0 }
+   # Reserve the existing task slot, but do not start its retry timer or charge.
+   set_variable = { name = ffpa_sc_task value = $ID$ }
+   set_variable = { name = ffpa_sc_aid_kind value = $ID$ }
+   set_variable = { name = ffpa_sc_aid_quote value = ffpa_sc_aid_full_quote }
+  }
+  remove_variable = ffpa_sc_aid_annual_rate
+ }
+}
+
+ffpa_sc_aid_drop_recipient = {
+ if = {
+  limit = { var:ffpa_sc_aid_kind = $ID$ }
+  remove_variable = ffpa_sc_aid_kind
+  if = { limit = { var:ffpa_sc_task = $ID$ } remove_variable = ffpa_sc_task }
+  remove_variable = ffpa_sc_aid_quote
+  remove_variable = ffpa_sc_aid_strength
+  remove_variable = ffpa_sc_aid_paid_fee
+  remove_variable = ffpa_sc_aid_applied_strength
+  remove_variable = ffpa_sc_aid_reduced
+  remove_variable = ffpa_sc_aid_reviewed
+  remove_variable = ffpa_sc_aid_review_offered
+  if = { limit = { has_modifier = ffpa_sc_aid_fee_modifier } remove_modifier = ffpa_sc_aid_fee_modifier }
+  if = { limit = { has_modifier = $BENEFIT$ } remove_modifier = $BENEFIT$ }
+  # ffpa_sc_works_retry survives all forms of exit, including war and default.
+ }
+}
+
+ffpa_sc_aid_end_pool = {
+ every_country = {
+  ffpa_sc_aid_drop_recipient = { ID = $ID$ BENEFIT = $BENEFIT$ }
+  remove_variable = ffpa_sc_aid_$POOL$_provider
+  remove_variable = ffpa_sc_aid_$POOL$_income
+  remove_variable = ffpa_sc_aid_$POOL$_paid_income
+  if = { limit = { has_modifier = $COST$ } remove_modifier = $COST$ }
+  if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
+ }
+ remove_global_variable = ffpa_sc_aid_$POOL$_phase
+ remove_global_variable = ffpa_sc_aid_$POOL$_months
+ remove_global_variable = ffpa_sc_aid_$POOL$_providers
+ remove_global_variable = ffpa_sc_aid_$POOL$_recipients
+ remove_global_variable = ffpa_sc_aid_$POOL$_total
+ remove_global_variable = ffpa_sc_aid_$POOL$_strength
+}
+
+# Snapshot -> invalid recipients out -> fees -> provider allocations -> modifiers.
+# This refresh does not advance dates. Public exit/war handlers must invoke it.
+ffpa_sc_aid_settle_pool = {
+ if = {
+  limit = { has_global_variable = ffpa_sc_aid_$POOL$_phase }
+  ffpa_sc_aid_collect_providers = { POOL = $POOL$ ID = $ID$ READY = $READY$ }
+  set_global_variable = { name = ffpa_sc_aid_$POOL$_recipients value = 0 }
+  every_country = {
+   limit = { var:ffpa_sc_aid_kind = $ID$ }
+   if = {
+    limit = {
+     OR = {
+      ffpa_sc_member = no ffpa_sc_eligible = no ffpa_sc_operational = no
+      in_default = yes NOT = { var:ffpa_sc_task = $ID$ }
+      # ponytail: pair checks only for wartime recipients; use a native enemy
+      # iterator if profiling shows wartime scans dominate the monthly refresh.
+      AND = {
+       is_at_war = yes
+       any_country = { has_variable = ffpa_sc_aid_$POOL$_provider has_war_with = prev }
+      }
+     }
+    }
+    ffpa_sc_aid_drop_recipient = { ID = $ID$ BENEFIT = $BENEFIT$ }
+   }
+   else = { change_global_variable = { name = ffpa_sc_aid_$POOL$_recipients add = 1 } }
+  }
+  if = {
+   limit = {
+    OR = {
+     ffpa_sc_operational = no global_var:ffpa_sc_aid_$POOL$_providers = 0
+     AND = { global_var:ffpa_sc_aid_$POOL$_phase = 2 global_var:ffpa_sc_aid_$POOL$_recipients = 0 }
+    }
+   }
+   ffpa_sc_aid_end_pool = { POOL = $POOL$ ID = $ID$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+  }
+  else_if = {
+   limit = { global_var:ffpa_sc_aid_$POOL$_phase = 2 }
+   set_global_variable = { name = ffpa_sc_aid_$POOL$_strength value = 1 }
+   if = { limit = { global_var:ffpa_sc_aid_$POOL$_providers = 1 } set_global_variable = { name = ffpa_sc_aid_$POOL$_strength value = 0.5 } }
+   else_if = { limit = { global_var:ffpa_sc_aid_$POOL$_providers = 2 } set_global_variable = { name = ffpa_sc_aid_$POOL$_strength value = 0.75 } }
+   set_global_variable = { name = ffpa_sc_aid_$POOL$_total value = 0 }
+   every_country = {
+    limit = { var:ffpa_sc_aid_kind = $ID$ }
+    set_variable = { name = ffpa_sc_aid_strength value = global_var:ffpa_sc_aid_$POOL$_strength }
+    if = { limit = { has_variable = ffpa_sc_aid_reduced } change_variable = { name = ffpa_sc_aid_strength multiply = 0.5 } }
+    change_global_variable = { name = ffpa_sc_aid_$POOL$_total add = ffpa_sc_aid_weekly_fee }
+    if = {
+     limit = { OR = { NOT = { has_modifier = ffpa_sc_aid_fee_modifier } NOT = { var:ffpa_sc_aid_paid_fee = ffpa_sc_aid_weekly_fee } } }
+     if = { limit = { has_modifier = ffpa_sc_aid_fee_modifier } remove_modifier = ffpa_sc_aid_fee_modifier }
+     add_modifier = { name = ffpa_sc_aid_fee_modifier multiplier = ffpa_sc_aid_weekly_fee }
+     set_variable = { name = ffpa_sc_aid_paid_fee value = ffpa_sc_aid_weekly_fee }
+    }
+    if = {
+     limit = { OR = { NOT = { has_modifier = $BENEFIT$ } NOT = { var:ffpa_sc_aid_applied_strength = var:ffpa_sc_aid_strength } } }
+     if = { limit = { has_modifier = $BENEFIT$ } remove_modifier = $BENEFIT$ }
+     add_modifier = { name = $BENEFIT$ multiplier = var:ffpa_sc_aid_strength }
+     set_variable = { name = ffpa_sc_aid_applied_strength value = var:ffpa_sc_aid_strength }
+    }
+   }
+   set_global_variable = { name = ffpa_sc_aid_distribution_total value = global_var:ffpa_sc_aid_$POOL$_total }
+   set_global_variable = { name = ffpa_sc_aid_distribution_weight_total value = 0 }
+   every_country = {
+    limit = { has_variable = ffpa_sc_aid_$POOL$_provider }
+    set_variable = { name = ffpa_sc_aid_distribution_weight value = ffpa_sc_aid_prestige_weight }
+    change_global_variable = { name = ffpa_sc_aid_distribution_weight_total add = var:ffpa_sc_aid_distribution_weight }
+   }
+   if = {
+    limit = { global_var:ffpa_sc_aid_distribution_weight_total = 0 }
+    set_global_variable = { name = ffpa_sc_aid_distribution_weight_total value = global_var:ffpa_sc_aid_$POOL$_providers }
+    every_country = { limit = { has_variable = ffpa_sc_aid_$POOL$_provider } set_variable = { name = ffpa_sc_aid_distribution_weight value = 1 } }
+   }
+   set_global_variable = { name = ffpa_sc_aid_distribution_remainder value = global_var:ffpa_sc_aid_distribution_total }
+   every_country = {
+    remove_variable = ffpa_sc_aid_$POOL$_income
+    if = {
+     limit = { has_variable = ffpa_sc_aid_$POOL$_provider }
+     set_variable = { name = ffpa_sc_aid_$POOL$_income value = ffpa_sc_aid_allocated_income }
+     change_global_variable = { name = ffpa_sc_aid_distribution_remainder subtract = var:ffpa_sc_aid_$POOL$_income }
+    }
+   }
+   # Floor shares to cents; highest-prestige provider takes the exact remainder.
+   ordered_country = {
+    limit = { has_variable = ffpa_sc_aid_$POOL$_provider }
+    order_by = prestige max = 1 check_range_bounds = no
+    change_variable = { name = ffpa_sc_aid_$POOL$_income add = global_var:ffpa_sc_aid_distribution_remainder }
+   }
+   every_country = {
+    if = {
+     limit = { has_variable = ffpa_sc_aid_$POOL$_provider }
+     if = { limit = { NOT = { has_modifier = $COST$ } } add_modifier = $COST$ }
+    }
+    else = { if = { limit = { has_modifier = $COST$ } remove_modifier = $COST$ } }
+    if = {
+     limit = { var:ffpa_sc_aid_$POOL$_income > 0 }
+     if = {
+      limit = { OR = { NOT = { has_modifier = $INCOME$ } NOT = { var:ffpa_sc_aid_$POOL$_paid_income = var:ffpa_sc_aid_$POOL$_income } } }
+      if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
+      add_modifier = { name = $INCOME$ multiplier = var:ffpa_sc_aid_$POOL$_income }
+      set_variable = { name = ffpa_sc_aid_$POOL$_paid_income value = var:ffpa_sc_aid_$POOL$_income }
+     }
+    }
+    else = {
+     if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
+     remove_variable = ffpa_sc_aid_$POOL$_paid_income
+    }
+    remove_variable = ffpa_sc_aid_distribution_weight
+   }
+   remove_global_variable = ffpa_sc_aid_distribution_total
+   remove_global_variable = ffpa_sc_aid_distribution_weight_total
+   remove_global_variable = ffpa_sc_aid_distribution_remainder
+  }
+ }
+}
+
+ffpa_sc_aid_withdraw = {
+ ffpa_sc_aid_drop_recipient = { ID = $ID$ BENEFIT = $BENEFIT$ }
+ ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+}
+
+ffpa_sc_aid_reduce = {
+ if = {
+  limit = {
+   var:ffpa_sc_aid_kind = $ID$ global_var:ffpa_sc_aid_$POOL$_phase = 2
+   global_var:ffpa_sc_aid_$POOL$_months <= 24 NOT = { has_variable = ffpa_sc_aid_reduced }
+   NOT = { has_variable = ffpa_sc_aid_reviewed }
+  }
+  set_variable = ffpa_sc_aid_reduced
+  set_variable = ffpa_sc_aid_reviewed
+  ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+ }
+}
+
+# Invoke once per pre-existing pool from the global monthly owner, before opening
+# new registrations. No country/JE callback may invoke this clock.
+ffpa_sc_aid_tick_pool = {
+ if = {
+  limit = { has_global_variable = ffpa_sc_aid_$POOL$_phase }
+  change_global_variable = { name = ffpa_sc_aid_$POOL$_months add = -1 }
+  if = {
+   limit = { global_var:ffpa_sc_aid_$POOL$_months <= 0 global_var:ffpa_sc_aid_$POOL$_phase = 2 }
+   ffpa_sc_aid_end_pool = { POOL = $POOL$ ID = $ID$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+  }
+  else = {
+   ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+   if = {
+    limit = { global_var:ffpa_sc_aid_$POOL$_phase = 1 global_var:ffpa_sc_aid_$POOL$_months <= 0 }
+    if = {
+     limit = { global_var:ffpa_sc_aid_$POOL$_recipients > 0 }
+     set_global_variable = { name = ffpa_sc_aid_$POOL$_phase value = 2 }
+     set_global_variable = { name = ffpa_sc_aid_$POOL$_months value = 36 }
+     set_global_variable = { name = ffpa_sc_aid_$POOL$_result value = 1 }
+     every_country = { limit = { var:ffpa_sc_aid_kind = $ID$ } set_variable = { name = ffpa_sc_works_retry years = 5 } }
+     ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+    }
+    else = { ffpa_sc_aid_end_pool = { POOL = $POOL$ ID = $ID$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ } }
+   }
+  }
+ }
+}

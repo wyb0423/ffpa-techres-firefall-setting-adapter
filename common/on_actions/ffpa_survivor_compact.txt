@@ -3,3 +3,9 @@ on_game_started = { on_actions = { ffpa_sc_initialize_on_action } }
 on_monthly_pulse = { on_actions = { ffpa_sc_monthly_on_action } }
 ffpa_sc_initialize_on_action = { effect = { ffpa_sc_ensure_initialized = yes } }
 ffpa_sc_monthly_on_action = { effect = { ffpa_sc_monthly = yes } }
+
+# All handlers check actual enemy status; none assume joining a play is war.
+on_diplo_play_war_start = { on_actions = { ffpa_sc_aid_war_refresh } }
+on_diplo_play_join_side = { on_actions = { ffpa_sc_aid_war_refresh } }
+on_diplo_play_switch_sides = { on_actions = { ffpa_sc_aid_war_refresh } }
+ffpa_sc_aid_war_refresh = { effect = { ffpa_sc_aid_refresh_all = yes } }

@@ -10,6 +10,16 @@ ffpa_sc_overview = {
  transferable = no
  progressbar = no
  weight = 100
+ scripted_button = ffpa_sc_aid_education_propose
+ scripted_button = ffpa_sc_aid_education_register
+ scripted_button = ffpa_sc_aid_talent_propose
+ scripted_button = ffpa_sc_aid_talent_register
+ scripted_button = ffpa_sc_aid_production_propose
+ scripted_button = ffpa_sc_aid_production_register
+ scripted_button = ffpa_sc_aid_society_propose
+ scripted_button = ffpa_sc_aid_society_register
+ scripted_button = ffpa_sc_aid_military_propose
+ scripted_button = ffpa_sc_aid_military_register
  scripted_button = ffpa_sc_propose_education
  scripted_button = ffpa_sc_propose_trade
  scripted_button = ffpa_sc_propose_works
@@ -40,10 +50,16 @@ ffpa_sc_task_journal = {
  transferable = no
  progressbar = no
  weight = 100
+ scripted_button = ffpa_sc_aid_reduce_current
  scripted_button = ffpa_sc_reform
  scripted_button = ffpa_sc_stop_task
  status_desc = {
   first_valid = {
+   triggered_desc = { trigger = { var:ffpa_sc_aid_kind = 4 } desc = ffpa_sc_aid_education_task }
+   triggered_desc = { trigger = { var:ffpa_sc_aid_kind = 5 } desc = ffpa_sc_aid_talent_task }
+   triggered_desc = { trigger = { var:ffpa_sc_aid_kind = 6 } desc = ffpa_sc_aid_production_task }
+   triggered_desc = { trigger = { var:ffpa_sc_aid_kind = 7 } desc = ffpa_sc_aid_society_task }
+   triggered_desc = { trigger = { var:ffpa_sc_aid_kind = 8 } desc = ffpa_sc_aid_military_task }
    triggered_desc = { trigger = { var:ffpa_sc_task = 3 } desc = ffpa_sc_task_works }
    triggered_desc = { trigger = { enacting_any_law = yes } desc = ffpa_sc_task_enacting }
    triggered_desc = { trigger = { relative_bureaucracy < 0.20 } desc = ffpa_sc_task_budget }

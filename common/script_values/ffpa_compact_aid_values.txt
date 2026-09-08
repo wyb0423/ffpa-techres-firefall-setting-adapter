@@ -1,0 +1,153 @@
+# Country scope. Raw production, not country_innovation (which is capped).
+# Native evidence and validation limits: research document section XVIII.
+# These values do not start a project or grant provider status by themselves.
+ffpa_sc_aid_raw_innovation = {
+ value = modifier:country_weekly_innovation_add
+ multiply = {
+  value = 1
+  add = modifier:country_weekly_innovation_mult
+  min = 0
+ }
+}
+
+ffpa_sc_aid_eligibility_innovation = {
+ value = modifier:country_weekly_innovation_add
+ multiply = {
+  value = 1
+  add = modifier:country_weekly_innovation_mult
+  # Exclude only our actual service penalty, before clamping the multiplier.
+  # Other countries' modifiers, university employment and other penalties stay.
+  if = {
+   limit = { has_modifier = ffpa_sc_aid_education_provider_modifier }
+   add = 0.10
+  }
+  min = 0
+ }
+}
+
+ffpa_sc_aid_full_quote = {
+ value = gdp
+ multiply = var:ffpa_sc_aid_annual_rate
+ divide = 52
+}
+ffpa_sc_aid_weekly_fee = {
+ value = var:ffpa_sc_aid_quote
+ multiply = var:ffpa_sc_aid_strength
+}
+ffpa_sc_aid_prestige_weight = { value = prestige min = 0 }
+# Short-lived globals are owned by one synchronous pool settlement, not journals.
+ffpa_sc_aid_allocated_income = {
+ value = global_var:ffpa_sc_aid_distribution_total
+ multiply = var:ffpa_sc_aid_distribution_weight
+ divide = global_var:ffpa_sc_aid_distribution_weight_total
+ multiply = 100
+ floor = yes
+ divide = 100
+}
+
+# Provisional tuning values, not calibrated Firefall starting-country statistics.
+ffpa_sc_aid_research_threshold = 200
+ffpa_sc_aid_education_release_enabled = 0 # Literacy-growth behavior awaits an engine comparison.
+ffpa_sc_aid_education_rate = 0.006
+ffpa_sc_aid_education_quote = { value = gdp multiply = ffpa_sc_aid_education_rate divide = 52 }
+ffpa_sc_aid_education_score = {
+ value = 3
+ if = { limit = { ffpa_sc_aid_education_ready = yes } add = 3
+  if = { limit = { prestige < 50 } subtract = 3 }
+ }
+ else_if = { limit = { ffpa_sc_aid_education_need = yes } add = 4
+  if = { limit = { ffpa_sc_aid_education_afford = no } subtract = 5 }
+ }
+ add = ffpa_sc_proposer_relations
+}
+ffpa_sc_aid_talent_rate = 0.004
+ffpa_sc_aid_talent_quote = { value = gdp multiply = ffpa_sc_aid_talent_rate divide = 52 }
+ffpa_sc_aid_talent_score = {
+ value = 3
+ if = { limit = { ffpa_sc_aid_talent_ready = yes } add = 3
+  if = { limit = { prestige < 50 } subtract = 3 }
+ }
+ else_if = { limit = { ffpa_sc_aid_talent_need = yes } add = 4
+  if = { limit = { ffpa_sc_aid_talent_afford = no } subtract = 5 }
+ }
+ add = ffpa_sc_proposer_relations
+}
+ffpa_sc_aid_production_rate = 0.005
+ffpa_sc_aid_production_quote = { value = gdp multiply = ffpa_sc_aid_production_rate divide = 52 }
+ffpa_sc_aid_production_score = {
+ value = 3
+ if = { limit = { ffpa_sc_aid_production_ready = yes } add = 3
+  if = { limit = { prestige < 50 } subtract = 3 }
+ }
+ else_if = { limit = { ffpa_sc_aid_production_need = yes } add = 4
+  if = { limit = { ffpa_sc_aid_production_afford = no } subtract = 5 }
+ }
+ add = ffpa_sc_proposer_relations
+}
+ffpa_sc_aid_society_rate = 0.005
+ffpa_sc_aid_society_quote = { value = gdp multiply = ffpa_sc_aid_society_rate divide = 52 }
+ffpa_sc_aid_society_score = {
+ value = 3
+ if = { limit = { ffpa_sc_aid_society_ready = yes } add = 3
+  if = { limit = { prestige < 50 } subtract = 3 }
+ }
+ else_if = { limit = { ffpa_sc_aid_society_need = yes } add = 4
+  if = { limit = { ffpa_sc_aid_society_afford = no } subtract = 5 }
+ }
+ add = ffpa_sc_proposer_relations
+}
+ffpa_sc_aid_military_rate = 0.005
+ffpa_sc_aid_military_quote = { value = gdp multiply = ffpa_sc_aid_military_rate divide = 52 }
+ffpa_sc_aid_military_score = {
+ value = 3
+ if = { limit = { ffpa_sc_aid_military_ready = yes } add = 3
+  if = { limit = { prestige < 50 } subtract = 3 }
+ }
+ else_if = { limit = { ffpa_sc_aid_military_need = yes } add = 4
+  if = { limit = { ffpa_sc_aid_military_afford = no } subtract = 5 }
+ }
+ add = ffpa_sc_proposer_relations
+}
+ffpa_sc_aid_remaining_full_cost = {
+ value = var:ffpa_sc_aid_quote
+ if = { limit = { has_variable = ffpa_sc_aid_paid_fee } subtract = var:ffpa_sc_aid_paid_fee }
+}
+ffpa_sc_aid_reserve_requirement = { value = ffpa_sc_aid_remaining_full_cost subtract = net_fixed_income min = 0 multiply = 52 }
+ffpa_sc_aid_education_current_quote = {
+ value = ffpa_sc_aid_education_quote
+ if = { limit = { global_var:ffpa_sc_aid_education_providers = 1 } multiply = 0.5 }
+ else_if = { limit = { global_var:ffpa_sc_aid_education_providers = 2 } multiply = 0.75 }
+ else_if = { limit = { global_var:ffpa_sc_aid_education_providers = 0 } multiply = 0 }
+}
+ffpa_sc_aid_talent_current_quote = {
+ value = ffpa_sc_aid_talent_quote
+ if = { limit = { global_var:ffpa_sc_aid_talent_providers = 1 } multiply = 0.5 }
+ else_if = { limit = { global_var:ffpa_sc_aid_talent_providers = 2 } multiply = 0.75 }
+ else_if = { limit = { global_var:ffpa_sc_aid_talent_providers = 0 } multiply = 0 }
+}
+ffpa_sc_aid_production_current_quote = {
+ value = ffpa_sc_aid_production_quote
+ if = { limit = { global_var:ffpa_sc_aid_production_providers = 1 } multiply = 0.5 }
+ else_if = { limit = { global_var:ffpa_sc_aid_production_providers = 2 } multiply = 0.75 }
+ else_if = { limit = { global_var:ffpa_sc_aid_production_providers = 0 } multiply = 0 }
+}
+ffpa_sc_aid_society_current_quote = {
+ value = ffpa_sc_aid_society_quote
+ if = { limit = { global_var:ffpa_sc_aid_society_providers = 1 } multiply = 0.5 }
+ else_if = { limit = { global_var:ffpa_sc_aid_society_providers = 2 } multiply = 0.75 }
+ else_if = { limit = { global_var:ffpa_sc_aid_society_providers = 0 } multiply = 0 }
+}
+ffpa_sc_aid_military_current_quote = {
+ value = ffpa_sc_aid_military_quote
+ if = { limit = { global_var:ffpa_sc_aid_military_providers = 1 } multiply = 0.5 }
+ else_if = { limit = { global_var:ffpa_sc_aid_military_providers = 2 } multiply = 0.75 }
+ else_if = { limit = { global_var:ffpa_sc_aid_military_providers = 0 } multiply = 0 }
+}
+ffpa_sc_aid_my_income = {
+ value = 0
+ if = { limit = { has_variable = ffpa_sc_aid_education_paid_income } add = var:ffpa_sc_aid_education_paid_income }
+ if = { limit = { has_variable = ffpa_sc_aid_talent_paid_income } add = var:ffpa_sc_aid_talent_paid_income }
+ if = { limit = { has_variable = ffpa_sc_aid_production_paid_income } add = var:ffpa_sc_aid_production_paid_income }
+ if = { limit = { has_variable = ffpa_sc_aid_society_paid_income } add = var:ffpa_sc_aid_society_paid_income }
+ if = { limit = { has_variable = ffpa_sc_aid_military_paid_income } add = var:ffpa_sc_aid_military_paid_income }
+}

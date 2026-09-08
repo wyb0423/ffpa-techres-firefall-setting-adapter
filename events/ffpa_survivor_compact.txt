@@ -95,3 +95,21 @@ ffpa_sc.5 = {
   ai_chance = { base = 1 }
  }
 }
+
+ffpa_sc.6 = {
+ type = country_event placement = root
+ title = ffpa_sc.6.t desc = ffpa_sc.6.d flavor = ffpa_sc.6.f
+ event_image = { video = "unspecific_signed_contract" }
+ duration = 1
+ option = { name = ffpa_sc_aid_keep default_option = yes
+  ffpa_sc_aid_keep_commitment = yes ai_chance = { base = 1 }
+ }
+ option = { name = ffpa_sc_aid_reduce_current
+  if = { limit = { ffpa_sc_aid_can_review = yes } ffpa_sc_aid_reduce_current = yes }
+  ai_chance = { base = 0 }
+ }
+ option = { name = ffpa_sc_aid_cancel
+  if = { limit = { ffpa_sc_aid_can_review = yes } ffpa_sc_aid_withdraw_current = yes }
+  ai_chance = { base = 0 }
+ }
+}

@@ -1,0 +1,116 @@
+# Task IDs 1..3 retain the existing protocol/works meaning; aid uses 4..8.
+ffpa_sc_aid_research_ready = { ffpa_sc_aid_eligibility_innovation >= ffpa_sc_aid_research_threshold }
+ffpa_sc_aid_free_slot = {
+ ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_operational = yes
+ NOT = { has_variable = ffpa_sc_task } NOT = { has_variable = ffpa_sc_aid_kind }
+ NOT = { has_variable = ffpa_sc_works_retry } in_default = no gdp > 0
+}
+ffpa_sc_aid_waiting_for_round = {
+ OR = { global_var:ffpa_sc_vote >= 4 global_var:ffpa_sc_pending >= 4
+ global_var:ffpa_sc_aid_education_phase = 1
+ global_var:ffpa_sc_aid_talent_phase = 1
+ global_var:ffpa_sc_aid_production_phase = 1
+ global_var:ffpa_sc_aid_society_phase = 1
+ global_var:ffpa_sc_aid_military_phase = 1
+ }
+}
+ffpa_sc_aid_education_enabled = { ffpa_sc_aid_education_release_enabled = 1 }
+ffpa_sc_aid_education_ready = { literacy_rate >= 0.70 institution_investment_level = { institution = institution_schools value >= 3 } }
+ffpa_sc_aid_education_need = { literacy_rate < 0.70 }
+ffpa_sc_aid_education_afford = {
+ in_default = no scaled_debt < 0.40
+ OR = { net_fixed_income >= ffpa_sc_aid_education_quote
+  AND = { scaled_debt < 0.15 gold_reserves >= { value = ffpa_sc_aid_education_quote subtract = net_fixed_income min = 0 multiply = 52 } }
+ }
+}
+ffpa_sc_aid_education_can_register = {
+ ffpa_sc_aid_education_enabled = yes ffpa_sc_aid_free_slot = yes
+ global_var:ffpa_sc_aid_education_phase = 1 ffpa_sc_aid_education_ready = no
+}
+ffpa_sc_aid_education_can_propose = {
+ ffpa_sc_aid_education_enabled = yes ffpa_sc_can_propose = yes
+ NOT = { has_global_variable = ffpa_sc_aid_education_phase }
+ any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_aid_education_ready = yes }
+}
+ffpa_sc_aid_talent_enabled = { always = yes }
+ffpa_sc_aid_talent_ready = { literacy_rate >= 0.60 institution_investment_level = { institution = institution_schools value >= 2 } any_scope_building = { is_building_type = building_university occupancy > 0 } }
+ffpa_sc_aid_talent_need = { ffpa_sc_has_work = yes }
+ffpa_sc_aid_talent_afford = {
+ in_default = no scaled_debt < 0.40
+ OR = { net_fixed_income >= ffpa_sc_aid_talent_quote
+  AND = { scaled_debt < 0.15 gold_reserves >= { value = ffpa_sc_aid_talent_quote subtract = net_fixed_income min = 0 multiply = 52 } }
+ }
+}
+ffpa_sc_aid_talent_can_register = {
+ ffpa_sc_aid_talent_enabled = yes ffpa_sc_aid_free_slot = yes
+ global_var:ffpa_sc_aid_talent_phase = 1 ffpa_sc_aid_talent_ready = no
+}
+ffpa_sc_aid_talent_can_propose = {
+ ffpa_sc_aid_talent_enabled = yes ffpa_sc_can_propose = yes
+ NOT = { has_global_variable = ffpa_sc_aid_talent_phase }
+ any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_aid_talent_ready = yes }
+}
+ffpa_sc_aid_production_enabled = { always = yes }
+ffpa_sc_aid_production_ready = { ffpa_sc_aid_research_ready = yes }
+ffpa_sc_aid_production_need = { is_researching_technology_category = production }
+ffpa_sc_aid_production_afford = {
+ in_default = no scaled_debt < 0.40
+ OR = { net_fixed_income >= ffpa_sc_aid_production_quote
+  AND = { scaled_debt < 0.15 gold_reserves >= { value = ffpa_sc_aid_production_quote subtract = net_fixed_income min = 0 multiply = 52 } }
+ }
+}
+ffpa_sc_aid_production_can_register = {
+ ffpa_sc_aid_production_enabled = yes ffpa_sc_aid_free_slot = yes
+ global_var:ffpa_sc_aid_production_phase = 1 ffpa_sc_aid_production_ready = no
+}
+ffpa_sc_aid_production_can_propose = {
+ ffpa_sc_aid_production_enabled = yes ffpa_sc_can_propose = yes
+ NOT = { has_global_variable = ffpa_sc_aid_production_phase }
+ any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_aid_production_ready = yes }
+}
+ffpa_sc_aid_society_enabled = { always = yes }
+ffpa_sc_aid_society_ready = { ffpa_sc_aid_research_ready = yes }
+ffpa_sc_aid_society_need = { is_researching_technology_category = society }
+ffpa_sc_aid_society_afford = {
+ in_default = no scaled_debt < 0.40
+ OR = { net_fixed_income >= ffpa_sc_aid_society_quote
+  AND = { scaled_debt < 0.15 gold_reserves >= { value = ffpa_sc_aid_society_quote subtract = net_fixed_income min = 0 multiply = 52 } }
+ }
+}
+ffpa_sc_aid_society_can_register = {
+ ffpa_sc_aid_society_enabled = yes ffpa_sc_aid_free_slot = yes
+ global_var:ffpa_sc_aid_society_phase = 1 ffpa_sc_aid_society_ready = no
+}
+ffpa_sc_aid_society_can_propose = {
+ ffpa_sc_aid_society_enabled = yes ffpa_sc_can_propose = yes
+ NOT = { has_global_variable = ffpa_sc_aid_society_phase }
+ any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_aid_society_ready = yes }
+}
+ffpa_sc_aid_military_enabled = { always = yes }
+ffpa_sc_aid_military_ready = { ffpa_sc_aid_research_ready = yes }
+ffpa_sc_aid_military_need = { is_researching_technology_category = military }
+ffpa_sc_aid_military_afford = {
+ in_default = no scaled_debt < 0.40
+ OR = { net_fixed_income >= ffpa_sc_aid_military_quote
+  AND = { scaled_debt < 0.15 gold_reserves >= { value = ffpa_sc_aid_military_quote subtract = net_fixed_income min = 0 multiply = 52 } }
+ }
+}
+ffpa_sc_aid_military_can_register = {
+ ffpa_sc_aid_military_enabled = yes ffpa_sc_aid_free_slot = yes
+ global_var:ffpa_sc_aid_military_phase = 1 ffpa_sc_aid_military_ready = no
+}
+ffpa_sc_aid_military_can_propose = {
+ ffpa_sc_aid_military_enabled = yes ffpa_sc_can_propose = yes
+ NOT = { has_global_variable = ffpa_sc_aid_military_phase }
+ any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_aid_military_ready = yes }
+}
+ffpa_sc_aid_can_review = {
+ has_variable = ffpa_sc_aid_kind NOT = { has_variable = ffpa_sc_aid_reviewed }
+ OR = {
+ AND = { var:ffpa_sc_aid_kind = 4 global_var:ffpa_sc_aid_education_phase = 2 global_var:ffpa_sc_aid_education_months <= 24 }
+ AND = { var:ffpa_sc_aid_kind = 5 global_var:ffpa_sc_aid_talent_phase = 2 global_var:ffpa_sc_aid_talent_months <= 24 }
+ AND = { var:ffpa_sc_aid_kind = 6 global_var:ffpa_sc_aid_production_phase = 2 global_var:ffpa_sc_aid_production_months <= 24 }
+ AND = { var:ffpa_sc_aid_kind = 7 global_var:ffpa_sc_aid_society_phase = 2 global_var:ffpa_sc_aid_society_months <= 24 }
+ AND = { var:ffpa_sc_aid_kind = 8 global_var:ffpa_sc_aid_military_phase = 2 global_var:ffpa_sc_aid_military_months <= 24 }
+ }
+}
