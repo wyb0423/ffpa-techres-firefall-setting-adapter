@@ -88,4 +88,15 @@ ffpa_sc_ensure_initialized = {
   # No reliable remaining-time accessor for the old four-year marker: clear it once.
   every_country = { limit = { ffpa_sc_member = yes } ffpa_sc_refresh = yes }
  }
+ # Separate migration also runs for saves which already completed schema 1.
+ if = {
+  limit = { NOT = { has_global_variable = ffpa_sc_membership_schema_2 } }
+  set_global_variable = ffpa_sc_membership_schema_2
+  every_country = {
+   if = { limit = { has_modifier = ztr_onu_member } remove_modifier = ztr_onu_member }
+   if = { limit = { has_modifier = ztr_onu_permanent_member } remove_modifier = ztr_onu_permanent_member }
+   if = { limit = { ffpa_sc_member = yes } ffpa_sc_refresh = yes }
+  }
+ }
+
 }

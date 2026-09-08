@@ -4,11 +4,14 @@ ffpa_sc_join = {
  if = {
   limit = { ffpa_sc_eligible = yes NOT = { ffpa_sc_member = yes } has_global_variable = ffpa_sc_founded }
   set_variable = ffpa_sc_membership
+  set_variable = { name = ffpa_sc_cooperation_months value = 0 }
+  every_country = { limit = { ffpa_sc_member = yes } ffpa_sc_refresh = yes }
   ffpa_sc_refresh = yes
  }
 }
 ffpa_sc_leave = {
  remove_variable = ffpa_sc_membership
+ remove_variable = ffpa_sc_cooperation_months
  remove_variable = ffpa_sc_coordinator
  remove_variable = ffpa_sc_willing
  remove_variable = ffpa_sc_ballot_eligible
@@ -18,6 +21,7 @@ ffpa_sc_leave = {
  ffpa_sc_stop_task = yes
  ffpa_sc_aid_refresh_all = yes
  ffpa_sc_refresh = yes
+ every_country = { limit = { ffpa_sc_member = yes } ffpa_sc_refresh = yes }
 }
 ffpa_sc_stop_task = {
  if = { limit = { has_variable = ffpa_sc_aid_kind } ffpa_sc_aid_withdraw_current = yes }
@@ -140,17 +144,32 @@ ffpa_sc_refresh = {
   remove_variable = ffpa_sc_works_window
  }
 
+ if = { limit = { has_modifier = ztr_onu_member } remove_modifier = ztr_onu_member }
+ if = { limit = { has_modifier = ztr_onu_permanent_member } remove_modifier = ztr_onu_permanent_member }
  if = {
-  limit = { ffpa_sc_member = yes ffpa_sc_operational = yes NOT = { has_variable = ffpa_sc_coordinator } }
-  if = { limit = { NOT = { has_modifier = ztr_onu_member } } add_modifier = ztr_onu_member }
+  limit = { ffpa_sc_member = yes NOT = { has_variable = ffpa_sc_cooperation_months } }
+  set_variable = { name = ffpa_sc_cooperation_months value = 0 }
  }
- else = { if = { limit = { has_modifier = ztr_onu_member } remove_modifier = ztr_onu_member } }
-
+ if = {
+  limit = { ffpa_sc_member = yes ffpa_sc_operational = yes var:ffpa_sc_cooperation_months < 24 }
+  if = { limit = { NOT = { has_modifier = ffpa_sc_membership_1_modifier } } add_modifier = ffpa_sc_membership_1_modifier }
+ }
+ else = { if = { limit = { has_modifier = ffpa_sc_membership_1_modifier } remove_modifier = ffpa_sc_membership_1_modifier } }
+ if = {
+  limit = { ffpa_sc_member = yes ffpa_sc_operational = yes var:ffpa_sc_cooperation_months >= 24 var:ffpa_sc_cooperation_months < 72 }
+  if = { limit = { NOT = { has_modifier = ffpa_sc_membership_2_modifier } } add_modifier = ffpa_sc_membership_2_modifier }
+ }
+ else = { if = { limit = { has_modifier = ffpa_sc_membership_2_modifier } remove_modifier = ffpa_sc_membership_2_modifier } }
+ if = {
+  limit = { ffpa_sc_member = yes ffpa_sc_operational = yes var:ffpa_sc_cooperation_months >= 72 }
+  if = { limit = { NOT = { has_modifier = ffpa_sc_membership_3_modifier } } add_modifier = ffpa_sc_membership_3_modifier }
+ }
+ else = { if = { limit = { has_modifier = ffpa_sc_membership_3_modifier } remove_modifier = ffpa_sc_membership_3_modifier } }
  if = {
   limit = { ffpa_sc_member = yes ffpa_sc_operational = yes has_variable = ffpa_sc_coordinator }
-  if = { limit = { NOT = { has_modifier = ztr_onu_permanent_member } } add_modifier = ztr_onu_permanent_member }
+  if = { limit = { NOT = { has_modifier = ffpa_sc_coordinator_modifier } } add_modifier = ffpa_sc_coordinator_modifier }
  }
- else = { if = { limit = { has_modifier = ztr_onu_permanent_member } remove_modifier = ztr_onu_permanent_member } }
+ else = { if = { limit = { has_modifier = ffpa_sc_coordinator_modifier } remove_modifier = ffpa_sc_coordinator_modifier } }
 
  if = {
   limit = { ffpa_sc_member = yes ffpa_sc_operational = yes has_variable = ffpa_sc_education_joined has_variable = ffpa_sc_education_served ffpa_sc_education_ready = yes }
@@ -328,6 +347,21 @@ ffpa_sc_ai_propose = {
   }
  }
 }
+# Called once per country by the global monthly pulse, never by journal refreshes.
+ffpa_sc_membership_tick = {
+ if = {
+  limit = { ffpa_sc_member = yes ffpa_sc_operational = yes }
+  if = {
+   limit = { NOT = { has_variable = ffpa_sc_cooperation_months } }
+   set_variable = { name = ffpa_sc_cooperation_months value = 0 }
+  }
+  if = {
+   limit = { var:ffpa_sc_cooperation_months < 72 }
+   change_variable = { name = ffpa_sc_cooperation_months add = 1 }
+  }
+ }
+}
+
 ffpa_sc_monthly = {
  ffpa_sc_ensure_initialized = yes
  every_country = {
@@ -346,7 +380,7 @@ ffpa_sc_monthly = {
   limit = { ffpa_sc_member = yes }
   if = { limit = { ffpa_sc_eligible = no } ffpa_sc_leave = yes }
  }
- every_country = { limit = { ffpa_sc_member = yes } ffpa_sc_refresh = yes ffpa_sc_ai_manage = yes }
+ every_country = { limit = { ffpa_sc_member = yes } ffpa_sc_membership_tick = yes ffpa_sc_refresh = yes ffpa_sc_ai_manage = yes }
  # Fill existing registrations before closing them; new votes open after ticking.
  ffpa_sc_aid_tick_all = yes
  every_country = { limit = { ffpa_sc_member = yes } ffpa_sc_aid_notify_review = yes }

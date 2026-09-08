@@ -122,12 +122,44 @@ def check_states():
     # Empty state and repeated cleanup must not emit fictitious modifier removals.
     s=State();s.run('ffpa_sc_refresh');s.run('ffpa_sc_stop_task');assert not s.mod
     s.g['ffpa_sc_founded']=1;s.run('ffpa_sc_join')
-    assert s.mod=={'ztr_onu_member'}
+    assert s.mod=={'ffpa_sc_membership_1_modifier'}
     s.v['ffpa_sc_coordinator']=1;s.run('ffpa_sc_refresh')
-    assert s.mod=={'ztr_onu_permanent_member'}
+    assert s.mod=={'ffpa_sc_membership_1_modifier','ffpa_sc_coordinator_modifier'}
     s.v.pop('ffpa_sc_coordinator');s.run('ffpa_sc_refresh')
-    assert s.mod=={'ztr_onu_member'}
+    assert s.mod=={'ffpa_sc_membership_1_modifier'}
     s.run('ffpa_sc_leave');s.run('ffpa_sc_leave');assert not s.mod
+    # Execute actual stage branches at both boundaries, under both membership roles.
+    for coordinator in (False, True):
+        s=State();s.g['ffpa_sc_founded']=1;s.run('ffpa_sc_join')
+        if coordinator:s.v['ffpa_sc_coordinator']=1
+        for month in range(101):
+            if month:s.run('ffpa_sc_membership_tick')
+            s.run('ffpa_sc_refresh');s.run('ffpa_sc_refresh')
+            stage=1 if month<24 else 2 if month<72 else 3
+            expected={f'ffpa_sc_membership_{stage}_modifier'}
+            if coordinator:expected.add('ffpa_sc_coordinator_modifier')
+            assert s.mod==expected,(month,s.mod)
+            assert s.v['ffpa_sc_cooperation_months']==min(month,72)
+        s.inputs['ffpa_sc_operational']=False
+        s.run('ffpa_sc_refresh');assert not s.mod
+        s.v['ffpa_sc_cooperation_months']=23
+        for _ in range(12):s.run('ffpa_sc_membership_tick')
+        assert s.v['ffpa_sc_cooperation_months']==23
+        s.inputs['ffpa_sc_operational']=True
+        s.run('ffpa_sc_membership_tick');s.run('ffpa_sc_refresh')
+        assert 'ffpa_sc_membership_2_modifier' in s.mod
+        s.v.pop('ffpa_sc_coordinator',None);s.run('ffpa_sc_refresh')
+        assert s.mod=={'ffpa_sc_membership_2_modifier'}
+        s.run('ffpa_sc_leave');assert not s.mod and 'ffpa_sc_cooperation_months' not in s.v
+        s.run('ffpa_sc_membership_tick');assert 'ffpa_sc_cooperation_months' not in s.v
+        s.run('ffpa_sc_join');assert s.v['ffpa_sc_cooperation_months']==0
+    # Existing members have no trustworthy join date; refresh strips both old IDs.
+    s=State();s.v['ffpa_sc_membership']=1
+    s.mod={'ztr_onu_member','ztr_onu_permanent_member'};s.run('ffpa_sc_refresh')
+    assert s.mod=={'ffpa_sc_membership_1_modifier'} and s.v['ffpa_sc_cooperation_months']==0
+    s.v['ffpa_sc_education_joined']=1;s.inputs['ffpa_sc_education_ready']=True
+    s.run('ffpa_sc_refresh')
+    assert s.mod=={'ffpa_sc_membership_1_modifier','ffpa_sc_education_modifier'}
     # Late joining opens no tasks; re-entry cannot refresh the five-year deadline.
     s=State();s.g.update(ffpa_sc_founded=1,ffpa_sc_education_open=1,ffpa_sc_trade_open=1,ffpa_sc_works_open=1)
     s.run('ffpa_sc_join');assert 'ffpa_sc_task' not in s.v
@@ -191,10 +223,25 @@ def check_static(workshop):
             assert not any(x.key=='invalid' for x in e.value),k
             assert child(e,'can_deactivate').value=='yes',k
     assert 'ztr_un_permanent_member_ranking_effect' not in {e.key for e in walk(EFFECTS['ffpa_sc_select_seats'].value)}
+    ticks=[(key,e) for key,eff in EFFECTS.items() for e in walk(eff.value) if e.key=='ffpa_sc_membership_tick']
+    assert [key for key,e in ticks]==['ffpa_sc_monthly']
+    monthly=EFFECTS['ffpa_sc_monthly']
+    loop=next(e for e in monthly.value if e.key=='every_country' and any(x.key=='ffpa_sc_membership_tick' for x in e.value))
+    assert child(child(loop,'limit'),'ffpa_sc_member').value=='yes'
+    assert [e.key for e in loop.value]==['limit','ffpa_sc_membership_tick','ffpa_sc_refresh','ffpa_sc_ai_manage']
+    migration=EFFECTS['ffpa_sc_ensure_initialized']
+    schema2=next(e for e in migration.value if e.key=='if' and any(x.key=='set_global_variable' and x.value=='ffpa_sc_membership_schema_2' for x in e.value))
+    removed={e.value for e in walk(schema2.value) if e.key=='remove_modifier'}
+    assert removed=={'ztr_onu_member','ztr_onu_permanent_member'}
+    assert not any(e.key=='add_modifier' and isinstance(e.value,str) and e.value in removed for e in all_nodes)
     mods=load('common/static_modifiers')
     expected={
-        'ztr_onu_member':{'country_tech_spread_mult':.1,'country_influence_mult':-.1},
-        'ztr_onu_permanent_member':{'country_tech_spread_mult':.1,'country_influence_mult':-.15},
+        'REPLACE:ztr_onu_member':{},
+        'REPLACE:ztr_onu_permanent_member':{},
+        'ffpa_sc_membership_1_modifier':{'country_tech_spread_mult':.05,'country_weekly_innovation_mult':.02,'country_influence_mult':-.05},
+        'ffpa_sc_membership_2_modifier':{'country_tech_spread_mult':.10,'country_weekly_innovation_mult':.04,'country_influence_mult':-.10},
+        'ffpa_sc_membership_3_modifier':{'country_tech_spread_mult':.15,'country_weekly_innovation_mult':.06,'country_influence_mult':-.10},
+        'ffpa_sc_coordinator_modifier':{'country_influence_mult':-.05},
         'ffpa_sc_education_modifier':{'country_tech_spread_mult':.25,'state_education_access_add':.05,'state_pop_qualifications_mult':.25,'country_institution_cost_institution_schools_mult':.25,'country_government_wages_mult':.1},
         'ffpa_sc_trade_modifier':{'state_import_advantage_mult':.25,'state_export_advantage_mult':.25,'state_trade_capacity_mult':.2,'state_tariff_import_add':-.1,'state_tariff_export_add':-.1,'country_bureaucracy_mult':-.05},
         'ffpa_sc_works_modifier':{'state_construction_mult':.2,'state_devastation_decay_mult':.25,'country_construction_goods_cost_mult':.1,'country_bureaucracy_mult':-.05}}
