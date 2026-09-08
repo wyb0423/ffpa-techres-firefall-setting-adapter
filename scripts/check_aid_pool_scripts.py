@@ -306,8 +306,6 @@ def check():
     w.country('B', ready=True, prestige=300)
     w.country('C', ready=True, prestige=100)
     w.country('X'); w.c['X']['ai'] = True
-    w.run('ffpa_sc_aid_education_open')
-    assert 'ffpa_sc_aid_education_phase' not in w.g  # Literacy gate is intentional.
     w.run('ffpa_sc_aid_talent_open')
     w.run('ffpa_sc_aid_ai_register', 'X')
     assert w.c['X']['v']['ffpa_sc_aid_quote'] == 400
@@ -343,6 +341,32 @@ def check():
     w.c['X']['net_fixed_income'] = F(600)
     w.run('ffpa_sc_aid_ai_register', 'X')
     assert w.c['X']['v']['ffpa_sc_aid_kind'] == 6
+
+    # Default-on education must actually open, charge, scale both effects and exit.
+    w = World()
+    for name in 'ABC': w.country(name, ready=True)
+    w.country('X')
+    w.run('ffpa_sc_aid_education_open')
+    assert w.g['ffpa_sc_aid_education_phase'] == 1
+    w.run('ffpa_sc_aid_education_register', 'X')
+    assert w.c['X']['v']['ffpa_sc_aid_quote'] == 600 and not w.c['X']['mods']
+    w.month = 1
+    w.run('ffpa_sc_aid_tick_all')
+    benefit = 'ffpa_sc_aid_education_benefit_modifier'
+    assert w.c['X']['mods'][fee] == 600 and w.c['X']['mods'][benefit] == 1
+    mods = {e.key: e for e in parse((ROOT / 'common/static_modifiers/zzzz_ffpa_survivor_compact.txt').read_text())}
+    access = F(child(mods[benefit], 'state_education_access_add').value)
+    growth = F(child(mods[benefit], 'state_literacy_growth_add').value)
+    assert access == F('0.05') and growth == F('0.005')
+    w.c['C']['member'] = False
+    w.run('ffpa_sc_aid_education_refresh')
+    assert w.c['X']['mods'][fee] == 450
+    assert access * w.c['X']['mods'][benefit] == F('0.0375')
+    assert growth * w.c['X']['mods'][benefit] == F('0.00375')
+    w.wars.add(frozenset(('X', 'A')))
+    w.run('ffpa_sc_aid_refresh_all')
+    assert all(not c['mods'] for c in w.c.values())
+    assert w.c['X']['expiry']['ffpa_sc_works_retry'] == 61
     print('PASS: actual aid scripts, registration/launch/settlement/exit/rounding/timers')
 
 

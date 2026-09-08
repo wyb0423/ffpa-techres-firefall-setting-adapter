@@ -47,7 +47,7 @@ ffpa_sc_aid_allocated_income = {
 
 # Provisional tuning values, not calibrated Firefall starting-country statistics.
 ffpa_sc_aid_research_threshold = 200
-ffpa_sc_aid_education_release_enabled = 0 # Literacy-growth behavior awaits an engine comparison.
+ffpa_sc_aid_education_release_enabled = 1 # User-requested default; literacy tuning is provisional.
 ffpa_sc_aid_education_rate = 0.006
 ffpa_sc_aid_education_quote = { value = gdp multiply = ffpa_sc_aid_education_rate divide = 52 }
 ffpa_sc_aid_education_score = {
