@@ -1,10 +1,12 @@
 # FFPA — Tech & Res Firefall Setting Adapter
 
-为 `[1.13] Tech & Res` 与 `2050: The Fire Falls` 提供轻量世界观适配。当前 0.3.0 保留八项社会科技适配，并将联合国机制改造为“幸存者协定”。不改科技树结构、开局科技档位或解锁关系。
+为 `[1.13] Tech & Res` 与 `2050: The Fire Falls` 提供轻量世界观适配。当前开发版包含十四项社会科技适配，并将联合国机制改造为“幸存者协定”。不改科技树结构、开局科技档位或解锁关系。
 
 机制脚本已写入当前项目，静态与局部状态检查通过；尚未完成游戏内验收。安装包沿用原 Mod ID，不需要第二个机制 Mod。
 
 当前决策见[联合国改造设计](docs/2026-09-07-un-system-research-and-options.md)，施工顺序见[实施计划](docs/superpowers/plans/2026-09-07-survivor-compact-implementation-plan.md)。
+
+人口恢复批次增加六项科技效果：五项出生率各 +5%，劳动力比例合计净增 10 个百分点，死亡率额外降低 4%。其他科技收益保留；具体改前／改后数值见[人口恢复设计](docs/superpowers/specs/2026-09-09-population-recovery-design.md)。游戏内人口和就业表现由另一台机器验收。
 
 ## 必要前置与加载顺序
 

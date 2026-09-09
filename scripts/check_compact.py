@@ -285,8 +285,33 @@ def check_static(workshop):
     assert SCALARS['ffpa_sc_vote_duration']==3 and SCALARS['ffpa_sc_cooldown_duration']==9
     meta=json.loads((ROOT/'.metadata/metadata.json').read_text());assert meta['supported_game_version']=='1.13.*'
     assert {r['id'] for r in meta['relationships']}=={'tech.res','alter_time_2050_fire_falls'}
-    assert len(load('common/technology/technologies'))==8
+    technologies=load('common/technology/technologies')
+    population_changes={
+        'penicillin': {'state_birth_rate_mult':'0.05'},
+        'socialdemocracy': {'state_working_adult_ratio_add':'0.05','state_birth_rate_mult':'0.05'},
+        'vaccination_campaigns': {'state_mortality_mult':'-0.03'},
+        'genetic_disease_screening': {'state_mortality_mult':'-0.02','state_birth_rate_mult':'0.05'},
+        'neo_feminism': {'state_working_adult_ratio_add':'0.1','state_birth_rate_mult':'0.05'},
+        'genetic_engineering': {'state_mortality_mult':'-0.02','state_birth_rate_mult':'0.05'},
+    }
+    original={'international_organizations','decolonization','neoimperialism','transnational_activism',
+              'global_stock_market','globalization','social_media','app_economy'}
+    assert set(technologies)==original|set(population_changes)
+    for key in technologies:
+        assert {key,key+'_desc'} <= locales['english'],key
+    for key,changes in population_changes.items():
+        actual={e.key:e.value for e in child(technologies[key],'modifier').value}
+        assert all(actual.get(k)==v for k,v in changes.items()),key
+    def normalized(nodes):
+        return [(e.key,e.op,normalized(e.value) if isinstance(e.value,list) else e.value) for e in nodes]
     if workshop:
+        upstream={e.key:e for e in parse((workshop/'3768192009/common/technology/technologies/ztr_new_society.txt').read_text())}
+        for key,changes in population_changes.items():
+            base,actual=upstream[key],technologies[key]
+            assert normalized([e for e in base.value if e.key!='modifier'])==normalized([e for e in actual.value if e.key!='modifier']),key
+            expected={e.key:e.value for e in child(base,'modifier').value};expected.update(changes)
+            mods=child(actual,'modifier').value
+            assert len(mods)==len(expected) and {e.key:e.value for e in mods}==expected,key
         sources=json.loads((ROOT/'scripts/compact_upstream_sources.json').read_text())
         for rel,digest in sources.items():assert hashlib.sha256((workshop/rel).read_bytes()).hexdigest()==digest,('upstream changed',rel)
         # Confirm matching event files cover every inherited ID; saves can contain queued events.
@@ -297,7 +322,7 @@ def check_static(workshop):
             before={e.key for e in parse(up.read_text(encoding='utf-8-sig')) if isinstance(e.value,list)}
             after={e.key for e in parse(p.read_text()) if isinstance(e.value,list)}
             assert before==after,rel
-    print(f'PASS static checks: {len(files)} scripts, 8 technologies, paired BOM localization, approved effects, upstream fingerprints')
+    print(f'PASS static checks: {len(files)} scripts, {len(technologies)} technologies, paired BOM localization, approved effects, upstream fingerprints')
 
 if __name__=='__main__':
     ap=argparse.ArgumentParser();ap.add_argument('--workshop-root',type=Path);args=ap.parse_args()

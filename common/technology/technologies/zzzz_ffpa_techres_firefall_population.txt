@@ -1,0 +1,128 @@
+# Population recovery: full technology replacements from Firefall 0.1.1 / Tech & Res 1.6'.
+# Only population modifiers differ; retain every other upstream field and effect.
+
+penicillin = {
+	era = era_5
+	texture = "gfx/interface/icons/invention_icons/penicillin.dds"
+	category = society
+
+	modifier = {
+		country_institution_health_system_max_investment_add = 1
+		state_birth_rate_mult = 0.05
+	}
+
+	unlocking_technologies = {
+		panum_antitoxins_tech
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
+socialdemocracy = {
+	era = era_6
+	texture = "gfx/interface/icons/invention_icons/socialdemocracy.dds"
+	category = society
+	modifier = {
+		state_dependent_wage_mult = 0.25
+		building_minimum_wage_mult = 0.25
+		state_radicals_from_political_movements_mult = -0.2
+		country_institution_social_security_max_investment_add = 1
+		interest_group_ig_intelligentsia_pol_str_mult = 1
+		interest_group_ig_trade_unions_pol_str_mult = 0.5
+		state_working_adult_ratio_add = 0.05
+		state_birth_rate_mult = 0.05
+	}
+	unlocking_technologies = {
+		international_organizations
+		keynesian_economics
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
+vaccination_campaigns = {
+    # Organized public health campaigns for vaccinations
+    era = era_6
+    texture = "gfx/interface/icons/invention_icons/vaccination_campaigns.dds"
+    category = society
+
+    unlocking_technologies = {
+		antibiotics
+		central_planning
+    }
+
+    modifier = {
+		state_mortality_mult = -0.03
+		country_institution_cost_institution_health_system_mult = -0.1
+		state_harvest_condition_disease_outbreak_impact_mult = -0.1
+		state_harvest_condition_disease_outbreak_duration_mult = -0.1
+	}
+
+    ai_weight = {
+        value = 1
+    }
+}
+
+genetic_disease_screening = {
+    # Early screening for hereditary diseases
+    era = era_7
+    texture = "gfx/interface/icons/invention_icons/genetic_disease_screening.dds"
+    category = society
+
+    unlocking_technologies = {
+        vaccination_campaigns
+		funded_research_projects
+    }
+
+    modifier = {
+		state_mortality_mult = -0.02
+		state_birth_rate_mult = 0.05
+	}
+
+    ai_weight = {
+        value = 1
+    }
+}
+
+neo_feminism = {
+	era = era_7
+	texture = "gfx/interface/icons/invention_icons/neo_feminism.dds"
+	category = society
+
+	modifier = {
+		state_working_adult_ratio_add = 0.1
+		state_birth_rate_mult = 0.05
+	}
+
+	unlocking_technologies = {
+		counterculture
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
+genetic_engineering = {
+    # Pioneering genetic modification techniques
+    era = era_7
+    texture = "gfx/interface/icons/invention_icons/genetic_engineering.dds"
+    category = society
+
+    unlocking_technologies = {
+        genetic_disease_screening
+    }
+
+    modifier = {
+		state_mortality_mult = -0.02
+		state_birth_rate_mult = 0.05
+	}
+
+    ai_weight = {
+        value = 1
+    }
+}
