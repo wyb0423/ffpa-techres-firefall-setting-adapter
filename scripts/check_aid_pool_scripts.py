@@ -247,6 +247,14 @@ def check():
     before = copy.deepcopy(w.c)
     w.run('ffpa_sc_aid_settle_pool', **args)
     assert w.c == before  # Rebuilding modifiers must not stack or reset contracts.
+
+    # A pre-upgrade recipient without a persisted quote must heal on refresh.
+    del w.c['X']['v']['ffpa_sc_aid_quote']
+    w.run('ffpa_sc_aid_settle_pool', **args)
+    assert w.c['X']['v']['ffpa_sc_aid_quote'] == 1200
+    assert w.c['X']['mods'][fee] == income(w) == 1200
+    w.c['X']['v']['ffpa_sc_aid_quote'] = 1000
+    w.run('ffpa_sc_aid_settle_pool', **args)
     register(w, 'Y')
     assert not w.c['Y']['v'].get('ffpa_sc_aid_kind')  # No late admission.
     w.c['X']['ready'] = True

@@ -300,7 +300,7 @@ def check_static(workshop):
     invitation=events['ffpa_sc.1']
     options=[x for x in invitation.value if x.key=='option']
     assert [child(x,'name').value for x in options]==['ffpa_sc_accept','ffpa_sc_decline']
-    assert child(options[0],'ffpa_sc_join').value=='yes'
+    assert child(child(options[0],'hidden_effect'),'ffpa_sc_join').value=='yes'
     assert child(options[1],'default_option').value=='yes'
     assert SCALARS['ffpa_sc_vote_duration']==3 and SCALARS['ffpa_sc_cooldown_duration']==9
     meta=json.loads((ROOT/'.metadata/metadata.json').read_text());assert meta['supported_game_version']=='1.13.*'

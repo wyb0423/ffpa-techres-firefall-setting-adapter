@@ -1,7 +1,7 @@
 ffpa_sc_education_status = {
  type = country
  text = { trigger = { has_modifier = ffpa_sc_education_modifier } localization_key = ffpa_sc_label_active }
- text = { trigger = { var:ffpa_sc_task = 1 } localization_key = ffpa_sc_label_preparing }
+ text = { trigger = { has_variable = ffpa_sc_task var:ffpa_sc_task = 1 } localization_key = ffpa_sc_label_preparing }
  text = { trigger = { has_variable = ffpa_sc_education_joined } localization_key = ffpa_sc_label_paused }
  text = { trigger = { has_variable = ffpa_sc_education_retry NOT = { has_variable = ffpa_sc_education_window } } localization_key = ffpa_sc_label_retry }
  text = { trigger = { has_global_variable = ffpa_sc_education_open } localization_key = ffpa_sc_label_available }
@@ -10,7 +10,7 @@ ffpa_sc_education_status = {
 ffpa_sc_trade_status = {
  type = country
  text = { trigger = { has_modifier = ffpa_sc_trade_modifier } localization_key = ffpa_sc_label_active }
- text = { trigger = { var:ffpa_sc_task = 2 } localization_key = ffpa_sc_label_preparing }
+ text = { trigger = { has_variable = ffpa_sc_task var:ffpa_sc_task = 2 } localization_key = ffpa_sc_label_preparing }
  text = { trigger = { has_variable = ffpa_sc_trade_joined } localization_key = ffpa_sc_label_paused }
  text = { trigger = { has_variable = ffpa_sc_trade_retry NOT = { has_variable = ffpa_sc_trade_window } } localization_key = ffpa_sc_label_retry }
  text = { trigger = { has_global_variable = ffpa_sc_trade_open } localization_key = ffpa_sc_label_available }
@@ -18,86 +18,86 @@ ffpa_sc_trade_status = {
 }
 ffpa_sc_works_status = {
  type = country
- text = { trigger = { var:ffpa_sc_task = 3 } localization_key = ffpa_sc_label_active }
+ text = { trigger = { has_variable = ffpa_sc_task var:ffpa_sc_task = 3 } localization_key = ffpa_sc_label_active }
  text = { trigger = { has_variable = ffpa_sc_works_retry } localization_key = ffpa_sc_label_retry }
  text = { trigger = { has_global_variable = ffpa_sc_works_open } localization_key = ffpa_sc_label_available }
  text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }
 }
 ffpa_sc_vote_subject = {
  type = country
- text = { trigger = { global_var:ffpa_sc_vote = 4 } localization_key = ffpa_sc_aid_education_label }
- text = { trigger = { global_var:ffpa_sc_vote = 5 } localization_key = ffpa_sc_aid_talent_label }
- text = { trigger = { global_var:ffpa_sc_vote = 6 } localization_key = ffpa_sc_aid_production_label }
- text = { trigger = { global_var:ffpa_sc_vote = 7 } localization_key = ffpa_sc_aid_society_label }
- text = { trigger = { global_var:ffpa_sc_vote = 8 } localization_key = ffpa_sc_aid_military_label }
- text = { trigger = { global_var:ffpa_sc_vote = 1 } localization_key = ffpa_sc_label_education }
- text = { trigger = { global_var:ffpa_sc_vote = 2 } localization_key = ffpa_sc_label_trade }
- text = { trigger = { global_var:ffpa_sc_vote = 3 } localization_key = ffpa_sc_label_works }
+ text = { trigger = { has_global_variable = ffpa_sc_vote global_var:ffpa_sc_vote = 4 } localization_key = ffpa_sc_aid_education_label }
+ text = { trigger = { has_global_variable = ffpa_sc_vote global_var:ffpa_sc_vote = 5 } localization_key = ffpa_sc_aid_talent_label }
+ text = { trigger = { has_global_variable = ffpa_sc_vote global_var:ffpa_sc_vote = 6 } localization_key = ffpa_sc_aid_production_label }
+ text = { trigger = { has_global_variable = ffpa_sc_vote global_var:ffpa_sc_vote = 7 } localization_key = ffpa_sc_aid_society_label }
+ text = { trigger = { has_global_variable = ffpa_sc_vote global_var:ffpa_sc_vote = 8 } localization_key = ffpa_sc_aid_military_label }
+ text = { trigger = { has_global_variable = ffpa_sc_vote global_var:ffpa_sc_vote = 1 } localization_key = ffpa_sc_label_education }
+ text = { trigger = { has_global_variable = ffpa_sc_vote global_var:ffpa_sc_vote = 2 } localization_key = ffpa_sc_label_trade }
+ text = { trigger = { has_global_variable = ffpa_sc_vote global_var:ffpa_sc_vote = 3 } localization_key = ffpa_sc_label_works }
  text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }
 }
 ffpa_sc_my_vote = {
  type = country
  text = { trigger = { NOT = { has_variable = ffpa_sc_ballot_eligible } } localization_key = ffpa_sc_label_ineligible }
- text = { trigger = { var:ffpa_sc_choice = 1 } localization_key = ffpa_sc_label_yes }
- text = { trigger = { var:ffpa_sc_choice = -1 } localization_key = ffpa_sc_label_no }
+ text = { trigger = { has_variable = ffpa_sc_choice var:ffpa_sc_choice = 1 } localization_key = ffpa_sc_label_yes }
+ text = { trigger = { has_variable = ffpa_sc_choice var:ffpa_sc_choice = -1 } localization_key = ffpa_sc_label_no }
  text = { trigger = { always = yes } localization_key = ffpa_sc_label_neutral }
 }
 ffpa_sc_vote_result = {
  type = country
- text = { trigger = { global_var:ffpa_sc_last_result = 1 } localization_key = ffpa_sc_result_pass }
+ text = { trigger = { has_global_variable = ffpa_sc_last_result global_var:ffpa_sc_last_result = 1 } localization_key = ffpa_sc_result_pass }
  text = { trigger = { always = yes } localization_key = ffpa_sc_result_fail }
 }
 ffpa_sc_aid_education_status = {
  type = country
- text = { trigger = { global_var:ffpa_sc_aid_education_phase = 1 var:ffpa_sc_aid_kind = 4 } localization_key = ffpa_sc_aid_education_registered_status }
- text = { trigger = { global_var:ffpa_sc_aid_education_phase = 2 var:ffpa_sc_aid_kind = 4 } localization_key = ffpa_sc_aid_education_recipient_status }
- text = { trigger = { global_var:ffpa_sc_aid_education_phase = 2 has_variable = ffpa_sc_aid_education_provider } localization_key = ffpa_sc_aid_education_provider_status }
- text = { trigger = { global_var:ffpa_sc_aid_education_phase = 1 } localization_key = ffpa_sc_aid_education_registration_status }
- text = { trigger = { global_var:ffpa_sc_aid_education_phase = 2 } localization_key = ffpa_sc_aid_education_active_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_education_phase has_variable = ffpa_sc_aid_kind global_var:ffpa_sc_aid_education_phase = 1 var:ffpa_sc_aid_kind = 4 } localization_key = ffpa_sc_aid_education_registered_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_education_phase has_variable = ffpa_sc_aid_kind global_var:ffpa_sc_aid_education_phase = 2 var:ffpa_sc_aid_kind = 4 } localization_key = ffpa_sc_aid_education_recipient_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_education_phase global_var:ffpa_sc_aid_education_phase = 2 has_variable = ffpa_sc_aid_education_provider } localization_key = ffpa_sc_aid_education_provider_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_education_phase global_var:ffpa_sc_aid_education_phase = 1 } localization_key = ffpa_sc_aid_education_registration_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_education_phase global_var:ffpa_sc_aid_education_phase = 2 } localization_key = ffpa_sc_aid_education_active_status }
  text = { trigger = { has_global_variable = ffpa_sc_aid_education_result global_var:ffpa_sc_aid_education_result = 0 } localization_key = ffpa_sc_aid_failed }
  text = { trigger = { has_global_variable = ffpa_sc_aid_education_result } localization_key = ffpa_sc_aid_ended }
  text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }
 }
 ffpa_sc_aid_talent_status = {
  type = country
- text = { trigger = { global_var:ffpa_sc_aid_talent_phase = 1 var:ffpa_sc_aid_kind = 5 } localization_key = ffpa_sc_aid_talent_registered_status }
- text = { trigger = { global_var:ffpa_sc_aid_talent_phase = 2 var:ffpa_sc_aid_kind = 5 } localization_key = ffpa_sc_aid_talent_recipient_status }
- text = { trigger = { global_var:ffpa_sc_aid_talent_phase = 2 has_variable = ffpa_sc_aid_talent_provider } localization_key = ffpa_sc_aid_talent_provider_status }
- text = { trigger = { global_var:ffpa_sc_aid_talent_phase = 1 } localization_key = ffpa_sc_aid_talent_registration_status }
- text = { trigger = { global_var:ffpa_sc_aid_talent_phase = 2 } localization_key = ffpa_sc_aid_talent_active_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_talent_phase has_variable = ffpa_sc_aid_kind global_var:ffpa_sc_aid_talent_phase = 1 var:ffpa_sc_aid_kind = 5 } localization_key = ffpa_sc_aid_talent_registered_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_talent_phase has_variable = ffpa_sc_aid_kind global_var:ffpa_sc_aid_talent_phase = 2 var:ffpa_sc_aid_kind = 5 } localization_key = ffpa_sc_aid_talent_recipient_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_talent_phase global_var:ffpa_sc_aid_talent_phase = 2 has_variable = ffpa_sc_aid_talent_provider } localization_key = ffpa_sc_aid_talent_provider_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_talent_phase global_var:ffpa_sc_aid_talent_phase = 1 } localization_key = ffpa_sc_aid_talent_registration_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_talent_phase global_var:ffpa_sc_aid_talent_phase = 2 } localization_key = ffpa_sc_aid_talent_active_status }
  text = { trigger = { has_global_variable = ffpa_sc_aid_talent_result global_var:ffpa_sc_aid_talent_result = 0 } localization_key = ffpa_sc_aid_failed }
  text = { trigger = { has_global_variable = ffpa_sc_aid_talent_result } localization_key = ffpa_sc_aid_ended }
  text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }
 }
 ffpa_sc_aid_production_status = {
  type = country
- text = { trigger = { global_var:ffpa_sc_aid_production_phase = 1 var:ffpa_sc_aid_kind = 6 } localization_key = ffpa_sc_aid_production_registered_status }
- text = { trigger = { global_var:ffpa_sc_aid_production_phase = 2 var:ffpa_sc_aid_kind = 6 } localization_key = ffpa_sc_aid_production_recipient_status }
- text = { trigger = { global_var:ffpa_sc_aid_production_phase = 2 has_variable = ffpa_sc_aid_production_provider } localization_key = ffpa_sc_aid_production_provider_status }
- text = { trigger = { global_var:ffpa_sc_aid_production_phase = 1 } localization_key = ffpa_sc_aid_production_registration_status }
- text = { trigger = { global_var:ffpa_sc_aid_production_phase = 2 } localization_key = ffpa_sc_aid_production_active_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_production_phase has_variable = ffpa_sc_aid_kind global_var:ffpa_sc_aid_production_phase = 1 var:ffpa_sc_aid_kind = 6 } localization_key = ffpa_sc_aid_production_registered_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_production_phase has_variable = ffpa_sc_aid_kind global_var:ffpa_sc_aid_production_phase = 2 var:ffpa_sc_aid_kind = 6 } localization_key = ffpa_sc_aid_production_recipient_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_production_phase global_var:ffpa_sc_aid_production_phase = 2 has_variable = ffpa_sc_aid_production_provider } localization_key = ffpa_sc_aid_production_provider_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_production_phase global_var:ffpa_sc_aid_production_phase = 1 } localization_key = ffpa_sc_aid_production_registration_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_production_phase global_var:ffpa_sc_aid_production_phase = 2 } localization_key = ffpa_sc_aid_production_active_status }
  text = { trigger = { has_global_variable = ffpa_sc_aid_production_result global_var:ffpa_sc_aid_production_result = 0 } localization_key = ffpa_sc_aid_failed }
  text = { trigger = { has_global_variable = ffpa_sc_aid_production_result } localization_key = ffpa_sc_aid_ended }
  text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }
 }
 ffpa_sc_aid_society_status = {
  type = country
- text = { trigger = { global_var:ffpa_sc_aid_society_phase = 1 var:ffpa_sc_aid_kind = 7 } localization_key = ffpa_sc_aid_society_registered_status }
- text = { trigger = { global_var:ffpa_sc_aid_society_phase = 2 var:ffpa_sc_aid_kind = 7 } localization_key = ffpa_sc_aid_society_recipient_status }
- text = { trigger = { global_var:ffpa_sc_aid_society_phase = 2 has_variable = ffpa_sc_aid_society_provider } localization_key = ffpa_sc_aid_society_provider_status }
- text = { trigger = { global_var:ffpa_sc_aid_society_phase = 1 } localization_key = ffpa_sc_aid_society_registration_status }
- text = { trigger = { global_var:ffpa_sc_aid_society_phase = 2 } localization_key = ffpa_sc_aid_society_active_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_society_phase has_variable = ffpa_sc_aid_kind global_var:ffpa_sc_aid_society_phase = 1 var:ffpa_sc_aid_kind = 7 } localization_key = ffpa_sc_aid_society_registered_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_society_phase has_variable = ffpa_sc_aid_kind global_var:ffpa_sc_aid_society_phase = 2 var:ffpa_sc_aid_kind = 7 } localization_key = ffpa_sc_aid_society_recipient_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_society_phase global_var:ffpa_sc_aid_society_phase = 2 has_variable = ffpa_sc_aid_society_provider } localization_key = ffpa_sc_aid_society_provider_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_society_phase global_var:ffpa_sc_aid_society_phase = 1 } localization_key = ffpa_sc_aid_society_registration_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_society_phase global_var:ffpa_sc_aid_society_phase = 2 } localization_key = ffpa_sc_aid_society_active_status }
  text = { trigger = { has_global_variable = ffpa_sc_aid_society_result global_var:ffpa_sc_aid_society_result = 0 } localization_key = ffpa_sc_aid_failed }
  text = { trigger = { has_global_variable = ffpa_sc_aid_society_result } localization_key = ffpa_sc_aid_ended }
  text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }
 }
 ffpa_sc_aid_military_status = {
  type = country
- text = { trigger = { global_var:ffpa_sc_aid_military_phase = 1 var:ffpa_sc_aid_kind = 8 } localization_key = ffpa_sc_aid_military_registered_status }
- text = { trigger = { global_var:ffpa_sc_aid_military_phase = 2 var:ffpa_sc_aid_kind = 8 } localization_key = ffpa_sc_aid_military_recipient_status }
- text = { trigger = { global_var:ffpa_sc_aid_military_phase = 2 has_variable = ffpa_sc_aid_military_provider } localization_key = ffpa_sc_aid_military_provider_status }
- text = { trigger = { global_var:ffpa_sc_aid_military_phase = 1 } localization_key = ffpa_sc_aid_military_registration_status }
- text = { trigger = { global_var:ffpa_sc_aid_military_phase = 2 } localization_key = ffpa_sc_aid_military_active_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_military_phase has_variable = ffpa_sc_aid_kind global_var:ffpa_sc_aid_military_phase = 1 var:ffpa_sc_aid_kind = 8 } localization_key = ffpa_sc_aid_military_registered_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_military_phase has_variable = ffpa_sc_aid_kind global_var:ffpa_sc_aid_military_phase = 2 var:ffpa_sc_aid_kind = 8 } localization_key = ffpa_sc_aid_military_recipient_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_military_phase global_var:ffpa_sc_aid_military_phase = 2 has_variable = ffpa_sc_aid_military_provider } localization_key = ffpa_sc_aid_military_provider_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_military_phase global_var:ffpa_sc_aid_military_phase = 1 } localization_key = ffpa_sc_aid_military_registration_status }
+ text = { trigger = { has_global_variable = ffpa_sc_aid_military_phase global_var:ffpa_sc_aid_military_phase = 2 } localization_key = ffpa_sc_aid_military_active_status }
  text = { trigger = { has_global_variable = ffpa_sc_aid_military_result global_var:ffpa_sc_aid_military_result = 0 } localization_key = ffpa_sc_aid_failed }
  text = { trigger = { has_global_variable = ffpa_sc_aid_military_result } localization_key = ffpa_sc_aid_ended }
  text = { trigger = { always = yes } localization_key = ffpa_sc_label_closed }

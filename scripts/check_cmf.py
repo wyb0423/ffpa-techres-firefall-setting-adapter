@@ -145,9 +145,10 @@ def check(cmf):
     old = Binding()
     old.v.update(ffpa_sc_membership=1, ffpa_sc_cooperation_months=25)
     old.g.update(ffpa_sc_vote=4, ffpa_sc_months_left=2)
+    old.journals['ffpa_sc_overview']['com_hide_scripted_buttons'] = 1
     for _ in range(3): old.run('ffpa_sc_cmf_bind_overview')
     assert old.v['ffpa_sc_cmf_overview_ref'] == 'je:ffpa_sc_overview'
-    assert old.journals['ffpa_sc_overview'] == {'com_hide_scripted_buttons': 1}
+    assert old.journals['ffpa_sc_overview'] == {}
     assert old.g['ffpa_sc_cmf_public_ref'] == 'je:ffpa_sc_cmf_organization'
     assert old.v['ffpa_sc_cooperation_months'] == 25 and old.g['ffpa_sc_months_left'] == 2
     del old.v['ffpa_sc_membership']
@@ -228,9 +229,8 @@ def check(cmf):
             state.g[prefix + '_phase'] = 2
 
     gui = (ROOT / 'gui/ffpa_compact_cmf.gui').read_text()
-    event_gui = (ROOT / 'gui/ffpa_compact_event_windows.gui').read_text()
     details = (ROOT / 'gui/ffpa_compact_cmf_details.gui').read_text()
-    for text in (gui, event_gui, details):
+    for text in (gui, details):
         # Normalize GUI declarations only for bracket/key parsing, not GUI semantics.
         text = re.sub(r'\b(?:types|blockoverride|block)\s+("[^"]+"|\w+)\s*\{', r'\1 = {', text)
         text = re.sub(r'\btype\s+(\w+)\s*=\s*\w+\s*\{', r'\1 = {', text)
@@ -253,16 +253,13 @@ def check(cmf):
     assert not any(e.key in ('scripted_button', 'on_monthly_pulse') for e in public.value)
     assert child(public, 'group').value == 'je_group_ffpa_sc_cmf'
     assert child(load('common/journal_entry_groups')['je_group_ffpa_sc_cmf'], 'context').value == 'none'
-    # Three groups cover every original overview button exactly once. CMF's actual
-    # grouping example compares ScriptedButton.GetName to the localization-key flag.
-    assigned = re.findall(r"EqualTo_string\(ScriptedButton.GetName, '(ffpa_sc_[^']+)'\)", details)
     overview = load('common/journal_entries')['ffpa_sc_overview']
     original = [e.value for e in overview.value if e.key == 'scripted_button']
-    assert sorted(assigned) == sorted(original) and len(assigned) == len(set(assigned))
-    assert 'scripted_journal_entry_button = ' in details
-    assert 'ExecuteEffect' not in details  # Native component owns execution/validation.
-    assert details.count('InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)') == 2
-    assert details.count('And(JournalEntry.IsValid, JournalEntry.IsActive)') == 2
+    assert len(original) == 22 and len(original) == len(set(original))
+    assert 'ffpa_sc_cmf_actions_widget' not in details
+    assert 'com_hide_scripted_buttons' not in (ROOT / 'common/journal_entries/ffpa_survivor_compact.txt').read_text()
+    assert details.count('InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)') == 1
+    assert details.count('And(JournalEntry.IsValid, JournalEntry.IsActive)') == 1
     for name in re.findall(r"GetScriptedGui\('([^']+)'\)", details):
         assert child(filters[name], 'scope').value == 'country'
         assert not any(e.key == 'effect' for e in filters[name].value)
@@ -270,15 +267,14 @@ def check(cmf):
         assert 'Scope.GetFlagName' not in text  # No legacy situation/struct grouping.
     for e in parse((ROOT / 'common/script_values/ffpa_compact_cmf.txt').read_text()):
         assert not any(n.key.startswith(('set_', 'change_', 'remove_')) for n in walk(e.value))
-    assert 'FONT:' not in event_gui and 'default_format = "#com_letter"' in event_gui
-    for name, file in (('com_event_window_letter_simple', 'com_letter_event_windows.gui'), ('com_event_window_telegram', 'com_telegram_event_windows.gui')):
-        assert f'type {name} =' in (cmf / 'gui/com_event_windows' / file).read_text()
+    events = load('events')
+    assert not any(any(e.key == 'gui_window' for e in event.value) for event in events.values())
     for lang in ('english', 'simp_chinese'):
         source = (ROOT / f'localization/{lang}/ffpa_survivor_compact_l_{lang}.yml').read_text(encoding='utf-8-sig')
         for number in (2, 3):
             desc = re.search(rf'^ ffpa_sc\.{number}\.d: "(.*)"$', source, re.M)[1]
             assert '#' not in desc, 'Paper telegram must not inherit pale journal colors'
-    print(f'PASS CMF {metadata["version"]}: initialization/binding, ballot groups/thresholds, aid phase/fee guards, all 21 grouped buttons, GUI contracts (not engine proof)')
+    print(f'PASS CMF {metadata["version"]}: initialization/binding, ballot threshold, aid phase/fee guards, all 22 native buttons, GUI contracts (not engine proof)')
 
 
 if __name__ == '__main__':

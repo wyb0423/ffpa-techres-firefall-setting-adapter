@@ -1,7 +1,6 @@
 namespace = ffpa_sc
 
 ffpa_sc.1 = {
- gui_window = com_event_window_letter_simple
  type = country_event
  placement = root
  title = ffpa_sc.1.t
@@ -17,7 +16,8 @@ ffpa_sc.1 = {
  }
  option = {
   name = ffpa_sc_accept
-  ffpa_sc_join = yes
+  # The description already states the result; do not preview the global tally chain.
+  hidden_effect = { ffpa_sc_join = yes }
   ai_chance = {
    base = 10
    modifier = {
@@ -34,7 +34,6 @@ ffpa_sc.1 = {
 }
 
 ffpa_sc.2 = {
- gui_window = ffpa_sc_cmf_telegram
  type = country_event
  placement = root
  title = ffpa_sc.2.t
@@ -51,7 +50,6 @@ ffpa_sc.2 = {
 }
 
 ffpa_sc.3 = {
- gui_window = ffpa_sc_cmf_telegram
  type = country_event
  placement = root
  title = ffpa_sc.3.t

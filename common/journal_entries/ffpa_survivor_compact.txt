@@ -1,10 +1,5 @@
 ffpa_sc_overview = {
  widget = {
-  gui = "gui/ffpa_compact_cmf_details.gui"
-  name = "ffpa_sc_cmf_actions_widget"
-  container = "custom_widget_container_2"
- }
- widget = {
   gui = "gui/ffpa_compact_cmf.gui"
   name = "ffpa_sc_cmf_ballot_widget"
   container = "com_custom_widget_container_scripted_progress_bars"
@@ -13,7 +8,6 @@ ffpa_sc_overview = {
  immediate = {
   ztr_un_permanent_member_ranking_variables = yes ztr_un_permanent_member_ranking_effect = yes
   com_save_journal_to_variable = { name = ffpa_sc_cmf_overview_ref }
-  scope:journal_entry = { set_variable = com_hide_scripted_buttons }
  }
  on_yearly_pulse = { effect = { ztr_un_permanent_member_ranking_variables = yes ztr_un_permanent_member_ranking_effect = yes } }
  icon = "gfx/interface/icons/event_icons/united_nations.dds"

@@ -26,7 +26,8 @@ ffpa_sc_cmf_bind_overview = {
  if = {
   limit = { ffpa_sc_member = yes has_journal_entry = ffpa_sc_overview }
   set_variable = { name = ffpa_sc_cmf_overview_ref value = je:ffpa_sc_overview }
-  je:ffpa_sc_overview = { set_variable = com_hide_scripted_buttons }
+  # Old journal instances lack the later custom action widget; keep native buttons visible.
+  je:ffpa_sc_overview = { remove_variable = com_hide_scripted_buttons }
  }
  else = { remove_variable = ffpa_sc_cmf_overview_ref }
  if = {

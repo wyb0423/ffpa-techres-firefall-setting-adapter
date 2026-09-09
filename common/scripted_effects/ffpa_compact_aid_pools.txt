@@ -133,6 +133,8 @@ ffpa_sc_aid_settle_pool = {
    set_global_variable = { name = ffpa_sc_aid_$POOL$_total value = 0 }
    every_country = {
     limit = { var:ffpa_sc_aid_kind = $ID$ }
+    # Old saves can contain a registered recipient from before quotes persisted.
+    if = { limit = { NOT = { has_variable = ffpa_sc_aid_quote } } set_variable = { name = ffpa_sc_aid_quote value = ffpa_sc_aid_$POOL$_quote } }
     set_variable = { name = ffpa_sc_aid_strength value = global_var:ffpa_sc_aid_$POOL$_strength }
     if = { limit = { has_variable = ffpa_sc_aid_reduced } change_variable = { name = ffpa_sc_aid_strength multiply = 0.5 } }
     change_global_variable = { name = ffpa_sc_aid_$POOL$_total add = ffpa_sc_aid_weekly_fee }
@@ -181,15 +183,19 @@ ffpa_sc_aid_settle_pool = {
     if = {
      limit = { has_variable = ffpa_sc_aid_$POOL$_provider }
      if = { limit = { NOT = { has_modifier = $COST$ } } add_modifier = $COST$ }
-    }
-    else = { if = { limit = { has_modifier = $COST$ } remove_modifier = $COST$ } }
-    if = {
-     limit = { var:ffpa_sc_aid_$POOL$_income > 0 }
-     if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
-     add_modifier = { name = $INCOME$ multiplier = ffpa_sc_aid_$POOL$_income_multiplier }
-     set_variable = { name = ffpa_sc_aid_$POOL$_paid_income value = var:ffpa_sc_aid_$POOL$_income }
+     if = {
+      limit = { var:ffpa_sc_aid_$POOL$_income > 0 }
+      if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
+      add_modifier = { name = $INCOME$ multiplier = ffpa_sc_aid_$POOL$_income_multiplier }
+      set_variable = { name = ffpa_sc_aid_$POOL$_paid_income value = var:ffpa_sc_aid_$POOL$_income }
+     }
+     else = {
+      if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
+      remove_variable = ffpa_sc_aid_$POOL$_paid_income
+     }
     }
     else = {
+     if = { limit = { has_modifier = $COST$ } remove_modifier = $COST$ }
      if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
      remove_variable = ffpa_sc_aid_$POOL$_paid_income
     }
