@@ -85,7 +85,7 @@ ffpa_sc_leave_trade = {
 ffpa_sc_start_works = {
  name = ffpa_sc_start_works
  desc = ffpa_sc_start_works_desc
- visible = { has_global_variable = ffpa_sc_works_open NOT = { var:ffpa_sc_task = 3 } }
+ visible = { has_global_variable = ffpa_sc_works_open NOT = { has_variable = ffpa_sc_task } }
  possible = { ffpa_sc_member = yes ffpa_sc_operational = yes NOT = { has_variable = ffpa_sc_task } NOT = { has_variable = ffpa_sc_works_retry } ffpa_sc_has_work = yes }
  effect = { ffpa_sc_start_works = yes }
  # AI calls the same guarded effects from the global monthly management pass.
@@ -94,7 +94,7 @@ ffpa_sc_start_works = {
 ffpa_sc_reform = {
  name = ffpa_sc_reform
  desc = ffpa_sc_reform_desc
- visible = { OR = { var:ffpa_sc_task = 1 var:ffpa_sc_task = 2 } }
+ visible = { has_variable = ffpa_sc_task OR = { var:ffpa_sc_task = 1 var:ffpa_sc_task = 2 } }
  possible = { ffpa_sc_can_reform = yes }
  effect = { ffpa_sc_reform = yes }
  # AI calls the same guarded effects from the global monthly management pass.

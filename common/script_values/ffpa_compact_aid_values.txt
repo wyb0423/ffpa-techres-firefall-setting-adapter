@@ -31,24 +31,37 @@ ffpa_sc_aid_full_quote = {
  divide = 52
 }
 ffpa_sc_aid_weekly_fee = {
- value = var:ffpa_sc_aid_quote
- multiply = var:ffpa_sc_aid_strength
+ if = {
+  limit = { has_variable = ffpa_sc_aid_quote has_variable = ffpa_sc_aid_strength }
+  value = var:ffpa_sc_aid_quote
+  multiply = var:ffpa_sc_aid_strength
+ }
+ else = { value = 0 }
 }
 ffpa_sc_aid_prestige_weight = { value = prestige min = 0 }
 # Short-lived globals are owned by one synchronous pool settlement, not journals.
 ffpa_sc_aid_allocated_income = {
- value = global_var:ffpa_sc_aid_distribution_total
- multiply = var:ffpa_sc_aid_distribution_weight
- divide = global_var:ffpa_sc_aid_distribution_weight_total
- multiply = 100
- floor = yes
- divide = 100
+ if = {
+  limit = {
+   has_global_variable = ffpa_sc_aid_distribution_total
+   has_global_variable = ffpa_sc_aid_distribution_weight_total
+   global_var:ffpa_sc_aid_distribution_weight_total > 0
+   has_variable = ffpa_sc_aid_distribution_weight
+  }
+  value = global_var:ffpa_sc_aid_distribution_total
+  multiply = var:ffpa_sc_aid_distribution_weight
+  divide = global_var:ffpa_sc_aid_distribution_weight_total
+  multiply = 100
+  floor = yes
+  divide = 100
+ }
+ else = { value = 0 }
 }
-ffpa_sc_aid_education_income_multiplier = { value = var:ffpa_sc_aid_education_income }
-ffpa_sc_aid_talent_income_multiplier = { value = var:ffpa_sc_aid_talent_income }
-ffpa_sc_aid_production_income_multiplier = { value = var:ffpa_sc_aid_production_income }
-ffpa_sc_aid_society_income_multiplier = { value = var:ffpa_sc_aid_society_income }
-ffpa_sc_aid_military_income_multiplier = { value = var:ffpa_sc_aid_military_income }
+ffpa_sc_aid_education_income_multiplier = { if = { limit = { has_variable = ffpa_sc_aid_education_income } value = var:ffpa_sc_aid_education_income } else = { value = 0 } }
+ffpa_sc_aid_talent_income_multiplier = { if = { limit = { has_variable = ffpa_sc_aid_talent_income } value = var:ffpa_sc_aid_talent_income } else = { value = 0 } }
+ffpa_sc_aid_production_income_multiplier = { if = { limit = { has_variable = ffpa_sc_aid_production_income } value = var:ffpa_sc_aid_production_income } else = { value = 0 } }
+ffpa_sc_aid_society_income_multiplier = { if = { limit = { has_variable = ffpa_sc_aid_society_income } value = var:ffpa_sc_aid_society_income } else = { value = 0 } }
+ffpa_sc_aid_military_income_multiplier = { if = { limit = { has_variable = ffpa_sc_aid_military_income } value = var:ffpa_sc_aid_military_income } else = { value = 0 } }
 
 # Provisional tuning values, not calibrated Firefall starting-country statistics.
 ffpa_sc_aid_research_threshold = 200

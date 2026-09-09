@@ -135,7 +135,9 @@ ffpa_sc_aid_settle_pool = {
     limit = { var:ffpa_sc_aid_kind = $ID$ }
     # Old saves can contain a registered recipient from before quotes persisted.
     if = { limit = { NOT = { has_variable = ffpa_sc_aid_quote } } set_variable = { name = ffpa_sc_aid_quote value = ffpa_sc_aid_$POOL$_quote } }
-    set_variable = { name = ffpa_sc_aid_strength value = global_var:ffpa_sc_aid_$POOL$_strength }
+    set_variable = { name = ffpa_sc_aid_strength value = 1 }
+    if = { limit = { global_var:ffpa_sc_aid_$POOL$_providers = 1 } set_variable = { name = ffpa_sc_aid_strength value = 0.5 } }
+    else_if = { limit = { global_var:ffpa_sc_aid_$POOL$_providers = 2 } set_variable = { name = ffpa_sc_aid_strength value = 0.75 } }
     if = { limit = { has_variable = ffpa_sc_aid_reduced } change_variable = { name = ffpa_sc_aid_strength multiply = 0.5 } }
     change_global_variable = { name = ffpa_sc_aid_$POOL$_total add = ffpa_sc_aid_weekly_fee }
     # Bookkeeping is not proof of the persisted modifier's actual multiplier.

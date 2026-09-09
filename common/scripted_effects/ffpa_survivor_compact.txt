@@ -251,6 +251,7 @@ ffpa_sc_begin_vote = {
 ffpa_sc_resolve_vote = {
  every_country = { limit = { ffpa_sc_can_vote = yes } ffpa_sc_ai_vote = yes }
  ffpa_sc_count_votes = yes
+ set_global_variable = { name = ffpa_sc_last_vote value = global_var:ffpa_sc_vote }
  if = {
   limit = {
    global_var:ffpa_sc_support > global_var:ffpa_sc_against

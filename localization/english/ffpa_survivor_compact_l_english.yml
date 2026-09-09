@@ -83,7 +83,7 @@
  ffpa_sc.2.t: "Compact Assembly Opens"
  ffpa_sc.2.d: "Session Open\nA new proposal enters a full 3-month vote.\n\nOur Action\nOpen the Survivors Compact overview for the current subject and tally. Vote for, against or abstain.\n\nSupporting access to cooperation does not enrol our country."
  ffpa_sc.3.t: "Compact Vote Concluded"
- ffpa_sc.3.d: "Vote Settlement\nResult: [GetPlayer.GetCustom('ffpa_sc_vote_result')]\nThe assembly enters 9 months of recess.\n\nWhat Follows\nPassed aid proposals with valid supply open 1 month of registration within this recess. Other passed protocols open for voluntary participation.\n\nCheck the overview for actual availability. Passage never creates a task for us automatically."
+ ffpa_sc.3.d: "Vote Settlement\nResult: [GetPlayer.GetCustom('ffpa_sc_vote_result')]\nThe assembly enters 9 months of recess.\n\nWhat Follows\nPassed aid proposals with valid supply open 1 month of registration within this recess; eligible countries may register directly in this event. Other passed protocols open for voluntary participation.\n\nThe same entry remains in the overview. Passage never creates a task for us automatically."
  ffpa_sc.4.t: "Preparation Period Ended"
  ffpa_sc.4.d: "#header Preparation Incomplete#!\n#N The original deadline has passed#!; this commitment ends.\n\n#header Retry#!\nTry again #V 3 years#! after the original deadline.\n\n#header Retained Progress#!\nDomestic laws and institutions remain unchanged. No infamy is added."
  ffpa_sc.5.t: "Survivors Compact: Save Migration"
