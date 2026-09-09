@@ -186,7 +186,7 @@ ffpa_sc_aid_settle_pool = {
     if = {
      limit = { var:ffpa_sc_aid_$POOL$_income > 0 }
      if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
-     add_modifier = { name = $INCOME$ multiplier = var:ffpa_sc_aid_$POOL$_income }
+     add_modifier = { name = $INCOME$ multiplier = ffpa_sc_aid_$POOL$_income_multiplier }
      set_variable = { name = ffpa_sc_aid_$POOL$_paid_income value = var:ffpa_sc_aid_$POOL$_income }
     }
     else = {

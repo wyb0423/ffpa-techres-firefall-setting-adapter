@@ -44,6 +44,11 @@ ffpa_sc_aid_allocated_income = {
  floor = yes
  divide = 100
 }
+ffpa_sc_aid_education_income_multiplier = { value = var:ffpa_sc_aid_education_income }
+ffpa_sc_aid_talent_income_multiplier = { value = var:ffpa_sc_aid_talent_income }
+ffpa_sc_aid_production_income_multiplier = { value = var:ffpa_sc_aid_production_income }
+ffpa_sc_aid_society_income_multiplier = { value = var:ffpa_sc_aid_society_income }
+ffpa_sc_aid_military_income_multiplier = { value = var:ffpa_sc_aid_military_income }
 
 # Provisional tuning values, not calibrated Firefall starting-country statistics.
 ffpa_sc_aid_research_threshold = 200

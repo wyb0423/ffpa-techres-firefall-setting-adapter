@@ -191,6 +191,12 @@ def check():
     for path in (ROOT / 'common').rglob('*.txt'):
         if path.name != 'ffpa_compact_aid_debug.txt':
             assert 'ffpa_sc_aid_debug' not in path.read_text(encoding='utf-8-sig'), 'Debug probe must stay manual'
+    settle = parse(EFFECTS['ffpa_sc_aid_settle_pool'])[0]
+    income_add = next(e for e in walk(settle.value) if e.key == 'add_modifier' and isinstance(e.value, list) and child(e, 'name').value == '$INCOME$')
+    assert child(income_add, 'multiplier').value == 'ffpa_sc_aid_$POOL$_income_multiplier'
+    for pool in 'education talent production society military'.split():
+        value = VALUES[f'ffpa_sc_aid_{pool}_income_multiplier']
+        assert [(e.key, e.value) for e in value] == [('value', f'var:ffpa_sc_aid_{pool}_income')]
     main = {e.key: e for e in parse((ROOT / 'common/scripted_effects/ffpa_survivor_compact.txt').read_text())}
     pulse = list(walk(main['ffpa_sc_monthly'].value))
     tick = next(e.start for e in pulse if e.key == 'ffpa_sc_aid_tick_all')
