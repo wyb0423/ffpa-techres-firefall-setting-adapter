@@ -3,23 +3,23 @@ ffpa_sc_cooldown_duration = 9
 ffpa_sc_seat_limit = 3
 ffpa_sc_vote_minimum = 2
 ffpa_sc_quorum_divisor = 3
-# Scores concern opening an optional channel, not obliging a country to join.
+# No default support: opening an optional channel still needs a concrete interest.
 ffpa_sc_education_score = {
- value = 5
+ value = 0
  if = { limit = { literacy_rate < 0.60 } add = 5 }
  if = { limit = { ffpa_sc_education_ready = yes } add = 5 }
  if = { limit = { ruler ?= { has_ideology = ideology:ideology_traditionalist } } subtract = 3 }
  add = ffpa_sc_proposer_relations
 }
 ffpa_sc_trade_score = {
- value = 3
+ value = 0
  if = { limit = { total_trade_value > 0 } add = 7 }
  if = { limit = { ffpa_sc_trade_ready = no } subtract = 3 }
  if = { limit = { has_law_or_variant = law_type:law_free_trade } add = 3 }
  add = ffpa_sc_proposer_relations
 }
 ffpa_sc_works_score = {
- value = 3
+ value = 0
  if = { limit = { ffpa_sc_has_work = yes } add = 6 }
  if = { limit = { scaled_debt > 0.50 } subtract = 2 }
  add = ffpa_sc_proposer_relations

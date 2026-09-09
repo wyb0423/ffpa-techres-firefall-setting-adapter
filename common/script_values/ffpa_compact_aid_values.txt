@@ -50,10 +50,14 @@ ffpa_sc_aid_research_threshold = 200
 ffpa_sc_aid_education_release_enabled = 1 # User-requested default; literacy tuning is provisional.
 ffpa_sc_aid_education_rate = 0.006
 ffpa_sc_aid_education_quote = { value = gdp multiply = ffpa_sc_aid_education_rate divide = 52 }
+# Scores also select AI proposals. Unaffordable optional participation is not a forced loss.
+# ponytail: prestige is a revenue proxy, not a payout forecast; calibrate against live pool receipts.
+# Providers weigh domestic research/training pressure against that proxy.
 ffpa_sc_aid_education_score = {
- value = 3
+ value = 0
  if = { limit = { ffpa_sc_aid_education_ready = yes } add = 3
   if = { limit = { prestige < 50 } subtract = 3 }
+  if = { limit = { ffpa_sc_aid_research_ready = no } subtract = 4 }
  }
  else_if = { limit = { ffpa_sc_aid_education_need = yes } add = 4
   if = { limit = { ffpa_sc_aid_education_afford = no } subtract = 5 }
@@ -63,9 +67,10 @@ ffpa_sc_aid_education_score = {
 ffpa_sc_aid_talent_rate = 0.004
 ffpa_sc_aid_talent_quote = { value = gdp multiply = ffpa_sc_aid_talent_rate divide = 52 }
 ffpa_sc_aid_talent_score = {
- value = 3
+ value = 0
  if = { limit = { ffpa_sc_aid_talent_ready = yes } add = 3
   if = { limit = { prestige < 50 } subtract = 3 }
+  if = { limit = { ffpa_sc_aid_talent_need = yes } subtract = 4 }
  }
  else_if = { limit = { ffpa_sc_aid_talent_need = yes } add = 4
   if = { limit = { ffpa_sc_aid_talent_afford = no } subtract = 5 }
@@ -75,9 +80,10 @@ ffpa_sc_aid_talent_score = {
 ffpa_sc_aid_production_rate = 0.005
 ffpa_sc_aid_production_quote = { value = gdp multiply = ffpa_sc_aid_production_rate divide = 52 }
 ffpa_sc_aid_production_score = {
- value = 3
+ value = 0
  if = { limit = { ffpa_sc_aid_production_ready = yes } add = 3
   if = { limit = { prestige < 50 } subtract = 3 }
+  if = { limit = { ffpa_sc_aid_production_need = yes } subtract = 4 }
  }
  else_if = { limit = { ffpa_sc_aid_production_need = yes } add = 4
   if = { limit = { ffpa_sc_aid_production_afford = no } subtract = 5 }
@@ -87,9 +93,10 @@ ffpa_sc_aid_production_score = {
 ffpa_sc_aid_society_rate = 0.005
 ffpa_sc_aid_society_quote = { value = gdp multiply = ffpa_sc_aid_society_rate divide = 52 }
 ffpa_sc_aid_society_score = {
- value = 3
+ value = 0
  if = { limit = { ffpa_sc_aid_society_ready = yes } add = 3
   if = { limit = { prestige < 50 } subtract = 3 }
+  if = { limit = { ffpa_sc_aid_society_need = yes } subtract = 4 }
  }
  else_if = { limit = { ffpa_sc_aid_society_need = yes } add = 4
   if = { limit = { ffpa_sc_aid_society_afford = no } subtract = 5 }
@@ -99,9 +106,10 @@ ffpa_sc_aid_society_score = {
 ffpa_sc_aid_military_rate = 0.005
 ffpa_sc_aid_military_quote = { value = gdp multiply = ffpa_sc_aid_military_rate divide = 52 }
 ffpa_sc_aid_military_score = {
- value = 3
+ value = 0
  if = { limit = { ffpa_sc_aid_military_ready = yes } add = 3
   if = { limit = { prestige < 50 } subtract = 3 }
+  if = { limit = { ffpa_sc_aid_military_need = yes } subtract = 4 }
  }
  else_if = { limit = { ffpa_sc_aid_military_need = yes } add = 4
   if = { limit = { ffpa_sc_aid_military_afford = no } subtract = 5 }
