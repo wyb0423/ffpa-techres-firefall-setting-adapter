@@ -1,6 +1,7 @@
 namespace = ffpa_sc
 
 ffpa_sc.1 = {
+ gui_window = com_event_window_letter_simple
  type = country_event
  placement = root
  title = ffpa_sc.1.t
@@ -33,6 +34,7 @@ ffpa_sc.1 = {
 }
 
 ffpa_sc.2 = {
+ gui_window = ffpa_sc_cmf_telegram
  type = country_event
  placement = root
  title = ffpa_sc.2.t
@@ -49,6 +51,7 @@ ffpa_sc.2 = {
 }
 
 ffpa_sc.3 = {
+ gui_window = ffpa_sc_cmf_telegram
  type = country_event
  placement = root
  title = ffpa_sc.3.t
@@ -103,6 +106,9 @@ ffpa_sc.6 = {
  duration = 1
  option = { name = ffpa_sc_aid_keep default_option = yes
   ffpa_sc_aid_keep_commitment = yes ai_chance = { base = 1 }
+ }
+ option = { name = ffpa_sc_aid_change_direction
+  ffpa_sc_aid_change_direction = yes ai_chance = { base = 0 }
  }
  option = { name = ffpa_sc_aid_reduce_current
   if = { limit = { ffpa_sc_aid_can_review = yes } ffpa_sc_aid_reduce_current = yes }

@@ -121,6 +121,12 @@ def check():
         state.g[prefix + '_phase'] = 1
         assert state.display(prefix + '_status') == prefix + '_registration_status'
         state.v.update(ffpa_sc_aid_kind=ident, ffpa_sc_aid_quote=100)
+        assert state.display('ffpa_sc_aid_current_benefits') == prefix + '_benefits'
+        assert state.display('ffpa_sc_aid_alternative_offer') == prefix + '_alternative_benefits'
+        state.v['ffpa_sc_aid_alternative'] = 1
+        assert state.display('ffpa_sc_aid_current_benefits') == prefix + '_alternative_benefits'
+        assert state.display('ffpa_sc_aid_commitment') == 'ffpa_sc_aid_commitment_alternative'
+        del state.v['ffpa_sc_aid_alternative']
         assert state.display(prefix + '_status') == prefix + '_registered_status'
         assert state.display('ffpa_sc_aid_payment') == 'ffpa_sc_aid_payment_none'
         state.g[prefix + '_phase'] = 2

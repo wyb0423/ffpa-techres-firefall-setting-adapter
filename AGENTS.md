@@ -4,6 +4,8 @@
 
 本仓库负责 Tech & Res 与 `2050: The Fire Falls` 的科技世界观适配，以及 Tech & Res 引入的联合国机制改造。用户已明确要求两者放在同一项目，不拆分独立机制 Mod。目标版本为 Victoria 3 `1.13.*`，硬依赖 ID 为 `tech.res` 和 `alter_time_2050_fire_falls`。
 
+2026-09-09 已批准接入 CMF，新增硬依赖 `com.github.Victoria-3-Modding-Co-op.Community-Mod-Framework`。CMF 在两个内容前置之前加载，本适配包仍最后加载。公共组织页只读；原国家日志保留操作与状态接口。进度使用 CMF 底层 GUI 组件直接绑定只读数值，不新增投票时钟或角色缓存。设计见 `docs/superpowers/specs/2026-09-09-compact-cmf-design.md`。
+
 ## 修改规则
 
 - 本 Mod 必须在两个依赖之后加载，不使用 `replace_path`。

@@ -24,12 +24,14 @@ class World:
         self.g, self.c, self.wars = {}, {}, set()
         self.month, self.operational = 0, True
         self.writes = 0
+        self.events = []
 
     def country(self, name, ready=False, prestige=100, gdp=5200000):
         self.c[name] = dict(v={}, mods={}, expiry={}, member=True, eligible=True,
                             ready=ready, prestige=F(prestige), gdp=F(gdp), default=False,
                             ai=False, scaled_debt=F(0), net_fixed_income=F(2000),
-                            gold_reserves=F(52000), construction=True, research='production')
+                            gold_reserves=F(52000), construction=True, research='production',
+                            literacy_rate=F('0.65'), schools=3)
 
     def number(self, value, country):
         if isinstance(value, list):
@@ -38,8 +40,8 @@ class World:
                 if e.key == 'if':
                     if self.test(child(e, 'limit').value, country):
                         body = [x for x in e.value if x.key != 'limit']
-                        assert all(x.key == 'add' for x in body)
-                        result += sum(self.number(x.value, country) for x in body)
+                        assert all(x.key in ('add', 'subtract') for x in body)
+                        result += sum(self.number(x.value, country) * (1 if x.key == 'add' else -1) for x in body)
                     continue
                 if e.key == 'floor':
                     assert e.value == 'yes'
@@ -57,7 +59,7 @@ class World:
         if value.startswith('global_var:'): return self.g.get(value[11:], F(0))
         if value.startswith('var:'): return self.c[country]['v'].get(value[4:], F(0))
         if value in VALUES: return self.number(VALUES[value], country)
-        if value in ('gdp', 'prestige', 'scaled_debt', 'net_fixed_income', 'gold_reserves'):
+        if value in ('gdp', 'prestige', 'scaled_debt', 'net_fixed_income', 'gold_reserves', 'literacy_rate'):
             return self.c[country][value]
         return F(value)
 
@@ -74,6 +76,11 @@ class World:
             elif k == 'has_modifier': ok = v in c['mods']
             elif k == 'always': ok = v == 'yes'
             elif k == 'is_ai': ok = c['ai'] == (v == 'yes')
+            elif k == 'institution_investment_level':
+                assert child(e, 'institution').value == 'institution_schools'
+                threshold = child(e, 'value')
+                assert threshold.op == '>='
+                ok = c['schools'] >= self.number(threshold.value, country)
             elif k == 'is_researching_technology_category': ok = c['research'] == v
             elif k == 'ffpa_sc_has_work': ok = c['construction'] == (v == 'yes')
             elif k.startswith('ffpa_sc_aid_') and k.endswith('_ready'):
@@ -125,6 +132,7 @@ class World:
                 self.run(k, country, **({} if v == 'yes' else {x.key: x.value for x in v}))
             elif k == 'trigger_event':
                 assert v == 'ffpa_sc.6'  # Delivery/presentation needs the real engine.
+                self.events.append((country, v))
             elif k in ('set_global_variable', 'set_variable'):
                 fields = {'name': v} if isinstance(v, str) else {x.key: x.value for x in v}
                 target = self.g if k == 'set_global_variable' else self.c[country]['v']
@@ -403,7 +411,106 @@ def check():
             assert w.c == expected, ('stale modifier survived settlement', pool, providers)
             w.run('ffpa_sc_aid_refresh_all')
             assert w.c == expected  # Repeated refresh preserves timers and balances.
-    print('PASS: actual aid scripts, registration/launch/settlement/exit/rounding/timers/stale modifiers')
+    check_alternatives(modifiers)
+    print('PASS: actual aid scripts, registration/launch/settlement/exit/rounding/timers/stale modifiers/annual alternatives')
+
+
+def check_alternatives(modifiers):
+    events = {e.key: e for e in parse((ROOT / 'events/ffpa_survivor_compact.txt').read_text())}
+    choices = [e for e in events['ffpa_sc.6'].value if e.key == 'option']
+    assert [child(e, 'name').value for e in choices] == ['ffpa_sc_aid_keep', 'ffpa_sc_aid_change_direction', 'ffpa_sc_aid_reduce_current', 'ffpa_sc_aid_cancel']
+    assert child(choices[1], 'ffpa_sc_aid_change_direction').value == 'yes'
+
+    def start(pool):
+        w = World()
+        for name in 'ABC': w.country(name, ready=True)
+        w.country('X')
+        w.run(f'ffpa_sc_aid_{pool}_open')
+        w.run(f'ffpa_sc_aid_{pool}_register', 'X')
+        w.run('ffpa_sc_aid_tick_all')
+        return w
+
+    for pool in ('education', 'talent', 'production', 'society', 'military'):
+        base = f'ffpa_sc_aid_{pool}_benefit_modifier'
+        alt = base + '_alternative'
+        fields = {e.key: F(e.value) for e in modifiers[alt].value if e.key != 'icon'}
+        expected = ({'state_education_access_add': F('.075'), 'state_literacy_growth_add': F('.0025')}
+                    if pool == 'education' else {'state_pop_qualifications_mult': F('.30'), 'state_education_access_add': F('.025')}
+                    if pool == 'talent' else {f'country_{pool}_tech_research_speed_mult': F('.10'), f'country_{pool}_tech_spread_mult': F('.20')})
+        assert fields == expected
+        for ending in ('withdraw', 'war', 'default', 'expiry', 'no_provider'):
+            w = start(pool); c = w.c['X']; months = f'ffpa_sc_aid_{pool}_months'
+            original = copy.deepcopy((w.g, w.c))
+            w.run('ffpa_sc_aid_change_direction', 'X')
+            assert (w.g, w.c) == original  # Before the first anniversary.
+            w.g[months] = 24
+            fee, deadline = c['v']['ffpa_sc_aid_paid_fee'], c['expiry']['ffpa_sc_works_retry']
+            receipts = [w.c[n]['v'][f'ffpa_sc_aid_{pool}_paid_income'] for n in 'ABC']
+            w.run('ffpa_sc_aid_change_direction', 'X')
+            assert base not in c['mods'] and c['mods'][alt] == 1
+            assert c['v']['ffpa_sc_aid_paid_fee'] == fee and w.g[months] == 24
+            assert [w.c[n]['v'][f'ffpa_sc_aid_{pool}_paid_income'] for n in 'ABC'] == receipts
+            after = copy.deepcopy((w.g, w.c))
+            for action in ('change_direction', 'reduce_current', 'keep_commitment'):
+                w.run('ffpa_sc_aid_' + action, 'X')
+                assert (w.g, w.c) == after  # Review consumed; no stacking or repeat switch.
+            for provider, strength in (('C', F('.75')), ('B', F('.5'))):
+                w.c[provider]['ready'] = False
+                w.run('ffpa_sc_aid_refresh_all')
+                assert base not in c['mods'] and c['mods'][alt] == strength
+                assert c['v']['ffpa_sc_aid_paid_fee'] == fee * strength
+                assert c['expiry']['ffpa_sc_works_retry'] == deadline
+            if ending == 'withdraw': w.run('ffpa_sc_aid_withdraw_current', 'X')
+            elif ending == 'expiry':
+                w.g[months] = 1; w.run('ffpa_sc_aid_tick_all')
+            else:
+                if ending == 'war': w.wars.add(frozenset(('A', 'X')))
+                elif ending == 'default': c['default'] = True
+                else: w.c['A']['ready'] = False
+                w.run('ffpa_sc_aid_refresh_all')
+            assert alt not in c['mods'] and base not in c['mods']
+            assert 'ffpa_sc_aid_alternative' not in c['v'] and 'ffpa_sc_aid_kind' not in c['v']
+            assert c['expiry']['ffpa_sc_works_retry'] == deadline
+        # Keeping or reducing the original route also consumes the review.
+        for action in ('keep_commitment', 'reduce_current'):
+            w = start(pool); w.g[f'ffpa_sc_aid_{pool}_months'] = 24
+            w.run('ffpa_sc_aid_' + action, 'X')
+            before = copy.deepcopy((w.g, w.c))
+            w.run('ffpa_sc_aid_change_direction', 'X')
+            assert (w.g, w.c) == before
+        for case in ('coverage', 'literate', 'schools', 'debt', 'deficit', 'default'):
+            w = start(pool); c = w.c['X']; w.g[f'ffpa_sc_aid_{pool}_months'] = 24
+            c.update(ai=True, literacy_rate=F('.5'), schools=2)
+            if case == 'literate': c['literacy_rate'] = F('.6')
+            if case == 'schools': c['schools'] = 3
+            if case == 'debt': c['scaled_debt'] = F('.4')
+            if case == 'deficit': c.update(net_fixed_income=F(-2000), gold_reserves=F(0))
+            if case == 'default': c['default'] = True
+            w.run('ffpa_sc_aid_ai_review', 'X')
+            assert ('ffpa_sc_aid_alternative' in c['v']) == (case == 'coverage' and pool in ('education','talent'))
+            if case in ('debt', 'deficit'): assert c['v']['ffpa_sc_aid_reduced'] == 1
+            if case == 'default': assert 'ffpa_sc_aid_kind' not in c['v']
+        # Pre-upgrade projects lack the alternative flag. Preserve decisions and
+        # queued reviews; these are script-state snapshots, not engine save loads.
+        for legacy in ('unreviewed', 'offered', 'kept', 'reduced'):
+            w = start(pool); c = w.c['X']; w.g[f'ffpa_sc_aid_{pool}_months'] = 20
+            if legacy == 'offered': c['v']['ffpa_sc_aid_review_offered'] = 1
+            if legacy in ('kept', 'reduced'):
+                w.run('ffpa_sc_aid_' + ('keep_commitment' if legacy == 'kept' else 'reduce_current'), 'X')
+            deadline = c['expiry']['ffpa_sc_works_retry']
+            for _ in range(2):
+                w.run('ffpa_sc_aid_refresh_all')
+                w.run('ffpa_sc_aid_notify_review', 'X')
+            assert len(w.events) == (1 if legacy == 'unreviewed' else 0)
+            assert alt not in c['mods'] and 'ffpa_sc_aid_alternative' not in c['v']
+            assert c['mods'][base] == (F('.5') if legacy == 'reduced' else 1)
+            assert c['expiry']['ffpa_sc_works_retry'] == deadline
+            # A delivered review may remain open when its project ends.
+            w.run('ffpa_sc_aid_withdraw_current', 'X')
+            after = copy.deepcopy((w.g, w.c))
+            for action in ('change_direction', 'keep_commitment', 'reduce_current', 'withdraw_current'):
+                w.run('ffpa_sc_aid_' + action, 'X')
+                assert (w.g, w.c) == after
 
 
 if __name__ == '__main__':

@@ -1,0 +1,26 @@
+# Public contextless directory, not a country-owned action journal.
+ffpa_sc_cmf_organization = {
+ group = je_group_ffpa_sc_cmf
+ icon = "gfx/interface/icons/event_icons/united_nations.dds"
+ weight = 100
+ can_deactivate = yes
+ transferable = no
+ progressbar = no
+ should_be_involved = { ffpa_sc_member = yes }
+ should_show_when_not_involved = { has_global_variable = ffpa_sc_founded }
+ complete = { always = no }
+ immediate = {
+  set_global_variable = { name = ffpa_sc_cmf_public_ref value = scope:journal_entry }
+  scope:journal_entry = { com_hide_all_journal_elements_for_interorg_effect = yes }
+ }
+ widget = {
+  gui = "gui/ffpa_compact_cmf.gui"
+  name = "ffpa_sc_cmf_organization_widget"
+  container = "custom_widget_container_je_icon"
+ }
+ widget = {
+  gui = "gui/ffpa_compact_cmf_details.gui"
+  name = "ffpa_sc_cmf_details_widget"
+  container = "custom_widget_container_2"
+ }
+}

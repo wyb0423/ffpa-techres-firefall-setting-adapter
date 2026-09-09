@@ -32,4 +32,8 @@ ffpa_sc_aid_debug_pool = {
   limit = { has_modifier = ffpa_sc_aid_$POOL$_benefit_modifier }
   debug_log = "FFPA_AID $POOL$ benefit=[THIS.GetCountry.GetTimedModifier('ffpa_sc_aid_$POOL$_benefit_modifier').GetTooltip]"
  }
+ if = {
+  limit = { has_modifier = ffpa_sc_aid_$POOL$_benefit_modifier_alternative }
+  debug_log = "FFPA_AID $POOL$ alternative=[THIS.GetCountry.GetTimedModifier('ffpa_sc_aid_$POOL$_benefit_modifier_alternative').GetTooltip]"
+ }
 }

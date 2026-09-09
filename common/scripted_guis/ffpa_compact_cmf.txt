@@ -1,0 +1,57 @@
+# Read-only country filters. Each GUI row supplies Country.MakeScope, never GetPlayer.
+ffpa_sc_cmf_support_filter = {
+ scope = country
+ is_shown = { ffpa_sc_can_vote = yes ffpa_sc_eligible = yes var:ffpa_sc_choice = 1 }
+}
+ffpa_sc_cmf_against_filter = {
+ scope = country
+ is_shown = { ffpa_sc_can_vote = yes ffpa_sc_eligible = yes var:ffpa_sc_choice = -1 }
+}
+ffpa_sc_cmf_neutral_filter = {
+ scope = country
+ is_shown = { ffpa_sc_can_vote = yes ffpa_sc_eligible = yes NOT = { var:ffpa_sc_choice = 1 } NOT = { var:ffpa_sc_choice = -1 } }
+}
+ffpa_sc_cmf_ineligible_filter = {
+ scope = country
+ is_shown = { NOT = { ffpa_sc_can_vote = yes ffpa_sc_eligible = yes } }
+}
+ffpa_sc_cmf_education_provider_filter = {
+ scope = country
+ is_shown = { has_global_variable = ffpa_sc_aid_education_phase ffpa_sc_member = yes has_variable = ffpa_sc_aid_education_provider }
+}
+ffpa_sc_cmf_education_recipient_filter = {
+ scope = country
+ is_shown = { has_global_variable = ffpa_sc_aid_education_phase ffpa_sc_member = yes var:ffpa_sc_aid_kind = 4 }
+}
+ffpa_sc_cmf_talent_provider_filter = {
+ scope = country
+ is_shown = { has_global_variable = ffpa_sc_aid_talent_phase ffpa_sc_member = yes has_variable = ffpa_sc_aid_talent_provider }
+}
+ffpa_sc_cmf_talent_recipient_filter = {
+ scope = country
+ is_shown = { has_global_variable = ffpa_sc_aid_talent_phase ffpa_sc_member = yes var:ffpa_sc_aid_kind = 5 }
+}
+ffpa_sc_cmf_production_provider_filter = {
+ scope = country
+ is_shown = { has_global_variable = ffpa_sc_aid_production_phase ffpa_sc_member = yes has_variable = ffpa_sc_aid_production_provider }
+}
+ffpa_sc_cmf_production_recipient_filter = {
+ scope = country
+ is_shown = { has_global_variable = ffpa_sc_aid_production_phase ffpa_sc_member = yes var:ffpa_sc_aid_kind = 6 }
+}
+ffpa_sc_cmf_society_provider_filter = {
+ scope = country
+ is_shown = { has_global_variable = ffpa_sc_aid_society_phase ffpa_sc_member = yes has_variable = ffpa_sc_aid_society_provider }
+}
+ffpa_sc_cmf_society_recipient_filter = {
+ scope = country
+ is_shown = { has_global_variable = ffpa_sc_aid_society_phase ffpa_sc_member = yes var:ffpa_sc_aid_kind = 7 }
+}
+ffpa_sc_cmf_military_provider_filter = {
+ scope = country
+ is_shown = { has_global_variable = ffpa_sc_aid_military_phase ffpa_sc_member = yes has_variable = ffpa_sc_aid_military_provider }
+}
+ffpa_sc_cmf_military_recipient_filter = {
+ scope = country
+ is_shown = { has_global_variable = ffpa_sc_aid_military_phase ffpa_sc_member = yes var:ffpa_sc_aid_kind = 8 }
+}

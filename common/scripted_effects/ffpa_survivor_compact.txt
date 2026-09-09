@@ -415,6 +415,8 @@ ffpa_sc_monthly = {
   # ponytail: sessions open on the monthly agenda; this gives three full global months
   # without a fragile delayed country event whose host can be annexed.
   ffpa_sc_begin_vote = yes
+  # Decide the agenda before works consume potential aid recipients' free slots.
+  every_country = { limit = { ffpa_sc_member = yes is_ai = yes } ffpa_sc_ai_start_works = yes }
  }
  else = { ffpa_sc_clear_vote = yes }
 }
@@ -462,11 +464,19 @@ ffpa_sc_ai_manage = {
     }
     ffpa_sc_join_trade = yes
    }
-   if = {
-    limit = { ffpa_sc_ai_solvent = yes ffpa_sc_has_work = yes NOT = { has_variable = ffpa_sc_task } ffpa_sc_aid_waiting_for_round = no }
-    ffpa_sc_start_works = yes
-   }
    if = { limit = { legitimacy >= 40 } ffpa_sc_reform = yes }
   }
+ }
+}
+
+ffpa_sc_ai_start_works = {
+ if = {
+  limit = {
+   is_ai = yes ffpa_sc_member = yes ffpa_sc_ai_solvent = yes
+   NOT = { has_variable = ffpa_sc_ai_rest }
+   ffpa_sc_has_work = yes NOT = { has_variable = ffpa_sc_task }
+   ffpa_sc_aid_waiting_for_round = no
+  }
+  ffpa_sc_start_works = yes
  }
 }

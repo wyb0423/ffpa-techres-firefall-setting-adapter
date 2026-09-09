@@ -12,6 +12,13 @@
   "relationships": [
     {
       "rel_type": "dependency",
+      "id": "com.github.Victoria-3-Modding-Co-op.Community-Mod-Framework",
+      "display_name": "Community Mod Framework",
+      "resource_type": "mod",
+      "version": "1.*"
+    },
+    {
+      "rel_type": "dependency",
       "id": "tech.res",
       "display_name": "[1.13] Tech & Res",
       "resource_type": "mod",

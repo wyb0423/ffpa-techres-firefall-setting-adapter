@@ -45,12 +45,12 @@ class State:
             elif k=='has_variable':ok=v in self.v
             elif k=='has_modifier':ok=v in self.mod
             elif k=='ffpa_sc_member':ok=('ffpa_sc_membership' in self.v)==(v=='yes')
-            elif k=='is_ai':ok=v=='no'
+            elif k=='is_ai':ok=self.inputs.get('is_ai',False)==(v=='yes')
             elif k in self.inputs:ok=self.inputs[k]==(v=='yes')
             elif k.startswith(('var:','global_var:')) or k in SCALARS:
                 a,b=self.value(k),self.value(v)
                 ok={'=':a==b,'>':a>b,'<':a<b,'>=':a>=b,'<=':a<=b,'!=':a!=b}[e.op]
-            elif k.startswith('ffpa_sc_can_join_'):
+            elif k.startswith('ffpa_sc_can_join_') or k=='ffpa_sc_aid_waiting_for_round':
                 trigger=TRIGGERS[k]
                 ok=self.test(trigger.value)==(v=='yes')
             elif k=='any_country':ok=False  # only used for vacant seats in clock checks
@@ -188,6 +188,19 @@ def check_states():
     assert 'ffpa_sc_task' not in s.v and s.expiry['set_variable','ffpa_sc_works_retry']==60
     s.advance(48);s.run('ffpa_sc_start_works');assert s.v['ffpa_sc_task']==3
     s.advance(36);s.run('ffpa_sc_refresh');assert 'ffpa_sc_works_modifier' not in s.mod and 'ffpa_sc_task' not in s.v
+    # AI works must leave a free slot while any aid proposal/registration is pending.
+    for waiting in ('ffpa_sc_pending','ffpa_sc_vote',*(f'ffpa_sc_aid_{p}_phase' for p in ('education','talent','production','society','military')),None):
+        s=State();s.inputs.update(is_ai=True,ffpa_sc_ai_solvent=True,ffpa_sc_has_work=True)
+        s.g.update(ffpa_sc_founded=1,ffpa_sc_works_open=1);s.run('ffpa_sc_join')
+        if waiting:s.g[waiting]=1 if waiting.endswith('_phase') else 6
+        s.run('ffpa_sc_ai_start_works')
+        assert ('ffpa_sc_task' in s.v)==(waiting is None),waiting
+    for blocked in ('player','rest','insolvent','occupied'):
+        s=State();s.inputs.update(is_ai=blocked!='player',ffpa_sc_ai_solvent=blocked!='insolvent',ffpa_sc_has_work=True)
+        s.g.update(ffpa_sc_founded=1,ffpa_sc_works_open=1);s.run('ffpa_sc_join')
+        if blocked=='rest':s.v['ffpa_sc_ai_rest']=1
+        if blocked=='occupied':s.v['ffpa_sc_task']=6
+        before=s.v.copy();s.run('ffpa_sc_ai_start_works');assert s.v==before,blocked
     print('PASS actual-script checks: voting clock/quorum, late join, task cap, retry dates, rollback and cleanup')
 
 def check_static(workshop):
@@ -217,7 +230,8 @@ def check_static(workshop):
     for p in (ROOT/'common/journal_entries').glob('*.txt'):
         assert not any(e.key in ('change_global_variable','ffpa_sc_monthly') for e in walk(parse(p.read_text()))),p
     assert sum(e.key=='ffpa_sc_monthly' for p in (ROOT/'common/on_actions').glob('*.txt') for e in walk(parse(p.read_text())))==1
-    assert len([k for k in load('common/journal_entries') if k.startswith('ffpa_sc_')])==2
+    assert {k for k in load('common/journal_entries') if k.startswith('ffpa_sc_')}=={
+        'ffpa_sc_overview','ffpa_sc_task_journal','ffpa_sc_cmf_organization'}
     for k,e in load('common/journal_entries').items():
         if k.startswith('ffpa_sc_'):
             assert not any(x.key=='invalid' for x in e.value),k
@@ -226,6 +240,9 @@ def check_static(workshop):
     ticks=[(key,e) for key,eff in EFFECTS.items() for e in walk(eff.value) if e.key=='ffpa_sc_membership_tick']
     assert [key for key,e in ticks]==['ffpa_sc_monthly']
     monthly=EFFECTS['ffpa_sc_monthly']
+    agenda=list(walk(monthly.value))
+    assert next(e.start for e in agenda if e.key=='ffpa_sc_ai_propose') < next(e.start for e in agenda if e.key=='ffpa_sc_begin_vote') < next(e.start for e in agenda if e.key=='ffpa_sc_ai_start_works')
+    assert not any(e.key=='ffpa_sc_start_works' for e in walk(EFFECTS['ffpa_sc_ai_manage'].value))
     loop=next(e for e in monthly.value if e.key=='every_country' and any(x.key=='ffpa_sc_membership_tick' for x in e.value))
     assert child(child(loop,'limit'),'ffpa_sc_member').value=='yes'
     assert [e.key for e in loop.value]==['limit','ffpa_sc_membership_tick','ffpa_sc_refresh','ffpa_sc_ai_manage']
@@ -284,7 +301,8 @@ def check_static(workshop):
     assert child(options[1],'default_option').value=='yes'
     assert SCALARS['ffpa_sc_vote_duration']==3 and SCALARS['ffpa_sc_cooldown_duration']==9
     meta=json.loads((ROOT/'.metadata/metadata.json').read_text());assert meta['supported_game_version']=='1.13.*'
-    assert {r['id'] for r in meta['relationships']}=={'tech.res','alter_time_2050_fire_falls'}
+    assert {r['id'] for r in meta['relationships']}=={'tech.res','alter_time_2050_fire_falls',
+        'com.github.Victoria-3-Modding-Co-op.Community-Mod-Framework'}
     technologies=load('common/technology/technologies')
     population_changes={
         'penicillin': {'state_birth_rate_mult':'0.05'},

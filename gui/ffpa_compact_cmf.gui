@@ -1,0 +1,71 @@
+# Local JE widgets only; the shared CMF journal and sidebar remain upstream-owned.
+flowcontainer = {
+ name = "ffpa_sc_cmf_ballot_widget"
+ direction = vertical
+ ffpa_sc_cmf_ballot = {}
+}
+flowcontainer = {
+ name = "ffpa_sc_cmf_task_widget"
+ visible = "[GetPlayer.MakeScope.Var('ffpa_sc_task').IsSet]"
+ direction = vertical
+ spacing = 5
+ ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_task_caption" }
+ ffpa_sc_cmf_bar = {
+  tooltip = "ffpa_sc_cmf_task_help"
+  blockoverride "com_base_value" { value = "[GetPlayer.MakeScope.ScriptValue('ffpa_sc_cmf_task_progress')]" }
+ }
+ ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_task_help" }
+}
+flowcontainer = {
+ name = "ffpa_sc_cmf_organization_widget"
+ direction = vertical
+ spacing = 10
+ parentanchor = hcenter
+ icon = {
+  size = { 72 72 }
+  parentanchor = hcenter
+  texture = "[JournalEntry.GetIcon]"
+ }
+ com_journal_reason_text = {}
+ ffpa_sc_cmf_ballot = {}
+ ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_coordinators" }
+ flowcontainer = {
+  direction = vertical
+  ignoreinvisible = yes
+  datamodel = "[JournalEntry.GetInvolvedCountries]"
+  item = {
+   flowcontainer = {
+    visible = "[Country.MakeScope.Var('ffpa_sc_coordinator').IsSet]"
+    spacing = 10
+    widget = { size = { 60 30 } small_flag = {} }
+    textbox = { text = "[Country.GetName]" autoresize = yes parentanchor = vcenter align = nobaseline }
+   }
+  }
+ }
+}
+
+types ffpa_sc_cmf_types {
+ type ffpa_sc_cmf_text = textbox {
+  min_width = 504
+  max_width = 504
+  multiline = yes
+  autoresize = yes
+  align = left|nobaseline
+ }
+ # CMF's base component has no struct dependency after overriding its value/tooltip.
+ type ffpa_sc_cmf_bar = com_progressbar_base {
+  tooltip = "ffpa_sc_cmf_vote_help"
+  blockoverride "noprogresstexture" { noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds" }
+  blockoverride "progresstexture" { progresstexture = "gfx/interface/progressbar/progressbar_default.dds" }
+ }
+ type ffpa_sc_cmf_ballot = flowcontainer {
+  visible = "[GetGlobalVariable('ffpa_sc_vote').IsSet]"
+  direction = vertical
+  spacing = 5
+  ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_vote_caption" }
+  ffpa_sc_cmf_bar = {
+   blockoverride "com_base_value" { value = "[GetPlayer.MakeScope.ScriptValue('ffpa_sc_cmf_vote_progress')]" }
+  }
+  ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_vote_help" }
+ }
+}

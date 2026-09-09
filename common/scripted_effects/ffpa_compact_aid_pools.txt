@@ -65,8 +65,10 @@ ffpa_sc_aid_drop_recipient = {
   remove_variable = ffpa_sc_aid_reduced
   remove_variable = ffpa_sc_aid_reviewed
   remove_variable = ffpa_sc_aid_review_offered
+  remove_variable = ffpa_sc_aid_alternative
   if = { limit = { has_modifier = ffpa_sc_aid_fee_modifier } remove_modifier = ffpa_sc_aid_fee_modifier }
   if = { limit = { has_modifier = $BENEFIT$ } remove_modifier = $BENEFIT$ }
+  if = { limit = { has_modifier = $BENEFIT$_alternative } remove_modifier = $BENEFIT$_alternative }
   # ffpa_sc_works_retry survives all forms of exit, including war and default.
  }
 }
@@ -140,7 +142,12 @@ ffpa_sc_aid_settle_pool = {
     add_modifier = { name = ffpa_sc_aid_fee_modifier multiplier = ffpa_sc_aid_weekly_fee }
     set_variable = { name = ffpa_sc_aid_paid_fee value = ffpa_sc_aid_weekly_fee }
     if = { limit = { has_modifier = $BENEFIT$ } remove_modifier = $BENEFIT$ }
-    add_modifier = { name = $BENEFIT$ multiplier = var:ffpa_sc_aid_strength }
+    if = { limit = { has_modifier = $BENEFIT$_alternative } remove_modifier = $BENEFIT$_alternative }
+    if = {
+     limit = { has_variable = ffpa_sc_aid_alternative }
+     add_modifier = { name = $BENEFIT$_alternative multiplier = var:ffpa_sc_aid_strength }
+    }
+    else = { add_modifier = { name = $BENEFIT$ multiplier = var:ffpa_sc_aid_strength } }
     set_variable = { name = ffpa_sc_aid_applied_strength value = var:ffpa_sc_aid_strength }
    }
    set_global_variable = { name = ffpa_sc_aid_distribution_total value = global_var:ffpa_sc_aid_$POOL$_total }

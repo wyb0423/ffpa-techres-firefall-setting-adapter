@@ -1,0 +1,166 @@
+# Read-only values; no progress cache, scheduled drift or duplicate voting clock.
+ffpa_sc_cmf_votes_required = {
+ value = ffpa_sc_vote_minimum
+ if = {
+  limit = { has_global_variable = ffpa_sc_vote }
+  min = { value = global_var:ffpa_sc_electorate divide = ffpa_sc_quorum_divisor ceiling = yes }
+  min = { value = global_var:ffpa_sc_against add = 1 }
+ }
+}
+ffpa_sc_cmf_vote_progress = {
+ value = 0
+ if = {
+  limit = { has_global_variable = ffpa_sc_vote }
+  value = global_var:ffpa_sc_support
+  divide = ffpa_sc_cmf_votes_required
+ }
+ min = 0
+ max = 1
+}
+ffpa_sc_cmf_coordinator_count = {
+ value = 0
+ every_country = {
+  limit = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_coordinator }
+  add = 1
+ }
+}
+ffpa_sc_cmf_task_duration = {
+ value = 1
+ if = { limit = { var:ffpa_sc_task = 1 } value = 60 }
+ else_if = { limit = { var:ffpa_sc_task = 2 } value = 60 }
+ else_if = { limit = { var:ffpa_sc_task = 3 } value = 36 }
+ else_if = { limit = { var:ffpa_sc_aid_kind = 8 global_var:ffpa_sc_aid_military_phase = 2 } value = 36 }
+ else_if = { limit = { var:ffpa_sc_aid_kind = 7 global_var:ffpa_sc_aid_society_phase = 2 } value = 36 }
+ else_if = { limit = { var:ffpa_sc_aid_kind = 6 global_var:ffpa_sc_aid_production_phase = 2 } value = 36 }
+ else_if = { limit = { var:ffpa_sc_aid_kind = 5 global_var:ffpa_sc_aid_talent_phase = 2 } value = 36 }
+ else_if = { limit = { var:ffpa_sc_aid_kind = 4 global_var:ffpa_sc_aid_education_phase = 2 } value = 36 }
+}
+ffpa_sc_cmf_task_remaining = {
+ value = 0
+ if = { limit = { var:ffpa_sc_task = 1 has_variable = ffpa_sc_education_months_left } value = var:ffpa_sc_education_months_left }
+ else_if = { limit = { var:ffpa_sc_task = 2 has_variable = ffpa_sc_trade_months_left } value = var:ffpa_sc_trade_months_left }
+ else_if = { limit = { var:ffpa_sc_task = 3 has_variable = ffpa_sc_works_months_left } value = var:ffpa_sc_works_months_left }
+ else_if = { limit = { var:ffpa_sc_aid_kind = 4 has_global_variable = ffpa_sc_aid_education_months } value = global_var:ffpa_sc_aid_education_months }
+ else_if = { limit = { var:ffpa_sc_aid_kind = 5 has_global_variable = ffpa_sc_aid_talent_months } value = global_var:ffpa_sc_aid_talent_months }
+ else_if = { limit = { var:ffpa_sc_aid_kind = 6 has_global_variable = ffpa_sc_aid_production_months } value = global_var:ffpa_sc_aid_production_months }
+ else_if = { limit = { var:ffpa_sc_aid_kind = 7 has_global_variable = ffpa_sc_aid_society_months } value = global_var:ffpa_sc_aid_society_months }
+ else_if = { limit = { var:ffpa_sc_aid_kind = 8 has_global_variable = ffpa_sc_aid_military_months } value = global_var:ffpa_sc_aid_military_months }
+ min = 0
+}
+ffpa_sc_cmf_task_progress = {
+ value = ffpa_sc_cmf_task_duration
+ subtract = ffpa_sc_cmf_task_remaining
+ divide = ffpa_sc_cmf_task_duration
+ min = 0
+ max = 1
+}
+
+ffpa_sc_cmf_education_strength = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_education_phase = 2 has_global_variable = ffpa_sc_aid_education_strength } value = global_var:ffpa_sc_aid_education_strength multiply = 100 }
+ else_if = { limit = { global_var:ffpa_sc_aid_education_phase = 1 }
+  if = { limit = { global_var:ffpa_sc_aid_education_providers = 1 } value = 50 }
+  else_if = { limit = { global_var:ffpa_sc_aid_education_providers = 2 } value = 75 }
+  else_if = { limit = { global_var:ffpa_sc_aid_education_providers >= 3 } value = 100 }
+ }
+}
+ffpa_sc_cmf_education_total = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_education_phase = 2 has_global_variable = ffpa_sc_aid_education_total } value = global_var:ffpa_sc_aid_education_total }
+}
+ffpa_sc_cmf_education_income = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_education_phase = 2 has_modifier = ffpa_sc_aid_education_income_modifier has_variable = ffpa_sc_aid_education_paid_income } value = var:ffpa_sc_aid_education_paid_income }
+}
+ffpa_sc_cmf_education_fee = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_education_phase = 2 var:ffpa_sc_aid_kind = 4 has_modifier = ffpa_sc_aid_fee_modifier has_variable = ffpa_sc_aid_paid_fee } value = var:ffpa_sc_aid_paid_fee }
+}
+
+ffpa_sc_cmf_talent_strength = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_talent_phase = 2 has_global_variable = ffpa_sc_aid_talent_strength } value = global_var:ffpa_sc_aid_talent_strength multiply = 100 }
+ else_if = { limit = { global_var:ffpa_sc_aid_talent_phase = 1 }
+  if = { limit = { global_var:ffpa_sc_aid_talent_providers = 1 } value = 50 }
+  else_if = { limit = { global_var:ffpa_sc_aid_talent_providers = 2 } value = 75 }
+  else_if = { limit = { global_var:ffpa_sc_aid_talent_providers >= 3 } value = 100 }
+ }
+}
+ffpa_sc_cmf_talent_total = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_talent_phase = 2 has_global_variable = ffpa_sc_aid_talent_total } value = global_var:ffpa_sc_aid_talent_total }
+}
+ffpa_sc_cmf_talent_income = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_talent_phase = 2 has_modifier = ffpa_sc_aid_talent_income_modifier has_variable = ffpa_sc_aid_talent_paid_income } value = var:ffpa_sc_aid_talent_paid_income }
+}
+ffpa_sc_cmf_talent_fee = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_talent_phase = 2 var:ffpa_sc_aid_kind = 5 has_modifier = ffpa_sc_aid_fee_modifier has_variable = ffpa_sc_aid_paid_fee } value = var:ffpa_sc_aid_paid_fee }
+}
+
+ffpa_sc_cmf_production_strength = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_production_phase = 2 has_global_variable = ffpa_sc_aid_production_strength } value = global_var:ffpa_sc_aid_production_strength multiply = 100 }
+ else_if = { limit = { global_var:ffpa_sc_aid_production_phase = 1 }
+  if = { limit = { global_var:ffpa_sc_aid_production_providers = 1 } value = 50 }
+  else_if = { limit = { global_var:ffpa_sc_aid_production_providers = 2 } value = 75 }
+  else_if = { limit = { global_var:ffpa_sc_aid_production_providers >= 3 } value = 100 }
+ }
+}
+ffpa_sc_cmf_production_total = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_production_phase = 2 has_global_variable = ffpa_sc_aid_production_total } value = global_var:ffpa_sc_aid_production_total }
+}
+ffpa_sc_cmf_production_income = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_production_phase = 2 has_modifier = ffpa_sc_aid_production_income_modifier has_variable = ffpa_sc_aid_production_paid_income } value = var:ffpa_sc_aid_production_paid_income }
+}
+ffpa_sc_cmf_production_fee = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_production_phase = 2 var:ffpa_sc_aid_kind = 6 has_modifier = ffpa_sc_aid_fee_modifier has_variable = ffpa_sc_aid_paid_fee } value = var:ffpa_sc_aid_paid_fee }
+}
+
+ffpa_sc_cmf_society_strength = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_society_phase = 2 has_global_variable = ffpa_sc_aid_society_strength } value = global_var:ffpa_sc_aid_society_strength multiply = 100 }
+ else_if = { limit = { global_var:ffpa_sc_aid_society_phase = 1 }
+  if = { limit = { global_var:ffpa_sc_aid_society_providers = 1 } value = 50 }
+  else_if = { limit = { global_var:ffpa_sc_aid_society_providers = 2 } value = 75 }
+  else_if = { limit = { global_var:ffpa_sc_aid_society_providers >= 3 } value = 100 }
+ }
+}
+ffpa_sc_cmf_society_total = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_society_phase = 2 has_global_variable = ffpa_sc_aid_society_total } value = global_var:ffpa_sc_aid_society_total }
+}
+ffpa_sc_cmf_society_income = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_society_phase = 2 has_modifier = ffpa_sc_aid_society_income_modifier has_variable = ffpa_sc_aid_society_paid_income } value = var:ffpa_sc_aid_society_paid_income }
+}
+ffpa_sc_cmf_society_fee = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_society_phase = 2 var:ffpa_sc_aid_kind = 7 has_modifier = ffpa_sc_aid_fee_modifier has_variable = ffpa_sc_aid_paid_fee } value = var:ffpa_sc_aid_paid_fee }
+}
+
+ffpa_sc_cmf_military_strength = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_military_phase = 2 has_global_variable = ffpa_sc_aid_military_strength } value = global_var:ffpa_sc_aid_military_strength multiply = 100 }
+ else_if = { limit = { global_var:ffpa_sc_aid_military_phase = 1 }
+  if = { limit = { global_var:ffpa_sc_aid_military_providers = 1 } value = 50 }
+  else_if = { limit = { global_var:ffpa_sc_aid_military_providers = 2 } value = 75 }
+  else_if = { limit = { global_var:ffpa_sc_aid_military_providers >= 3 } value = 100 }
+ }
+}
+ffpa_sc_cmf_military_total = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_military_phase = 2 has_global_variable = ffpa_sc_aid_military_total } value = global_var:ffpa_sc_aid_military_total }
+}
+ffpa_sc_cmf_military_income = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_military_phase = 2 has_modifier = ffpa_sc_aid_military_income_modifier has_variable = ffpa_sc_aid_military_paid_income } value = var:ffpa_sc_aid_military_paid_income }
+}
+ffpa_sc_cmf_military_fee = {
+ value = 0
+ if = { limit = { global_var:ffpa_sc_aid_military_phase = 2 var:ffpa_sc_aid_kind = 8 has_modifier = ffpa_sc_aid_fee_modifier has_variable = ffpa_sc_aid_paid_fee } value = var:ffpa_sc_aid_paid_fee }
+}

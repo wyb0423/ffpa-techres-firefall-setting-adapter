@@ -143,6 +143,14 @@ ffpa_sc_aid_ai_review = {
   else_if = { limit = { OR = { scaled_debt >= 0.40
     AND = { net_fixed_income < ffpa_sc_aid_remaining_full_cost gold_reserves < ffpa_sc_aid_reserve_requirement }
   } } ffpa_sc_aid_reduce_current = yes }
+  else_if = {
+   limit = {
+    OR = { var:ffpa_sc_aid_kind = 4 var:ffpa_sc_aid_kind = 5 }
+    literacy_rate < 0.60
+    NOT = { institution_investment_level = { institution = institution_schools value >= 3 } }
+   }
+   ffpa_sc_aid_change_direction = yes
+  }
   else = { set_variable = ffpa_sc_aid_reviewed }
  }
 }
@@ -155,4 +163,18 @@ ffpa_sc_aid_notify_review = {
 }
 ffpa_sc_aid_keep_commitment = {
  if = { limit = { ffpa_sc_aid_can_review = yes } set_variable = ffpa_sc_aid_reviewed }
+}
+
+# One choice per round; old saves without this flag retain their original benefits.
+ffpa_sc_aid_change_direction = {
+ if = {
+  limit = { ffpa_sc_aid_can_review = yes }
+  set_variable = ffpa_sc_aid_alternative
+  set_variable = ffpa_sc_aid_reviewed
+  if = { limit = { var:ffpa_sc_aid_kind = 4 } ffpa_sc_aid_education_refresh = yes }
+  else_if = { limit = { var:ffpa_sc_aid_kind = 5 } ffpa_sc_aid_talent_refresh = yes }
+  else_if = { limit = { var:ffpa_sc_aid_kind = 6 } ffpa_sc_aid_production_refresh = yes }
+  else_if = { limit = { var:ffpa_sc_aid_kind = 7 } ffpa_sc_aid_society_refresh = yes }
+  else_if = { limit = { var:ffpa_sc_aid_kind = 8 } ffpa_sc_aid_military_refresh = yes }
+ }
 }

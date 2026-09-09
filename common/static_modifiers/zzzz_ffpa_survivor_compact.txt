@@ -119,3 +119,33 @@ ffpa_sc_aid_military_income_modifier = {
  icon = gfx/interface/icons/timed_modifier_icons/tech_agreement.dds
  country_tax_income_add = 1
 }
+
+ffpa_sc_aid_education_benefit_modifier_alternative = {
+ icon = gfx/interface/icons/timed_modifier_icons/tech_agreement.dds
+ state_education_access_add = 0.075
+ state_literacy_growth_add = 0.0025
+}
+
+ffpa_sc_aid_talent_benefit_modifier_alternative = {
+ icon = gfx/interface/icons/timed_modifier_icons/tech_agreement.dds
+ state_pop_qualifications_mult = 0.30
+ state_education_access_add = 0.025
+}
+
+ffpa_sc_aid_production_benefit_modifier_alternative = {
+ icon = gfx/interface/icons/timed_modifier_icons/tech_agreement.dds
+ country_production_tech_research_speed_mult = 0.10
+ country_production_tech_spread_mult = 0.20
+}
+
+ffpa_sc_aid_society_benefit_modifier_alternative = {
+ icon = gfx/interface/icons/timed_modifier_icons/tech_agreement.dds
+ country_society_tech_research_speed_mult = 0.10
+ country_society_tech_spread_mult = 0.20
+}
+
+ffpa_sc_aid_military_benefit_modifier_alternative = {
+ icon = gfx/interface/icons/timed_modifier_icons/tech_agreement.dds
+ country_military_tech_research_speed_mult = 0.10
+ country_military_tech_spread_mult = 0.20
+}

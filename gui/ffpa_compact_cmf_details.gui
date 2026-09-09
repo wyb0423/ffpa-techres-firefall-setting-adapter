@@ -1,0 +1,253 @@
+# CMF widgets; GUI selections are local, every action still uses its native button object.
+flowcontainer = {
+ name = "ffpa_sc_cmf_actions_widget"
+ direction = vertical
+ spacing = 8
+ ffpa_sc_cmf_to_public = {}
+ flowcontainer = {
+  spacing = 3
+  ffpa_sc_cmf_tab = {
+   size = { 166 34 }
+   onclick = "[GetVariableSystem.Set('ffpa_sc_cmf_action_tab', 'assembly')]"
+   blockoverride "tab_text" { text = "ffpa_sc_cmf_tab_assembly" }
+   blockoverride "tab_selected" { visible = "[Or(GetVariableSystem.HasValue('ffpa_sc_cmf_action_tab', 'assembly'), Not(GetVariableSystem.Exists('ffpa_sc_cmf_action_tab')))]" }
+  }
+  ffpa_sc_cmf_tab = {
+   size = { 166 34 }
+   onclick = "[GetVariableSystem.Set('ffpa_sc_cmf_action_tab', 'protocols')]"
+   blockoverride "tab_text" { text = "ffpa_sc_cmf_tab_protocols" }
+   blockoverride "tab_selected" { visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_action_tab', 'protocols')]" }
+  }
+  ffpa_sc_cmf_tab = {
+   size = { 166 34 }
+   onclick = "[GetVariableSystem.Set('ffpa_sc_cmf_action_tab', 'projects')]"
+   blockoverride "tab_text" { text = "ffpa_sc_cmf_tab_projects" }
+   blockoverride "tab_selected" { visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_action_tab', 'projects')]" }
+  }
+ }
+ ffpa_sc_cmf_button_group = {
+  visible = "[Or(GetVariableSystem.HasValue('ffpa_sc_cmf_action_tab', 'assembly'), Not(GetVariableSystem.Exists('ffpa_sc_cmf_action_tab')))]"
+  blockoverride "button_filter" { visible = "[Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_vote_support'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_vote_against'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_vote_abstain'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_propose_education'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_propose_trade'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_propose_works'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_education_propose'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_talent_propose'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_production_propose'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_society_propose'), EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_military_propose')))))))))))]" }
+ }
+ ffpa_sc_cmf_button_group = {
+  visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_action_tab', 'protocols')]"
+  blockoverride "button_filter" { visible = "[Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_join_education'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_leave_education'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_join_trade'), EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_leave_trade'))))]" }
+ }
+ ffpa_sc_cmf_button_group = {
+  visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_action_tab', 'projects')]"
+  blockoverride "button_filter" { visible = "[Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_start_works'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_education_register'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_talent_register'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_production_register'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_society_register'), EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_military_register'))))))]" }
+ }
+}
+flowcontainer = {
+ name = "ffpa_sc_cmf_details_widget"
+ direction = vertical
+ spacing = 10
+ ffpa_sc_cmf_to_national = {}
+ flowcontainer = {
+  spacing = 4
+  ffpa_sc_cmf_tab = {
+   size = { 250 34 }
+   onclick = "[GetVariableSystem.Set('ffpa_sc_cmf_public_tab', 'assembly')]"
+   blockoverride "tab_text" { text = "ffpa_sc_cmf_tab_assembly" }
+   blockoverride "tab_selected" { visible = "[Or(GetVariableSystem.HasValue('ffpa_sc_cmf_public_tab', 'assembly'), Not(GetVariableSystem.Exists('ffpa_sc_cmf_public_tab')))]" }
+  }
+  ffpa_sc_cmf_tab = {
+   size = { 250 34 }
+   onclick = "[GetVariableSystem.Set('ffpa_sc_cmf_public_tab', 'aid')]"
+   blockoverride "tab_text" { text = "ffpa_sc_cmf_tab_aid" }
+   blockoverride "tab_selected" { visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_public_tab', 'aid')]" }
+  }
+ }
+ flowcontainer = {
+  direction = vertical
+  spacing = 8
+  visible = "[Or(GetVariableSystem.HasValue('ffpa_sc_cmf_public_tab', 'assembly'), Not(GetVariableSystem.Exists('ffpa_sc_cmf_public_tab')))]"
+  ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_rollcall_help" }
+  com_journal_involved_countries = { visible = "[Not(GetGlobalVariable('ffpa_sc_vote').IsSet)]" }
+  flowcontainer = {
+   visible = "[GetGlobalVariable('ffpa_sc_vote').IsSet]"
+   direction = vertical
+   spacing = 8
+   ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_rollcall_support" }
+   ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_support_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_rollcall_against" }
+   ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_against_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_rollcall_neutral" }
+   ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_neutral_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_rollcall_ineligible" }
+   ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_ineligible_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+  }
+ }
+ flowcontainer = {
+  direction = vertical
+  spacing = 8
+  visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_public_tab', 'aid')]"
+  flowcontainer = {
+   spacing = 1
+   ffpa_sc_cmf_tab = {
+    size = { 100 34 }
+    onclick = "[GetVariableSystem.Set('ffpa_sc_cmf_aid_tab', 'education')]"
+    blockoverride "tab_text" { text = "ffpa_sc_cmf_pool_education" }
+    blockoverride "tab_selected" { visible = "[Or(GetVariableSystem.HasValue('ffpa_sc_cmf_aid_tab', 'education'), Not(GetVariableSystem.Exists('ffpa_sc_cmf_aid_tab')))]" }
+   }
+   ffpa_sc_cmf_tab = {
+    size = { 100 34 }
+    onclick = "[GetVariableSystem.Set('ffpa_sc_cmf_aid_tab', 'talent')]"
+    blockoverride "tab_text" { text = "ffpa_sc_cmf_pool_talent" }
+    blockoverride "tab_selected" { visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_aid_tab', 'talent')]" }
+   }
+   ffpa_sc_cmf_tab = {
+    size = { 100 34 }
+    onclick = "[GetVariableSystem.Set('ffpa_sc_cmf_aid_tab', 'production')]"
+    blockoverride "tab_text" { text = "ffpa_sc_cmf_pool_production" }
+    blockoverride "tab_selected" { visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_aid_tab', 'production')]" }
+   }
+   ffpa_sc_cmf_tab = {
+    size = { 100 34 }
+    onclick = "[GetVariableSystem.Set('ffpa_sc_cmf_aid_tab', 'society')]"
+    blockoverride "tab_text" { text = "ffpa_sc_cmf_pool_society" }
+    blockoverride "tab_selected" { visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_aid_tab', 'society')]" }
+   }
+   ffpa_sc_cmf_tab = {
+    size = { 100 34 }
+    onclick = "[GetVariableSystem.Set('ffpa_sc_cmf_aid_tab', 'military')]"
+    blockoverride "tab_text" { text = "ffpa_sc_cmf_pool_military" }
+    blockoverride "tab_selected" { visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_aid_tab', 'military')]" }
+   }
+  }
+  ffpa_sc_cmf_pool_panel = {
+   visible = "[Or(GetVariableSystem.HasValue('ffpa_sc_cmf_aid_tab', 'education'), Not(GetVariableSystem.Exists('ffpa_sc_cmf_aid_tab')))]"
+   blockoverride "pool_summary" { text = "ffpa_sc_cmf_education_summary" }
+   blockoverride "pool_providers" {
+    ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_education_provider_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   }
+   blockoverride "pool_recipients" {
+    ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_education_recipient_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   }
+  }
+  ffpa_sc_cmf_pool_panel = {
+   visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_aid_tab', 'talent')]"
+   blockoverride "pool_summary" { text = "ffpa_sc_cmf_talent_summary" }
+   blockoverride "pool_providers" {
+    ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_talent_provider_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   }
+   blockoverride "pool_recipients" {
+    ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_talent_recipient_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   }
+  }
+  ffpa_sc_cmf_pool_panel = {
+   visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_aid_tab', 'production')]"
+   blockoverride "pool_summary" { text = "ffpa_sc_cmf_production_summary" }
+   blockoverride "pool_providers" {
+    ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_production_provider_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   }
+   blockoverride "pool_recipients" {
+    ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_production_recipient_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   }
+  }
+  ffpa_sc_cmf_pool_panel = {
+   visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_aid_tab', 'society')]"
+   blockoverride "pool_summary" { text = "ffpa_sc_cmf_society_summary" }
+   blockoverride "pool_providers" {
+    ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_society_provider_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   }
+   blockoverride "pool_recipients" {
+    ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_society_recipient_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   }
+  }
+  ffpa_sc_cmf_pool_panel = {
+   visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_aid_tab', 'military')]"
+   blockoverride "pool_summary" { text = "ffpa_sc_cmf_military_summary" }
+   blockoverride "pool_providers" {
+    ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_military_provider_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   }
+   blockoverride "pool_recipients" {
+    ffpa_sc_cmf_member_rows = { blockoverride "row_filter" { visible = "[GetScriptedGui('ffpa_sc_cmf_military_recipient_filter').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]" } }
+   }
+  }
+ }
+}
+types ffpa_sc_cmf_detail_types {
+ type ffpa_sc_cmf_tab = button {
+  using = default_button
+  textbox = {
+   parentanchor = center
+   autoresize = yes
+   align = hcenter|nobaseline
+   block "tab_text" { text = "ffpa_sc_cmf_tab_assembly" }
+  }
+  icon = { using = highlighted_square_selection block "tab_selected" { visible = no } }
+ }
+ type ffpa_sc_cmf_button_group = flowcontainer {
+  direction = vertical
+  ignoreinvisible = yes
+  spacing = 3
+  datamodel = "[JournalEntry.GetScriptedButtons]"
+  item = {
+   widget = {
+    block "button_filter" { visible = no }
+    size = { 504 60 }
+    scripted_journal_entry_button = { parentanchor = center }
+   }
+  }
+ }
+ type ffpa_sc_cmf_member_rows = flowcontainer {
+  direction = vertical
+  ignoreinvisible = yes
+  spacing = 3
+  datamodel = "[JournalEntry.GetInvolvedCountries]"
+  item = {
+   flowcontainer = {
+    block "row_filter" { visible = no }
+    spacing = 8
+    widget = { size = { 60 30 } small_flag = {} }
+    textbox = {
+     text = "[Country.GetName]"
+     min_width = 300
+     max_width = 300
+     multiline = yes
+     autoresize = yes
+     align = left|nobaseline
+     parentanchor = vcenter
+    }
+    textbox = {
+     visible = "[And(Not(GetVariableSystem.HasValue('ffpa_sc_cmf_public_tab', 'aid')), And(GetGlobalVariable('ffpa_sc_vote').IsSet, Country.MakeScope.Var('ffpa_sc_proposer').IsSet))]"
+     text = "ffpa_sc_cmf_proposer"
+     autoresize = yes
+     parentanchor = vcenter
+    }
+   }
+  }
+ }
+ type ffpa_sc_cmf_pool_panel = flowcontainer {
+  direction = vertical
+  spacing = 8
+  ffpa_sc_cmf_text = { block "pool_summary" { text = "ffpa_sc_cmf_pool_education" } }
+  ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_providers" }
+  block "pool_providers" {}
+  ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_recipients" }
+  block "pool_recipients" {}
+ }
+ type ffpa_sc_cmf_to_public = flowcontainer {
+  visible = "[GetGlobalVariable('ffpa_sc_cmf_public_ref').IsSet]"
+  datacontext = "[GetGlobalVariable('ffpa_sc_cmf_public_ref').GetJournalEntry]"
+  button = {
+   size = { 504 34 }
+   using = default_button
+   enabled = "[And(JournalEntry.IsValid, JournalEntry.IsActive)]"
+   onclick = "[InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)]"
+   textbox = { text = "ffpa_sc_cmf_open_public" parentanchor = center autoresize = yes }
+  }
+ }
+ type ffpa_sc_cmf_to_national = flowcontainer {
+  visible = "[And(GetPlayer.MakeScope.Var('ffpa_sc_membership').IsSet, GetPlayer.MakeScope.Var('ffpa_sc_cmf_overview_ref').IsSet)]"
+  datacontext = "[GetPlayer.MakeScope.Var('ffpa_sc_cmf_overview_ref').GetJournalEntry]"
+  button = {
+   size = { 504 34 }
+   using = default_button
+   enabled = "[And(JournalEntry.IsValid, JournalEntry.IsActive)]"
+   onclick = "[InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)]"
+   textbox = { text = "ffpa_sc_cmf_open_national" parentanchor = center autoresize = yes }
+  }
+ }
+}

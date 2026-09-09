@@ -1,0 +1,36 @@
+# Global, presentation only. Called on game start and after the existing monthly pass.
+ffpa_sc_cmf_initialize = {
+ if = {
+  limit = { has_global_variable = ffpa_sc_founded }
+  if = {
+   limit = {
+    NOT = { is_target_in_global_variable_list = { name = com_international_organization_journal_groups target = flag:je_group_ffpa_sc_cmf } }
+   }
+   com_add_journal_group_to_interorg_list_and_hide_from_journal = { name = je_group_ffpa_sc_cmf }
+  }
+  if = {
+   limit = { NOT = { has_global_variable = com_international_organization_panel_active } }
+   com_activate_interorg_sidebar = yes
+  }
+  if = {
+   limit = { NOT = { has_global_variable = ffpa_sc_cmf_organization_created } }
+   com_add_interorg_journal_entry = { type = ffpa_sc_cmf_organization }
+   set_global_variable = ffpa_sc_cmf_organization_created
+  }
+  every_country = { ffpa_sc_cmf_bind_overview = yes }
+ }
+}
+
+# Country scope. Bind existing journals too: their immediate does not rerun on reload.
+ffpa_sc_cmf_bind_overview = {
+ if = {
+  limit = { ffpa_sc_member = yes has_journal_entry = ffpa_sc_overview }
+  set_variable = { name = ffpa_sc_cmf_overview_ref value = je:ffpa_sc_overview }
+  je:ffpa_sc_overview = { set_variable = com_hide_scripted_buttons }
+ }
+ else = { remove_variable = ffpa_sc_cmf_overview_ref }
+ if = {
+  limit = { NOT = { has_global_variable = ffpa_sc_cmf_public_ref } has_journal_entry = ffpa_sc_cmf_organization }
+  set_global_variable = { name = ffpa_sc_cmf_public_ref value = je:ffpa_sc_cmf_organization }
+ }
+}
