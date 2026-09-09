@@ -10,27 +10,28 @@ ffpa_sc_overview = {
  transferable = no
  progressbar = no
  weight = 100
- scripted_button = ffpa_sc_aid_education_propose
- scripted_button = ffpa_sc_aid_education_register
- scripted_button = ffpa_sc_aid_talent_propose
- scripted_button = ffpa_sc_aid_talent_register
- scripted_button = ffpa_sc_aid_production_propose
- scripted_button = ffpa_sc_aid_production_register
- scripted_button = ffpa_sc_aid_society_propose
- scripted_button = ffpa_sc_aid_society_register
- scripted_button = ffpa_sc_aid_military_propose
- scripted_button = ffpa_sc_aid_military_register
- scripted_button = ffpa_sc_propose_education
- scripted_button = ffpa_sc_propose_trade
- scripted_button = ffpa_sc_propose_works
+ # Assembly actions, protocols, then aid registration.
  scripted_button = ffpa_sc_vote_support
  scripted_button = ffpa_sc_vote_against
  scripted_button = ffpa_sc_vote_abstain
+ scripted_button = ffpa_sc_propose_education
+ scripted_button = ffpa_sc_propose_trade
+ scripted_button = ffpa_sc_propose_works
+ scripted_button = ffpa_sc_aid_education_propose
+ scripted_button = ffpa_sc_aid_talent_propose
+ scripted_button = ffpa_sc_aid_production_propose
+ scripted_button = ffpa_sc_aid_society_propose
+ scripted_button = ffpa_sc_aid_military_propose
  scripted_button = ffpa_sc_join_education
  scripted_button = ffpa_sc_leave_education
  scripted_button = ffpa_sc_join_trade
  scripted_button = ffpa_sc_leave_trade
  scripted_button = ffpa_sc_start_works
+ scripted_button = ffpa_sc_aid_education_register
+ scripted_button = ffpa_sc_aid_talent_register
+ scripted_button = ffpa_sc_aid_production_register
+ scripted_button = ffpa_sc_aid_society_register
+ scripted_button = ffpa_sc_aid_military_register
  status_desc = {
   first_valid = {
    triggered_desc = { trigger = { ffpa_sc_operational = no } desc = ffpa_sc_status_dormant }
@@ -61,11 +62,10 @@ ffpa_sc_task_journal = {
    triggered_desc = { trigger = { var:ffpa_sc_aid_kind = 7 } desc = ffpa_sc_aid_society_task }
    triggered_desc = { trigger = { var:ffpa_sc_aid_kind = 8 } desc = ffpa_sc_aid_military_task }
    triggered_desc = { trigger = { var:ffpa_sc_task = 3 } desc = ffpa_sc_task_works }
-   triggered_desc = { trigger = { enacting_any_law = yes } desc = ffpa_sc_task_enacting }
-   triggered_desc = { trigger = { relative_bureaucracy < 0.20 } desc = ffpa_sc_task_budget }
    triggered_desc = { trigger = { var:ffpa_sc_task = 1 ffpa_sc_child_law_ready = no } desc = ffpa_sc_task_children }
    triggered_desc = { trigger = { var:ffpa_sc_task = 1 } desc = ffpa_sc_task_schools }
-   triggered_desc = { trigger = { always = yes } desc = ffpa_sc_task_trade }
+   triggered_desc = { trigger = { var:ffpa_sc_task = 2 } desc = ffpa_sc_task_trade }
+   triggered_desc = { trigger = { always = yes } desc = ffpa_sc_task_unknown_status }
   }
  }
 }
