@@ -26,7 +26,7 @@ class State:
     """
     def __init__(self):
         self.g={};self.v={};self.mod=set();self.expiry={};self.now=0
-        self.inputs={'ffpa_sc_operational':True,'ffpa_sc_education_ready':False,'ffpa_sc_trade_ready':False,'ffpa_sc_eligible':True}
+        self.inputs={'ffpa_sc_operational':True,'ffpa_sc_education_ready':False,'ffpa_sc_trade_ready':False,'ffpa_sc_eligible':True,'ffpa_sc_agenda_reserve_slot':False}
         self.tally=(2,0,3)
     def value(self,s):
         if s in SCALARS:return SCALARS[s]
@@ -58,7 +58,7 @@ class State:
             if not ok:return False
         return True
     def run(self,key):
-        if key in ('ffpa_sc_ensure_initialized','ffpa_sc_select_seats','ffpa_sc_fill_seats'):return
+        if key in ('ffpa_sc_ensure_initialized','ffpa_sc_select_seats','ffpa_sc_fill_seats','ffpa_sc_agenda_initialize','ffpa_sc_agenda_tally','ffpa_sc_agenda_clear','ffpa_sc_agenda_select'):return
         if key=='ffpa_sc_count_votes':
             a,b,n=self.tally
             self.g.update(ffpa_sc_support=a,ffpa_sc_against=b,ffpa_sc_electorate=n,ffpa_sc_quorum_support=a*SCALARS['ffpa_sc_quorum_divisor'])
@@ -209,10 +209,13 @@ def check_static(workshop):
     for p in files:all_nodes+=list(walk(parse(p.read_text(encoding='utf-8-sig'))))
     definitions={e.key for p in files for e in parse(p.read_text(encoding='utf-8-sig'))}
     for e in all_nodes:
+        if e.key.startswith('ffpa_sc_') and '$ID$' in e.key:
+            assert all(e.key.replace('$ID$',str(i)) in definitions for i in range(1,9)),e.key
+            continue
         if e.key.startswith('ffpa_sc_') and e.key not in definitions:
             assert isinstance(e.value,list),('undefined script reference',e.key)
         if e.op in ('>','<','>=','<=') and isinstance(e.value,str) and e.value.startswith('ffpa_sc_'):
-            assert e.value in VALUES,('undefined script value',e.value)
+            assert all(e.value.replace('$ID$',str(i)) in VALUES for i in range(1,9)),('undefined script value',e.value)
     # Cover migration/IG scopes too: every removal must check the same modifier first.
     for key in ('ffpa_sc_refresh','ffpa_sc_stop_task','ffpa_sc_ensure_initialized'):
         def check_removal_guards(nodes, guard=None):

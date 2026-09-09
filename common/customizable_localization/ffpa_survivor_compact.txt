@@ -233,3 +233,16 @@ ffpa_sc_cmf_military_supply = {
  text = { trigger = { global_var:ffpa_sc_aid_military_phase = 2 } localization_key = ffpa_sc_cmf_military_supply_execution }
  text = { trigger = { always = yes } localization_key = ffpa_sc_cmf_supply_closed }
 }
+
+ffpa_sc_agenda_choice_text = {
+ type = country
+ text = { trigger = { var:ffpa_sc_agenda_choice = 1 } localization_key = ffpa_sc_motion_1_label }
+ text = { trigger = { var:ffpa_sc_agenda_choice = 2 } localization_key = ffpa_sc_motion_2_label }
+ text = { trigger = { var:ffpa_sc_agenda_choice = 3 } localization_key = ffpa_sc_motion_3_label }
+ text = { trigger = { var:ffpa_sc_agenda_choice = 4 } localization_key = ffpa_sc_motion_4_label }
+ text = { trigger = { var:ffpa_sc_agenda_choice = 5 } localization_key = ffpa_sc_motion_5_label }
+ text = { trigger = { var:ffpa_sc_agenda_choice = 6 } localization_key = ffpa_sc_motion_6_label }
+ text = { trigger = { var:ffpa_sc_agenda_choice = 7 } localization_key = ffpa_sc_motion_7_label }
+ text = { trigger = { var:ffpa_sc_agenda_choice = 8 } localization_key = ffpa_sc_motion_8_label }
+ text = { trigger = { always = yes } localization_key = ffpa_sc_agenda_none }
+}

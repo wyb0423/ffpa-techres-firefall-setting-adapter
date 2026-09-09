@@ -27,6 +27,7 @@ ffpa_sc_overview = {
  # Assembly actions, protocols, then aid registration.
  scripted_button = ffpa_sc_vote_support
  scripted_button = ffpa_sc_vote_against
+ scripted_button = ffpa_sc_agenda_withdraw
  scripted_button = ffpa_sc_vote_abstain
  scripted_button = ffpa_sc_propose_education
  scripted_button = ffpa_sc_propose_trade

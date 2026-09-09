@@ -1,0 +1,96 @@
+# Candidate availability is separate from recess access and ballot eligibility.
+ffpa_sc_agenda_access = {
+ ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_operational = yes
+ NOT = { has_global_variable = ffpa_sc_vote }
+}
+ffpa_sc_motion_1_available = { NOT = { has_global_variable = ffpa_sc_education_open } }
+ffpa_sc_motion_1_qualified = {
+ ffpa_sc_motion_1_available = yes
+ global_var:ffpa_sc_motion_1_support > 0
+ OR = {
+  global_var:ffpa_sc_motion_1_support >= global_var:ffpa_sc_agenda_threshold
+  any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_coordinator var:ffpa_sc_agenda_choice = 1 }
+ }
+}
+ffpa_sc_motion_1_ai_viable = { ffpa_sc_motion_1_available = yes }
+ffpa_sc_motion_2_available = { NOT = { has_global_variable = ffpa_sc_trade_open } }
+ffpa_sc_motion_2_qualified = {
+ ffpa_sc_motion_2_available = yes
+ global_var:ffpa_sc_motion_2_support > 0
+ OR = {
+  global_var:ffpa_sc_motion_2_support >= global_var:ffpa_sc_agenda_threshold
+  any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_coordinator var:ffpa_sc_agenda_choice = 2 }
+ }
+}
+ffpa_sc_motion_2_ai_viable = { ffpa_sc_motion_2_available = yes }
+ffpa_sc_motion_3_available = { NOT = { has_global_variable = ffpa_sc_works_open } }
+ffpa_sc_motion_3_qualified = {
+ ffpa_sc_motion_3_available = yes
+ global_var:ffpa_sc_motion_3_support > 0
+ OR = {
+  global_var:ffpa_sc_motion_3_support >= global_var:ffpa_sc_agenda_threshold
+  any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_coordinator var:ffpa_sc_agenda_choice = 3 }
+ }
+}
+ffpa_sc_motion_3_ai_viable = { ffpa_sc_motion_3_available = yes }
+ffpa_sc_motion_4_available = { ffpa_sc_aid_education_enabled = yes NOT = { has_global_variable = ffpa_sc_aid_education_phase } any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_aid_education_ready = yes } }
+ffpa_sc_motion_4_qualified = {
+ ffpa_sc_motion_4_available = yes
+ global_var:ffpa_sc_motion_4_support > 0
+ OR = {
+  global_var:ffpa_sc_motion_4_support >= global_var:ffpa_sc_agenda_threshold
+  any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_coordinator var:ffpa_sc_agenda_choice = 4 }
+ }
+}
+ffpa_sc_motion_4_ai_viable = { ffpa_sc_motion_4_available = yes any_country = { ffpa_sc_aid_free_slot = yes ffpa_sc_aid_education_ready = no ffpa_sc_aid_education_need = yes ffpa_sc_aid_education_afford = yes } }
+ffpa_sc_motion_5_available = { ffpa_sc_aid_talent_enabled = yes NOT = { has_global_variable = ffpa_sc_aid_talent_phase } any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_aid_talent_ready = yes } }
+ffpa_sc_motion_5_qualified = {
+ ffpa_sc_motion_5_available = yes
+ global_var:ffpa_sc_motion_5_support > 0
+ OR = {
+  global_var:ffpa_sc_motion_5_support >= global_var:ffpa_sc_agenda_threshold
+  any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_coordinator var:ffpa_sc_agenda_choice = 5 }
+ }
+}
+ffpa_sc_motion_5_ai_viable = { ffpa_sc_motion_5_available = yes any_country = { ffpa_sc_aid_free_slot = yes ffpa_sc_aid_talent_ready = no ffpa_sc_aid_talent_need = yes ffpa_sc_aid_talent_afford = yes } }
+ffpa_sc_motion_6_available = { ffpa_sc_aid_production_enabled = yes NOT = { has_global_variable = ffpa_sc_aid_production_phase } any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_aid_production_ready = yes } }
+ffpa_sc_motion_6_qualified = {
+ ffpa_sc_motion_6_available = yes
+ global_var:ffpa_sc_motion_6_support > 0
+ OR = {
+  global_var:ffpa_sc_motion_6_support >= global_var:ffpa_sc_agenda_threshold
+  any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_coordinator var:ffpa_sc_agenda_choice = 6 }
+ }
+}
+ffpa_sc_motion_6_ai_viable = { ffpa_sc_motion_6_available = yes any_country = { ffpa_sc_aid_free_slot = yes ffpa_sc_aid_production_ready = no ffpa_sc_aid_production_need = yes ffpa_sc_aid_production_afford = yes } }
+ffpa_sc_motion_7_available = { ffpa_sc_aid_society_enabled = yes NOT = { has_global_variable = ffpa_sc_aid_society_phase } any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_aid_society_ready = yes } }
+ffpa_sc_motion_7_qualified = {
+ ffpa_sc_motion_7_available = yes
+ global_var:ffpa_sc_motion_7_support > 0
+ OR = {
+  global_var:ffpa_sc_motion_7_support >= global_var:ffpa_sc_agenda_threshold
+  any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_coordinator var:ffpa_sc_agenda_choice = 7 }
+ }
+}
+ffpa_sc_motion_7_ai_viable = { ffpa_sc_motion_7_available = yes any_country = { ffpa_sc_aid_free_slot = yes ffpa_sc_aid_society_ready = no ffpa_sc_aid_society_need = yes ffpa_sc_aid_society_afford = yes } }
+ffpa_sc_motion_8_available = { ffpa_sc_aid_military_enabled = yes NOT = { has_global_variable = ffpa_sc_aid_military_phase } any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes ffpa_sc_aid_military_ready = yes } }
+ffpa_sc_motion_8_qualified = {
+ ffpa_sc_motion_8_available = yes
+ global_var:ffpa_sc_motion_8_support > 0
+ OR = {
+  global_var:ffpa_sc_motion_8_support >= global_var:ffpa_sc_agenda_threshold
+  any_country = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_coordinator var:ffpa_sc_agenda_choice = 8 }
+ }
+}
+ffpa_sc_motion_8_ai_viable = { ffpa_sc_motion_8_available = yes any_country = { ffpa_sc_aid_free_slot = yes ffpa_sc_aid_military_ready = no ffpa_sc_aid_military_need = yes ffpa_sc_aid_military_afford = yes } }
+ffpa_sc_agenda_reserve_slot = {
+ OR = { global_var:ffpa_sc_cooldown <= 1 NOT = { has_global_variable = ffpa_sc_cooldown } }
+ ffpa_sc_aid_free_slot = yes
+ OR = {
+  AND = { var:ffpa_sc_agenda_choice = 4 ffpa_sc_motion_4_qualified = yes ffpa_sc_aid_education_need = yes ffpa_sc_aid_education_afford = yes }
+  AND = { var:ffpa_sc_agenda_choice = 5 ffpa_sc_motion_5_qualified = yes ffpa_sc_aid_talent_need = yes ffpa_sc_aid_talent_afford = yes }
+  AND = { var:ffpa_sc_agenda_choice = 6 ffpa_sc_motion_6_qualified = yes ffpa_sc_aid_production_need = yes ffpa_sc_aid_production_afford = yes }
+  AND = { var:ffpa_sc_agenda_choice = 7 ffpa_sc_motion_7_qualified = yes ffpa_sc_aid_society_need = yes ffpa_sc_aid_society_afford = yes }
+  AND = { var:ffpa_sc_agenda_choice = 8 ffpa_sc_motion_8_qualified = yes ffpa_sc_aid_military_need = yes ffpa_sc_aid_military_afford = yes }
+ }
+}

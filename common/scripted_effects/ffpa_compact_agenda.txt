@@ -1,0 +1,143 @@
+# One endorsement per country; no extra meeting clock or CMF role cache.
+ffpa_sc_agenda_initialize = {
+ if = {
+  limit = { NOT = { has_global_variable = ffpa_sc_agenda_schema_1 } }
+  if = {
+   limit = { has_global_variable = ffpa_sc_pending NOT = { has_global_variable = ffpa_sc_vote } }
+   every_country = {
+    limit = { ffpa_sc_member = yes ffpa_sc_eligible = yes has_variable = ffpa_sc_proposer }
+    set_variable = { name = ffpa_sc_agenda_choice value = global_var:ffpa_sc_pending }
+    remove_variable = ffpa_sc_proposer
+   }
+   remove_global_variable = ffpa_sc_pending
+  }
+  set_global_variable = ffpa_sc_agenda_schema_1
+  ffpa_sc_agenda_tally = yes
+ }
+}
+ffpa_sc_agenda_endorse = {
+ ffpa_sc_agenda_initialize = yes
+ if = {
+  limit = { ffpa_sc_agenda_access = yes ffpa_sc_motion_$ID$_available = yes }
+  set_variable = { name = ffpa_sc_agenda_choice value = $ID$ }
+  ffpa_sc_agenda_tally = yes
+ }
+}
+ffpa_sc_agenda_withdraw = {
+ if = { limit = { ffpa_sc_agenda_access = yes }
+  remove_variable = ffpa_sc_agenda_choice
+  ffpa_sc_agenda_tally = yes
+ }
+}
+ffpa_sc_agenda_count_choice = {
+ if = {
+  limit = { var:ffpa_sc_agenda_choice = $ID$ }
+  if = { limit = { ffpa_sc_motion_$ID$_available = yes }
+   change_global_variable = { name = ffpa_sc_motion_$ID$_support add = 1 }
+  }
+  else = { remove_variable = ffpa_sc_agenda_choice }
+ }
+}
+ffpa_sc_agenda_tally = {
+ set_global_variable = { name = ffpa_sc_agenda_members value = 0 }
+ set_global_variable = { name = ffpa_sc_motion_1_support value = 0 }
+ set_global_variable = { name = ffpa_sc_motion_2_support value = 0 }
+ set_global_variable = { name = ffpa_sc_motion_3_support value = 0 }
+ set_global_variable = { name = ffpa_sc_motion_4_support value = 0 }
+ set_global_variable = { name = ffpa_sc_motion_5_support value = 0 }
+ set_global_variable = { name = ffpa_sc_motion_6_support value = 0 }
+ set_global_variable = { name = ffpa_sc_motion_7_support value = 0 }
+ set_global_variable = { name = ffpa_sc_motion_8_support value = 0 }
+ every_country = {
+  if = { limit = { ffpa_sc_member = yes ffpa_sc_eligible = yes }
+   change_global_variable = { name = ffpa_sc_agenda_members add = 1 }
+   ffpa_sc_agenda_count_choice = { ID = 1 }
+   ffpa_sc_agenda_count_choice = { ID = 2 }
+   ffpa_sc_agenda_count_choice = { ID = 3 }
+   ffpa_sc_agenda_count_choice = { ID = 4 }
+   ffpa_sc_agenda_count_choice = { ID = 5 }
+   ffpa_sc_agenda_count_choice = { ID = 6 }
+   ffpa_sc_agenda_count_choice = { ID = 7 }
+   ffpa_sc_agenda_count_choice = { ID = 8 }
+  }
+  else = { remove_variable = ffpa_sc_agenda_choice }
+ }
+ set_global_variable = { name = ffpa_sc_agenda_threshold value = 2 }
+ if = { limit = { global_var:ffpa_sc_agenda_members > 20 } set_global_variable = { name = ffpa_sc_agenda_threshold value = 3 } }
+ if = { limit = { global_var:ffpa_sc_agenda_members > 30 } set_global_variable = { name = ffpa_sc_agenda_threshold value = 4 } }
+ if = { limit = { global_var:ffpa_sc_agenda_members > 40 } set_global_variable = { name = ffpa_sc_agenda_threshold value = 5 } }
+}
+ffpa_sc_agenda_clear = {
+ every_country = { remove_variable = ffpa_sc_agenda_choice }
+ ffpa_sc_agenda_tally = yes
+}
+ffpa_sc_agenda_ai_consider = {
+ if = {
+  limit = { ffpa_sc_motion_$ID$_ai_viable = yes ffpa_sc_motion_$ID$_score > var:ffpa_sc_best_score }
+  set_variable = { name = ffpa_sc_best_score value = ffpa_sc_motion_$ID$_score }
+  set_variable = { name = ffpa_sc_best_proposal value = $ID$ }
+ }
+}
+ffpa_sc_agenda_compare = {
+ if = {
+  limit = { ffpa_sc_motion_$ID$_qualified = yes global_var:ffpa_sc_motion_$ID$_support > global_var:ffpa_sc_agenda_best_support }
+  set_global_variable = { name = ffpa_sc_agenda_best_support value = global_var:ffpa_sc_motion_$ID$_support }
+ }
+}
+ffpa_sc_agenda_select = {
+ if = { limit = { ffpa_sc_operational = yes NOT = { has_global_variable = ffpa_sc_vote } NOT = { has_global_variable = ffpa_sc_cooldown } }
+  set_global_variable = { name = ffpa_sc_agenda_best_support value = 0 }
+  ffpa_sc_agenda_compare = { ID = 1 }
+  ffpa_sc_agenda_compare = { ID = 2 }
+  ffpa_sc_agenda_compare = { ID = 3 }
+  ffpa_sc_agenda_compare = { ID = 4 }
+  ffpa_sc_agenda_compare = { ID = 5 }
+  ffpa_sc_agenda_compare = { ID = 6 }
+  ffpa_sc_agenda_compare = { ID = 7 }
+  ffpa_sc_agenda_compare = { ID = 8 }
+  if = { limit = { global_var:ffpa_sc_agenda_best_support > 0 }
+   random_list = {
+    1 = {
+     modifier = { if = { limit = { NOT = { ffpa_sc_motion_1_qualified = yes global_var:ffpa_sc_motion_1_support = global_var:ffpa_sc_agenda_best_support } } add = -1 } }
+     set_global_variable = { name = ffpa_sc_pending value = 1 }
+    }
+    1 = {
+     modifier = { if = { limit = { NOT = { ffpa_sc_motion_2_qualified = yes global_var:ffpa_sc_motion_2_support = global_var:ffpa_sc_agenda_best_support } } add = -1 } }
+     set_global_variable = { name = ffpa_sc_pending value = 2 }
+    }
+    1 = {
+     modifier = { if = { limit = { NOT = { ffpa_sc_motion_3_qualified = yes global_var:ffpa_sc_motion_3_support = global_var:ffpa_sc_agenda_best_support } } add = -1 } }
+     set_global_variable = { name = ffpa_sc_pending value = 3 }
+    }
+    1 = {
+     modifier = { if = { limit = { NOT = { ffpa_sc_motion_4_qualified = yes global_var:ffpa_sc_motion_4_support = global_var:ffpa_sc_agenda_best_support } } add = -1 } }
+     set_global_variable = { name = ffpa_sc_pending value = 4 }
+    }
+    1 = {
+     modifier = { if = { limit = { NOT = { ffpa_sc_motion_5_qualified = yes global_var:ffpa_sc_motion_5_support = global_var:ffpa_sc_agenda_best_support } } add = -1 } }
+     set_global_variable = { name = ffpa_sc_pending value = 5 }
+    }
+    1 = {
+     modifier = { if = { limit = { NOT = { ffpa_sc_motion_6_qualified = yes global_var:ffpa_sc_motion_6_support = global_var:ffpa_sc_agenda_best_support } } add = -1 } }
+     set_global_variable = { name = ffpa_sc_pending value = 6 }
+    }
+    1 = {
+     modifier = { if = { limit = { NOT = { ffpa_sc_motion_7_qualified = yes global_var:ffpa_sc_motion_7_support = global_var:ffpa_sc_agenda_best_support } } add = -1 } }
+     set_global_variable = { name = ffpa_sc_pending value = 7 }
+    }
+    1 = {
+     modifier = { if = { limit = { NOT = { ffpa_sc_motion_8_qualified = yes global_var:ffpa_sc_motion_8_support = global_var:ffpa_sc_agenda_best_support } } add = -1 } }
+     set_global_variable = { name = ffpa_sc_pending value = 8 }
+    }
+   }
+   # Representative only: prestige never affects endorsements or the motion draw.
+   every_country = { remove_variable = ffpa_sc_proposer }
+   ordered_country = {
+    limit = { ffpa_sc_member = yes ffpa_sc_eligible = yes var:ffpa_sc_agenda_choice = global_var:ffpa_sc_pending }
+    order_by = prestige max = 1 check_range_bounds = no
+    set_variable = ffpa_sc_proposer
+   }
+  }
+  remove_global_variable = ffpa_sc_agenda_best_support
+ }
+}

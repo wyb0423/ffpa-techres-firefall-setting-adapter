@@ -146,6 +146,11 @@ def check():
         state.g[prefix + '_result'] = 1
         assert state.display(prefix + '_status') == 'ffpa_sc_aid_ended'
     state = DisplayState()
+    assert state.display('ffpa_sc_agenda_choice_text') == 'ffpa_sc_agenda_none'
+    for ident in range(1,9):
+        state.v['ffpa_sc_agenda_choice'] = ident
+        assert state.display('ffpa_sc_agenda_choice_text') == f'ffpa_sc_motion_{ident}_label'
+    state.v.pop('ffpa_sc_agenda_choice')
     for ready in (False, True):
         state.inputs['ffpa_sc_child_law_ready'] = ready
         state.inputs['ffpa_sc_trade_ready'] = ready

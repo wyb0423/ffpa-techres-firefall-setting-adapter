@@ -1,0 +1,41 @@
+# Personal benefit dominates; a bounded coalition bonus breaks close choices.
+ffpa_sc_motion_1_score = {
+ value = ffpa_sc_education_score multiply = 10
+ add = { value = global_var:ffpa_sc_motion_1_support max = 5 multiply = 2 }
+ if = { limit = { var:ffpa_sc_agenda_choice = 1 } add = 1 }
+}
+ffpa_sc_motion_2_score = {
+ value = ffpa_sc_trade_score multiply = 10
+ add = { value = global_var:ffpa_sc_motion_2_support max = 5 multiply = 2 }
+ if = { limit = { var:ffpa_sc_agenda_choice = 2 } add = 1 }
+}
+ffpa_sc_motion_3_score = {
+ value = ffpa_sc_works_score multiply = 10
+ add = { value = global_var:ffpa_sc_motion_3_support max = 5 multiply = 2 }
+ if = { limit = { var:ffpa_sc_agenda_choice = 3 } add = 1 }
+}
+ffpa_sc_motion_4_score = {
+ value = ffpa_sc_aid_education_score multiply = 10
+ add = { value = global_var:ffpa_sc_motion_4_support max = 5 multiply = 2 }
+ if = { limit = { var:ffpa_sc_agenda_choice = 4 } add = 1 }
+}
+ffpa_sc_motion_5_score = {
+ value = ffpa_sc_aid_talent_score multiply = 10
+ add = { value = global_var:ffpa_sc_motion_5_support max = 5 multiply = 2 }
+ if = { limit = { var:ffpa_sc_agenda_choice = 5 } add = 1 }
+}
+ffpa_sc_motion_6_score = {
+ value = ffpa_sc_aid_production_score multiply = 10
+ add = { value = global_var:ffpa_sc_motion_6_support max = 5 multiply = 2 }
+ if = { limit = { var:ffpa_sc_agenda_choice = 6 } add = 1 }
+}
+ffpa_sc_motion_7_score = {
+ value = ffpa_sc_aid_society_score multiply = 10
+ add = { value = global_var:ffpa_sc_motion_7_support max = 5 multiply = 2 }
+ if = { limit = { var:ffpa_sc_agenda_choice = 7 } add = 1 }
+}
+ffpa_sc_motion_8_score = {
+ value = ffpa_sc_aid_military_score multiply = 10
+ add = { value = global_var:ffpa_sc_motion_8_support max = 5 multiply = 2 }
+ if = { limit = { var:ffpa_sc_agenda_choice = 8 } add = 1 }
+}

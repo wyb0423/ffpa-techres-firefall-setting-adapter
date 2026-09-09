@@ -1,8 +1,9 @@
 ffpa_sc_aid_education_propose = {
  name = ffpa_sc_aid_education_propose desc = ffpa_sc_aid_education_propose_desc
- visible = { has_variable = ffpa_sc_coordinator ffpa_sc_aid_education_enabled = yes NOT = { has_global_variable = ffpa_sc_aid_education_phase } }
- possible = { ffpa_sc_aid_education_can_propose = yes }
- effect = { ffpa_sc_aid_education_propose = yes } ai_chance = { value = 0 }
+ visible = { ffpa_sc_agenda_access = yes ffpa_sc_motion_4_available = yes }
+ possible = { ffpa_sc_agenda_access = yes ffpa_sc_motion_4_available = yes }
+ effect = { ffpa_sc_agenda_endorse = { ID = 4 } }
+ ai_chance = { value = 0 }
 }
 ffpa_sc_aid_education_register = {
  name = ffpa_sc_aid_education_register desc = ffpa_sc_aid_education_register_desc
@@ -12,9 +13,10 @@ ffpa_sc_aid_education_register = {
 }
 ffpa_sc_aid_talent_propose = {
  name = ffpa_sc_aid_talent_propose desc = ffpa_sc_aid_talent_propose_desc
- visible = { has_variable = ffpa_sc_coordinator ffpa_sc_aid_talent_enabled = yes NOT = { has_global_variable = ffpa_sc_aid_talent_phase } }
- possible = { ffpa_sc_aid_talent_can_propose = yes }
- effect = { ffpa_sc_aid_talent_propose = yes } ai_chance = { value = 0 }
+ visible = { ffpa_sc_agenda_access = yes ffpa_sc_motion_5_available = yes }
+ possible = { ffpa_sc_agenda_access = yes ffpa_sc_motion_5_available = yes }
+ effect = { ffpa_sc_agenda_endorse = { ID = 5 } }
+ ai_chance = { value = 0 }
 }
 ffpa_sc_aid_talent_register = {
  name = ffpa_sc_aid_talent_register desc = ffpa_sc_aid_talent_register_desc
@@ -24,9 +26,10 @@ ffpa_sc_aid_talent_register = {
 }
 ffpa_sc_aid_production_propose = {
  name = ffpa_sc_aid_production_propose desc = ffpa_sc_aid_production_propose_desc
- visible = { has_variable = ffpa_sc_coordinator ffpa_sc_aid_production_enabled = yes NOT = { has_global_variable = ffpa_sc_aid_production_phase } }
- possible = { ffpa_sc_aid_production_can_propose = yes }
- effect = { ffpa_sc_aid_production_propose = yes } ai_chance = { value = 0 }
+ visible = { ffpa_sc_agenda_access = yes ffpa_sc_motion_6_available = yes }
+ possible = { ffpa_sc_agenda_access = yes ffpa_sc_motion_6_available = yes }
+ effect = { ffpa_sc_agenda_endorse = { ID = 6 } }
+ ai_chance = { value = 0 }
 }
 ffpa_sc_aid_production_register = {
  name = ffpa_sc_aid_production_register desc = ffpa_sc_aid_production_register_desc
@@ -36,9 +39,10 @@ ffpa_sc_aid_production_register = {
 }
 ffpa_sc_aid_society_propose = {
  name = ffpa_sc_aid_society_propose desc = ffpa_sc_aid_society_propose_desc
- visible = { has_variable = ffpa_sc_coordinator ffpa_sc_aid_society_enabled = yes NOT = { has_global_variable = ffpa_sc_aid_society_phase } }
- possible = { ffpa_sc_aid_society_can_propose = yes }
- effect = { ffpa_sc_aid_society_propose = yes } ai_chance = { value = 0 }
+ visible = { ffpa_sc_agenda_access = yes ffpa_sc_motion_7_available = yes }
+ possible = { ffpa_sc_agenda_access = yes ffpa_sc_motion_7_available = yes }
+ effect = { ffpa_sc_agenda_endorse = { ID = 7 } }
+ ai_chance = { value = 0 }
 }
 ffpa_sc_aid_society_register = {
  name = ffpa_sc_aid_society_register desc = ffpa_sc_aid_society_register_desc
@@ -48,9 +52,10 @@ ffpa_sc_aid_society_register = {
 }
 ffpa_sc_aid_military_propose = {
  name = ffpa_sc_aid_military_propose desc = ffpa_sc_aid_military_propose_desc
- visible = { has_variable = ffpa_sc_coordinator ffpa_sc_aid_military_enabled = yes NOT = { has_global_variable = ffpa_sc_aid_military_phase } }
- possible = { ffpa_sc_aid_military_can_propose = yes }
- effect = { ffpa_sc_aid_military_propose = yes } ai_chance = { value = 0 }
+ visible = { ffpa_sc_agenda_access = yes ffpa_sc_motion_8_available = yes }
+ possible = { ffpa_sc_agenda_access = yes ffpa_sc_motion_8_available = yes }
+ effect = { ffpa_sc_agenda_endorse = { ID = 8 } }
+ ai_chance = { value = 0 }
 }
 ffpa_sc_aid_military_register = {
  name = ffpa_sc_aid_military_register desc = ffpa_sc_aid_military_register_desc

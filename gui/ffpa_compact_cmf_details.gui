@@ -25,9 +25,14 @@ flowcontainer = {
    blockoverride "tab_selected" { visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_action_tab', 'projects')]" }
   }
  }
+ flowcontainer = {
+  direction = vertical
+  visible = "[Or(GetVariableSystem.HasValue('ffpa_sc_cmf_action_tab', 'assembly'), Not(GetVariableSystem.Exists('ffpa_sc_cmf_action_tab')))]"
+  ffpa_sc_cmf_text = { visible = "[Not(GetGlobalVariable('ffpa_sc_vote').IsSet)]" text = "ffpa_sc_agenda_panel" }
+ }
  ffpa_sc_cmf_button_group = {
   visible = "[Or(GetVariableSystem.HasValue('ffpa_sc_cmf_action_tab', 'assembly'), Not(GetVariableSystem.Exists('ffpa_sc_cmf_action_tab')))]"
-  blockoverride "button_filter" { visible = "[Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_vote_support'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_vote_against'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_vote_abstain'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_propose_education'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_propose_trade'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_propose_works'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_education_propose'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_talent_propose'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_production_propose'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_society_propose'), EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_military_propose')))))))))))]" }
+  blockoverride "button_filter" { visible = "[Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_agenda_withdraw'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_vote_support'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_vote_against'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_vote_abstain'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_propose_education'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_propose_trade'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_propose_works'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_education_propose'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_talent_propose'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_production_propose'), Or(EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_society_propose'), EqualTo_string(ScriptedButton.GetName, 'ffpa_sc_aid_military_propose'))))))))))))]" }
  }
  ffpa_sc_cmf_button_group = {
   visible = "[GetVariableSystem.HasValue('ffpa_sc_cmf_action_tab', 'protocols')]"
@@ -62,6 +67,7 @@ flowcontainer = {
   direction = vertical
   spacing = 8
   visible = "[Or(GetVariableSystem.HasValue('ffpa_sc_cmf_public_tab', 'assembly'), Not(GetVariableSystem.Exists('ffpa_sc_cmf_public_tab')))]"
+  ffpa_sc_cmf_text = { visible = "[Not(GetGlobalVariable('ffpa_sc_vote').IsSet)]" text = "ffpa_sc_agenda_panel" }
   ffpa_sc_cmf_text = { text = "ffpa_sc_cmf_rollcall_help" }
   com_journal_involved_countries = { visible = "[Not(GetGlobalVariable('ffpa_sc_vote').IsSet)]" }
   flowcontainer = {

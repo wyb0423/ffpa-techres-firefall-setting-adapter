@@ -7,10 +7,13 @@ ffpa_sc_join = {
   set_variable = { name = ffpa_sc_cooperation_months value = 0 }
   every_country = { limit = { ffpa_sc_member = yes } ffpa_sc_refresh = yes }
   ffpa_sc_refresh = yes
+  ffpa_sc_agenda_tally = yes
  }
 }
 ffpa_sc_leave = {
  remove_variable = ffpa_sc_membership
+ remove_variable = ffpa_sc_agenda_choice
+ ffpa_sc_agenda_tally = yes
  remove_variable = ffpa_sc_cooperation_months
  remove_variable = ffpa_sc_coordinator
  remove_variable = ffpa_sc_willing
@@ -263,6 +266,7 @@ ffpa_sc_resolve_vote = {
  else = { set_global_variable = { name = ffpa_sc_last_result value = 0 } }
  every_country = { limit = { ffpa_sc_member = yes is_ai = no } trigger_event = ffpa_sc.3 }
  ffpa_sc_clear_vote = yes
+ ffpa_sc_agenda_clear = yes
  set_global_variable = { name = ffpa_sc_cooldown value = ffpa_sc_cooldown_duration }
 }
 ffpa_sc_select_seats = {
@@ -302,49 +306,21 @@ ffpa_sc_fill_seats = {
  remove_global_variable = ffpa_sc_occupied_seats
 }
 ffpa_sc_ai_propose = {
- if = {
-  limit = { is_ai = yes ffpa_sc_can_propose = yes }
-  set_variable = { name = ffpa_sc_best_score value = 2 }
+ if = { limit = { is_ai = yes ffpa_sc_agenda_access = yes }
+  set_variable = { name = ffpa_sc_best_score value = 20 }
   remove_variable = ffpa_sc_best_proposal
-
-  if = {
-   limit = { NOT = { has_global_variable = ffpa_sc_education_open } ffpa_sc_education_score > var:ffpa_sc_best_score }
-   set_variable = { name = ffpa_sc_best_score value = ffpa_sc_education_score }
-   set_variable = { name = ffpa_sc_best_proposal value = 1 }
+  ffpa_sc_agenda_ai_consider = { ID = 1 }
+  ffpa_sc_agenda_ai_consider = { ID = 2 }
+  ffpa_sc_agenda_ai_consider = { ID = 3 }
+  ffpa_sc_agenda_ai_consider = { ID = 4 }
+  ffpa_sc_agenda_ai_consider = { ID = 5 }
+  ffpa_sc_agenda_ai_consider = { ID = 6 }
+  ffpa_sc_agenda_ai_consider = { ID = 7 }
+  ffpa_sc_agenda_ai_consider = { ID = 8 }
+  if = { limit = { has_variable = ffpa_sc_best_proposal }
+   set_variable = { name = ffpa_sc_agenda_choice value = var:ffpa_sc_best_proposal }
   }
-
-  if = {
-   limit = { NOT = { has_global_variable = ffpa_sc_trade_open } ffpa_sc_trade_score > var:ffpa_sc_best_score }
-   set_variable = { name = ffpa_sc_best_score value = ffpa_sc_trade_score }
-   set_variable = { name = ffpa_sc_best_proposal value = 2 }
-  }
-
-  if = {
-   limit = { NOT = { has_global_variable = ffpa_sc_works_open } ffpa_sc_works_score > var:ffpa_sc_best_score }
-   set_variable = { name = ffpa_sc_best_score value = ffpa_sc_works_score }
-   set_variable = { name = ffpa_sc_best_proposal value = 3 }
-  }
-
-  if = { limit = { ffpa_sc_aid_education_can_propose = yes ffpa_sc_aid_education_score > var:ffpa_sc_best_score
-   any_country = { ffpa_sc_aid_free_slot = yes ffpa_sc_aid_education_ready = no ffpa_sc_aid_education_afford = yes ffpa_sc_aid_education_need = yes }
-  } set_variable = { name = ffpa_sc_best_score value = ffpa_sc_aid_education_score } set_variable = { name = ffpa_sc_best_proposal value = 4 } }
-  if = { limit = { ffpa_sc_aid_talent_can_propose = yes ffpa_sc_aid_talent_score > var:ffpa_sc_best_score
-   any_country = { ffpa_sc_aid_free_slot = yes ffpa_sc_aid_talent_ready = no ffpa_sc_aid_talent_afford = yes ffpa_sc_aid_talent_need = yes }
-  } set_variable = { name = ffpa_sc_best_score value = ffpa_sc_aid_talent_score } set_variable = { name = ffpa_sc_best_proposal value = 5 } }
-  if = { limit = { ffpa_sc_aid_production_can_propose = yes ffpa_sc_aid_production_score > var:ffpa_sc_best_score
-   any_country = { ffpa_sc_aid_free_slot = yes ffpa_sc_aid_production_ready = no ffpa_sc_aid_production_afford = yes ffpa_sc_aid_production_need = yes }
-  } set_variable = { name = ffpa_sc_best_score value = ffpa_sc_aid_production_score } set_variable = { name = ffpa_sc_best_proposal value = 6 } }
-  if = { limit = { ffpa_sc_aid_society_can_propose = yes ffpa_sc_aid_society_score > var:ffpa_sc_best_score
-   any_country = { ffpa_sc_aid_free_slot = yes ffpa_sc_aid_society_ready = no ffpa_sc_aid_society_afford = yes ffpa_sc_aid_society_need = yes }
-  } set_variable = { name = ffpa_sc_best_score value = ffpa_sc_aid_society_score } set_variable = { name = ffpa_sc_best_proposal value = 7 } }
-  if = { limit = { ffpa_sc_aid_military_can_propose = yes ffpa_sc_aid_military_score > var:ffpa_sc_best_score
-   any_country = { ffpa_sc_aid_free_slot = yes ffpa_sc_aid_military_ready = no ffpa_sc_aid_military_afford = yes ffpa_sc_aid_military_need = yes }
-  } set_variable = { name = ffpa_sc_best_score value = ffpa_sc_aid_military_score } set_variable = { name = ffpa_sc_best_proposal value = 8 } }
-  if = {
-   limit = { has_variable = ffpa_sc_best_proposal }
-   set_global_variable = { name = ffpa_sc_pending value = var:ffpa_sc_best_proposal }
-   set_variable = ffpa_sc_proposer
-  }
+  else = { remove_variable = ffpa_sc_agenda_choice }
  }
 }
 # Called once per country by the global monthly pulse, never by journal refreshes.
@@ -364,6 +340,7 @@ ffpa_sc_membership_tick = {
 
 ffpa_sc_monthly = {
  ffpa_sc_ensure_initialized = yes
+ ffpa_sc_agenda_initialize = yes
  every_country = {
   limit = { has_variable = ffpa_sc_education_window var:ffpa_sc_education_months_left > 0 }
   change_variable = { name = ffpa_sc_education_months_left add = -1 }
@@ -407,10 +384,12 @@ ffpa_sc_monthly = {
    ffpa_sc_select_seats = yes
   }
   if = { limit = { NOT = { has_global_variable = ffpa_sc_vote } } ffpa_sc_fill_seats = yes }
-  ordered_country = {
-   limit = { ffpa_sc_member = yes has_variable = ffpa_sc_coordinator is_ai = yes }
-   order_by = prestige
-   ffpa_sc_ai_propose = yes
+  if = { limit = { NOT = { has_global_variable = ffpa_sc_vote } }
+   # Freeze the tally while AI evaluates; country iteration order cannot add support.
+   ffpa_sc_agenda_tally = yes
+   every_country = { limit = { ffpa_sc_member = yes ffpa_sc_eligible = yes is_ai = yes } ffpa_sc_ai_propose = yes }
+   ffpa_sc_agenda_tally = yes
+   ffpa_sc_agenda_select = yes
   }
   # ponytail: sessions open on the monthly agenda; this gives three full global months
   # without a fragile delayed country event whose host can be annexed.
@@ -475,7 +454,7 @@ ffpa_sc_ai_start_works = {
    is_ai = yes ffpa_sc_member = yes ffpa_sc_ai_solvent = yes
    NOT = { has_variable = ffpa_sc_ai_rest }
    ffpa_sc_has_work = yes NOT = { has_variable = ffpa_sc_task }
-   ffpa_sc_aid_waiting_for_round = no
+   ffpa_sc_aid_waiting_for_round = no ffpa_sc_agenda_reserve_slot = no
   }
   ffpa_sc_start_works = yes
  }
