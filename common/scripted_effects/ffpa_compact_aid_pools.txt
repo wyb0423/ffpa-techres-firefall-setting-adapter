@@ -134,18 +134,14 @@ ffpa_sc_aid_settle_pool = {
     set_variable = { name = ffpa_sc_aid_strength value = global_var:ffpa_sc_aid_$POOL$_strength }
     if = { limit = { has_variable = ffpa_sc_aid_reduced } change_variable = { name = ffpa_sc_aid_strength multiply = 0.5 } }
     change_global_variable = { name = ffpa_sc_aid_$POOL$_total add = ffpa_sc_aid_weekly_fee }
-    if = {
-     limit = { OR = { NOT = { has_modifier = ffpa_sc_aid_fee_modifier } NOT = { var:ffpa_sc_aid_paid_fee = ffpa_sc_aid_weekly_fee } } }
-     if = { limit = { has_modifier = ffpa_sc_aid_fee_modifier } remove_modifier = ffpa_sc_aid_fee_modifier }
-     add_modifier = { name = ffpa_sc_aid_fee_modifier multiplier = ffpa_sc_aid_weekly_fee }
-     set_variable = { name = ffpa_sc_aid_paid_fee value = ffpa_sc_aid_weekly_fee }
-    }
-    if = {
-     limit = { OR = { NOT = { has_modifier = $BENEFIT$ } NOT = { var:ffpa_sc_aid_applied_strength = var:ffpa_sc_aid_strength } } }
-     if = { limit = { has_modifier = $BENEFIT$ } remove_modifier = $BENEFIT$ }
-     add_modifier = { name = $BENEFIT$ multiplier = var:ffpa_sc_aid_strength }
-     set_variable = { name = ffpa_sc_aid_applied_strength value = var:ffpa_sc_aid_strength }
-    }
+    # Bookkeeping is not proof of the persisted modifier's actual multiplier.
+    # Rebuild on settlement so stale saves recover even when quotes are unchanged.
+    if = { limit = { has_modifier = ffpa_sc_aid_fee_modifier } remove_modifier = ffpa_sc_aid_fee_modifier }
+    add_modifier = { name = ffpa_sc_aid_fee_modifier multiplier = ffpa_sc_aid_weekly_fee }
+    set_variable = { name = ffpa_sc_aid_paid_fee value = ffpa_sc_aid_weekly_fee }
+    if = { limit = { has_modifier = $BENEFIT$ } remove_modifier = $BENEFIT$ }
+    add_modifier = { name = $BENEFIT$ multiplier = var:ffpa_sc_aid_strength }
+    set_variable = { name = ffpa_sc_aid_applied_strength value = var:ffpa_sc_aid_strength }
    }
    set_global_variable = { name = ffpa_sc_aid_distribution_total value = global_var:ffpa_sc_aid_$POOL$_total }
    set_global_variable = { name = ffpa_sc_aid_distribution_weight_total value = 0 }
@@ -182,12 +178,9 @@ ffpa_sc_aid_settle_pool = {
     else = { if = { limit = { has_modifier = $COST$ } remove_modifier = $COST$ } }
     if = {
      limit = { var:ffpa_sc_aid_$POOL$_income > 0 }
-     if = {
-      limit = { OR = { NOT = { has_modifier = $INCOME$ } NOT = { var:ffpa_sc_aid_$POOL$_paid_income = var:ffpa_sc_aid_$POOL$_income } } }
-      if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
-      add_modifier = { name = $INCOME$ multiplier = var:ffpa_sc_aid_$POOL$_income }
-      set_variable = { name = ffpa_sc_aid_$POOL$_paid_income value = var:ffpa_sc_aid_$POOL$_income }
-     }
+     if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
+     add_modifier = { name = $INCOME$ multiplier = var:ffpa_sc_aid_$POOL$_income }
+     set_variable = { name = ffpa_sc_aid_$POOL$_paid_income value = var:ffpa_sc_aid_$POOL$_income }
     }
     else = {
      if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }

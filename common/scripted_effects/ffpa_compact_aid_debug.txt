@@ -1,0 +1,35 @@
+# Manual, read-only country-scope probe: effect ffpa_sc_aid_debug = yes
+# No scheduler: capture before refreshing, then compare after monthly settlement.
+ffpa_sc_aid_debug = {
+ debug_log = "FFPA_AID country=[THIS.GetCountry.GetNameNoFormatting] expected_weekly_income=[THIS.ScriptValue('ffpa_sc_aid_my_income')|5]"
+ # These are whole-country totals, including sources outside the Compact.
+ debug_log = "FFPA_AID country_tax_income_add=[THIS.GetCountry.GetModifier.GetValueFor('country_tax_income_add')|5] country_expenses_add=[THIS.GetCountry.GetModifier.GetValueFor('country_expenses_add')|5]"
+ if = {
+  limit = { has_variable = ffpa_sc_aid_paid_fee }
+  debug_log = "FFPA_AID expected_weekly_fee=[THIS.Var('ffpa_sc_aid_paid_fee').GetValue|5] strength=[THIS.Var('ffpa_sc_aid_strength').GetValue|5]"
+ }
+ if = {
+  limit = { has_modifier = ffpa_sc_aid_fee_modifier }
+  debug_log = "FFPA_AID fee=[THIS.GetCountry.GetTimedModifier('ffpa_sc_aid_fee_modifier').GetTooltip]"
+ }
+ ffpa_sc_aid_debug_pool = { POOL = education }
+ ffpa_sc_aid_debug_pool = { POOL = talent }
+ ffpa_sc_aid_debug_pool = { POOL = production }
+ ffpa_sc_aid_debug_pool = { POOL = society }
+ ffpa_sc_aid_debug_pool = { POOL = military }
+}
+
+ffpa_sc_aid_debug_pool = {
+ if = {
+  limit = { has_variable = ffpa_sc_aid_$POOL$_paid_income }
+  debug_log = "FFPA_AID $POOL$ expected_income=[THIS.Var('ffpa_sc_aid_$POOL$_paid_income').GetValue|5] pool_total=[GetGlobalVariable('ffpa_sc_aid_$POOL$_total').GetValue|5]"
+ }
+ if = {
+  limit = { has_modifier = ffpa_sc_aid_$POOL$_income_modifier }
+  debug_log = "FFPA_AID $POOL$ income=[THIS.GetCountry.GetTimedModifier('ffpa_sc_aid_$POOL$_income_modifier').GetTooltip]"
+ }
+ if = {
+  limit = { has_modifier = ffpa_sc_aid_$POOL$_benefit_modifier }
+  debug_log = "FFPA_AID $POOL$ benefit=[THIS.GetCountry.GetTimedModifier('ffpa_sc_aid_$POOL$_benefit_modifier').GetTooltip]"
+ }
+}

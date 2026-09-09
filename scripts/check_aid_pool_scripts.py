@@ -168,6 +168,21 @@ class World:
 
 def check():
     assert not (set(VALUES) & set(TRIGGERS)), 'Value/trigger name collision can recurse'
+    # The budget contract depends on the real modifier definitions as well as
+    # the allocation multipliers. Do not silently validate just the ledger.
+    modifiers = {e.key: e for e in parse((ROOT / 'common/static_modifiers/zzzz_ffpa_survivor_compact.txt').read_text())}
+    assert child(modifiers['ffpa_sc_aid_fee_modifier'], 'country_expenses_add').value == '1'
+    for pool in ('education', 'talent', 'production', 'society', 'military'):
+        assert child(modifiers[f'ffpa_sc_aid_{pool}_income_modifier'], 'country_tax_income_add').value == '1'
+    debug = parse((ROOT / 'common/scripted_effects/ffpa_compact_aid_debug.txt').read_text())
+    allowed = {'debug_log', 'if', 'limit', 'has_variable', 'has_modifier',
+               'ffpa_sc_aid_debug_pool', 'POOL'}
+    assert all(e.key in allowed for effect in debug for e in walk(effect.value)), 'Debug probe must be read-only'
+    assert {e.value[0].value for e in debug[0].value if e.key == 'ffpa_sc_aid_debug_pool'} == {
+        'education', 'talent', 'production', 'society', 'military'}
+    for path in (ROOT / 'common').rglob('*.txt'):
+        if path.name != 'ffpa_compact_aid_debug.txt':
+            assert 'ffpa_sc_aid_debug' not in path.read_text(encoding='utf-8-sig'), 'Debug probe must stay manual'
     main = {e.key: e for e in parse((ROOT / 'common/scripted_effects/ffpa_survivor_compact.txt').read_text())}
     pulse = list(walk(main['ffpa_sc_monthly'].value))
     tick = next(e.start for e in pulse if e.key == 'ffpa_sc_aid_tick_all')
@@ -215,9 +230,9 @@ def check():
     assert w.c['X']['expiry']['ffpa_sc_works_retry'] == 61
     assert w.c['X']['mods'] == {fee: 1000, 'test_benefit': 1}
     assert [w.c[n]['mods']['test_income'] for n in 'ABC'] == [600, 300, 100]
-    before = w.writes
+    before = copy.deepcopy(w.c)
     w.run('ffpa_sc_aid_settle_pool', **args)
-    assert w.writes == before  # Refresh does not re-add unchanged effects.
+    assert w.c == before  # Rebuilding modifiers must not stack or reset contracts.
     register(w, 'Y')
     assert not w.c['Y']['v'].get('ffpa_sc_aid_kind')  # No late admission.
     w.c['X']['ready'] = True
@@ -367,7 +382,28 @@ def check():
     w.run('ffpa_sc_aid_refresh_all')
     assert all(not c['mods'] for c in w.c.values())
     assert w.c['X']['expiry']['ffpa_sc_works_retry'] == 61
-    print('PASS: actual aid scripts, registration/launch/settlement/exit/rounding/timers')
+    # A persisted modifier can disagree with our bookkeeping. Exercise all real
+    # wrappers: unchanged quotes must not leave a base-1 income/fee or full buff.
+    for pool in ('education', 'talent', 'production', 'society', 'military'):
+        for providers in (1, 2, 3):
+            w = World()
+            for name in 'ABC'[:providers]: w.country(name, ready=True)
+            w.country('X')
+            w.run(f'ffpa_sc_aid_{pool}_open')
+            w.run(f'ffpa_sc_aid_{pool}_register', 'X')
+            w.month = 1
+            w.run('ffpa_sc_aid_tick_all')
+            expected = copy.deepcopy(w.c)
+            revenue = f'ffpa_sc_aid_{pool}_income_modifier'
+            benefit = f'ffpa_sc_aid_{pool}_benefit_modifier'
+            for name in 'ABC'[:providers]: w.c[name]['mods'][revenue] = F(1)
+            w.c['X']['mods'][fee] = F(1)
+            w.c['X']['mods'][benefit] = F('0.1')
+            w.run('ffpa_sc_aid_refresh_all')
+            assert w.c == expected, ('stale modifier survived settlement', pool, providers)
+            w.run('ffpa_sc_aid_refresh_all')
+            assert w.c == expected  # Repeated refresh preserves timers and balances.
+    print('PASS: actual aid scripts, registration/launch/settlement/exit/rounding/timers/stale modifiers')
 
 
 if __name__ == '__main__':
