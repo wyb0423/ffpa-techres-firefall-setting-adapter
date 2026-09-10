@@ -41,7 +41,7 @@ ffpa_sc_aid_allocated_income = {
    has_variable = ffpa_sc_aid_distribution_weight
   }
   value = global_var:ffpa_sc_aid_distribution_total
-  multiply = var:ffpa_sc_aid_distribution_weight
+  multiply = this.var:ffpa_sc_aid_distribution_weight
   divide = global_var:ffpa_sc_aid_distribution_weight_total
   multiply = 100
   floor = yes

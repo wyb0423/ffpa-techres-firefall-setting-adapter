@@ -8,6 +8,7 @@ from fractions import Fraction as F
 from pathlib import Path
 import copy
 import math
+import re
 from compact_script import parse, child, walk
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,6 +61,7 @@ class World:
                 else: raise AssertionError(('unsupported script value', e))
             return result
         if value.startswith('global_var:'): return self.g.get(value[11:], F(0))
+        if value.startswith('this.var:'): return self.c[country]['v'].get(value[9:], F(0))
         if value.startswith('var:'): return self.c[country]['v'].get(value[4:], F(0))
         if value in VALUES: return self.number(VALUES[value], country)
         if value in ('gdp', 'prestige', 'scaled_debt', 'net_fixed_income', 'gold_reserves', 'literacy_rate'):
@@ -179,6 +181,8 @@ class World:
 
 def check():
     assert not (set(VALUES) & set(TRIGGERS)), 'Value/trigger name collision can recurse'
+    pool_source = (ROOT / 'common/scripted_effects/ffpa_compact_aid_pools.txt').read_text()
+    assert not re.search(r'(?<![\w.])var:', pool_source), 'Global pool engine must bind country variables through this.var'
     # The budget contract depends on the real modifier definitions as well as
     # the allocation multipliers. Do not silently validate just the ledger.
     modifiers = {e.key: e for e in parse((ROOT / 'common/static_modifiers/zzzz_ffpa_survivor_compact.txt').read_text())}
@@ -197,8 +201,8 @@ def check():
     settle = parse(EFFECTS['ffpa_sc_aid_settle_pool'])[0]
     fee_add = next(e for e in walk(settle.value) if e.key == 'add_modifier' and isinstance(e.value, list) and child(e, 'name').value == 'ffpa_sc_aid_fee_modifier')
     income_add = next(e for e in walk(settle.value) if e.key == 'add_modifier' and isinstance(e.value, list) and child(e, 'name').value == '$INCOME$')
-    assert child(fee_add, 'multiplier').value == 'var:ffpa_sc_aid_paid_fee'
-    assert child(income_add, 'multiplier').value == 'var:ffpa_sc_aid_$POOL$_paid_income'
+    assert child(child(fee_add, 'multiplier'), 'value').value == 'this.var:ffpa_sc_aid_paid_fee'
+    assert child(child(income_add, 'multiplier'), 'value').value == 'this.var:ffpa_sc_aid_$POOL$_paid_income'
     for pool in 'education talent production society military'.split():
         assert f'ffpa_sc_aid_{pool}_income_multiplier' not in VALUES
     main = {e.key: e for e in parse((ROOT / 'common/scripted_effects/ffpa_survivor_compact.txt').read_text())}

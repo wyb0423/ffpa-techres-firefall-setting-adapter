@@ -10,7 +10,7 @@ ffpa_sc_aid_collect_providers = {
   if = {
    limit = {
     ffpa_sc_member = yes ffpa_sc_eligible = yes $READY$ = yes
-    NOT = { var:ffpa_sc_aid_kind = $ID$ }
+    NOT = { this.var:ffpa_sc_aid_kind = $ID$ }
    }
    set_variable = ffpa_sc_aid_$POOL$_provider
    change_global_variable = { name = ffpa_sc_aid_$POOL$_providers add = 1 }
@@ -55,9 +55,9 @@ ffpa_sc_aid_register = {
 
 ffpa_sc_aid_drop_recipient = {
  if = {
-  limit = { var:ffpa_sc_aid_kind = $ID$ }
+  limit = { this.var:ffpa_sc_aid_kind = $ID$ }
   remove_variable = ffpa_sc_aid_kind
-  if = { limit = { var:ffpa_sc_task = $ID$ } remove_variable = ffpa_sc_task }
+  if = { limit = { this.var:ffpa_sc_task = $ID$ } remove_variable = ffpa_sc_task }
   remove_variable = ffpa_sc_aid_quote
   remove_variable = ffpa_sc_aid_strength
   remove_variable = ffpa_sc_aid_paid_fee
@@ -98,12 +98,12 @@ ffpa_sc_aid_settle_pool = {
   ffpa_sc_aid_collect_providers = { POOL = $POOL$ ID = $ID$ READY = $READY$ }
   set_global_variable = { name = ffpa_sc_aid_$POOL$_recipients value = 0 }
   every_country = {
-   limit = { var:ffpa_sc_aid_kind = $ID$ }
+   limit = { this.var:ffpa_sc_aid_kind = $ID$ }
    if = {
     limit = {
      OR = {
       ffpa_sc_member = no ffpa_sc_eligible = no ffpa_sc_operational = no
-      in_default = yes NOT = { var:ffpa_sc_task = $ID$ }
+      in_default = yes NOT = { this.var:ffpa_sc_task = $ID$ }
       # ponytail: pair checks only for wartime recipients; use a native enemy
       # iterator if profiling shows wartime scans dominate the monthly refresh.
       AND = {
@@ -132,34 +132,36 @@ ffpa_sc_aid_settle_pool = {
    else_if = { limit = { global_var:ffpa_sc_aid_$POOL$_providers = 2 } set_global_variable = { name = ffpa_sc_aid_$POOL$_strength value = 0.75 } }
    set_global_variable = { name = ffpa_sc_aid_$POOL$_total value = 0 }
    every_country = {
-    limit = { var:ffpa_sc_aid_kind = $ID$ }
+    limit = { this.var:ffpa_sc_aid_kind = $ID$ }
     # Old saves can contain a registered recipient from before quotes persisted.
     if = { limit = { NOT = { has_variable = ffpa_sc_aid_quote } } set_variable = { name = ffpa_sc_aid_quote value = ffpa_sc_aid_$POOL$_quote } }
     set_variable = { name = ffpa_sc_aid_strength value = 1 }
     if = { limit = { global_var:ffpa_sc_aid_$POOL$_providers = 1 } set_variable = { name = ffpa_sc_aid_strength value = 0.5 } }
     else_if = { limit = { global_var:ffpa_sc_aid_$POOL$_providers = 2 } set_variable = { name = ffpa_sc_aid_strength value = 0.75 } }
     if = { limit = { has_variable = ffpa_sc_aid_reduced } change_variable = { name = ffpa_sc_aid_strength multiply = 0.5 } }
-    set_variable = { name = ffpa_sc_aid_paid_fee value = var:ffpa_sc_aid_quote }
-    change_variable = { name = ffpa_sc_aid_paid_fee multiply = var:ffpa_sc_aid_strength }
-    change_global_variable = { name = ffpa_sc_aid_$POOL$_total add = var:ffpa_sc_aid_paid_fee }
+    set_variable = {
+     name = ffpa_sc_aid_paid_fee
+     value = { value = this.var:ffpa_sc_aid_quote multiply = this.var:ffpa_sc_aid_strength }
+    }
+    change_global_variable = { name = ffpa_sc_aid_$POOL$_total add = this.var:ffpa_sc_aid_paid_fee }
     # Rebuild on settlement so stale saves recover even when quotes are unchanged.
     if = { limit = { has_modifier = ffpa_sc_aid_fee_modifier } remove_modifier = ffpa_sc_aid_fee_modifier }
-    add_modifier = { name = ffpa_sc_aid_fee_modifier multiplier = var:ffpa_sc_aid_paid_fee }
+    add_modifier = { name = ffpa_sc_aid_fee_modifier multiplier = { value = this.var:ffpa_sc_aid_paid_fee } }
     if = { limit = { has_modifier = $BENEFIT$ } remove_modifier = $BENEFIT$ }
     if = { limit = { has_modifier = $BENEFIT_ALT$ } remove_modifier = $BENEFIT_ALT$ }
     if = {
      limit = { has_variable = ffpa_sc_aid_alternative }
-     add_modifier = { name = $BENEFIT_ALT$ multiplier = var:ffpa_sc_aid_strength }
+     add_modifier = { name = $BENEFIT_ALT$ multiplier = { value = this.var:ffpa_sc_aid_strength } }
     }
-    else = { add_modifier = { name = $BENEFIT$ multiplier = var:ffpa_sc_aid_strength } }
-    set_variable = { name = ffpa_sc_aid_applied_strength value = var:ffpa_sc_aid_strength }
+    else = { add_modifier = { name = $BENEFIT$ multiplier = { value = this.var:ffpa_sc_aid_strength } } }
+    set_variable = { name = ffpa_sc_aid_applied_strength value = this.var:ffpa_sc_aid_strength }
    }
    set_global_variable = { name = ffpa_sc_aid_distribution_total value = global_var:ffpa_sc_aid_$POOL$_total }
    set_global_variable = { name = ffpa_sc_aid_distribution_weight_total value = 0 }
    every_country = {
     limit = { has_variable = ffpa_sc_aid_$POOL$_provider }
     set_variable = { name = ffpa_sc_aid_distribution_weight value = ffpa_sc_aid_prestige_weight }
-    change_global_variable = { name = ffpa_sc_aid_distribution_weight_total add = var:ffpa_sc_aid_distribution_weight }
+    change_global_variable = { name = ffpa_sc_aid_distribution_weight_total add = this.var:ffpa_sc_aid_distribution_weight }
    }
    if = {
     limit = { global_var:ffpa_sc_aid_distribution_weight_total = 0 }
@@ -172,7 +174,7 @@ ffpa_sc_aid_settle_pool = {
     if = {
      limit = { has_variable = ffpa_sc_aid_$POOL$_provider }
      set_variable = { name = ffpa_sc_aid_$POOL$_income value = ffpa_sc_aid_allocated_income }
-     change_global_variable = { name = ffpa_sc_aid_distribution_remainder subtract = var:ffpa_sc_aid_$POOL$_income }
+     change_global_variable = { name = ffpa_sc_aid_distribution_remainder subtract = this.var:ffpa_sc_aid_$POOL$_income }
     }
    }
    # Floor shares to cents; highest-prestige provider takes the exact remainder.
@@ -186,10 +188,10 @@ ffpa_sc_aid_settle_pool = {
      limit = { has_variable = ffpa_sc_aid_$POOL$_provider }
      if = { limit = { NOT = { has_modifier = $COST$ } } add_modifier = $COST$ }
      if = {
-      limit = { var:ffpa_sc_aid_$POOL$_income > 0 }
-      set_variable = { name = ffpa_sc_aid_$POOL$_paid_income value = var:ffpa_sc_aid_$POOL$_income }
+      limit = { this.var:ffpa_sc_aid_$POOL$_income > 0 }
+      set_variable = { name = ffpa_sc_aid_$POOL$_paid_income value = this.var:ffpa_sc_aid_$POOL$_income }
       if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
-      add_modifier = { name = $INCOME$ multiplier = var:ffpa_sc_aid_$POOL$_paid_income }
+      add_modifier = { name = $INCOME$ multiplier = { value = this.var:ffpa_sc_aid_$POOL$_paid_income } }
      }
      else = {
       if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
@@ -218,7 +220,7 @@ ffpa_sc_aid_withdraw = {
 ffpa_sc_aid_reduce = {
  if = {
   limit = {
-   var:ffpa_sc_aid_kind = $ID$ global_var:ffpa_sc_aid_$POOL$_phase = 2
+   this.var:ffpa_sc_aid_kind = $ID$ global_var:ffpa_sc_aid_$POOL$_phase = 2
    global_var:ffpa_sc_aid_$POOL$_months <= 24 NOT = { has_variable = ffpa_sc_aid_reduced }
    NOT = { has_variable = ffpa_sc_aid_reviewed }
   }
@@ -247,7 +249,7 @@ ffpa_sc_aid_tick_pool = {
      set_global_variable = { name = ffpa_sc_aid_$POOL$_phase value = 2 }
      set_global_variable = { name = ffpa_sc_aid_$POOL$_months value = 36 }
      set_global_variable = { name = ffpa_sc_aid_$POOL$_result value = 1 }
-     every_country = { limit = { var:ffpa_sc_aid_kind = $ID$ } set_variable = { name = ffpa_sc_works_retry years = 5 } }
+     every_country = { limit = { this.var:ffpa_sc_aid_kind = $ID$ } set_variable = { name = ffpa_sc_works_retry years = 5 } }
      ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ COST = $COST$ INCOME = $INCOME$ }
     }
     else = { ffpa_sc_aid_end_pool = { POOL = $POOL$ ID = $ID$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ COST = $COST$ INCOME = $INCOME$ } }
