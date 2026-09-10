@@ -9,10 +9,10 @@ ffpa_sc_aid_education_register = {
   ffpa_sc_aid_register = { POOL = education ID = 4 READY = ffpa_sc_aid_education_ready RATE = ffpa_sc_aid_education_rate }
  }
 }
-ffpa_sc_aid_education_refresh = { ffpa_sc_aid_settle_pool = { POOL = education ID = 4 READY = ffpa_sc_aid_education_ready BENEFIT = ffpa_sc_aid_education_benefit_modifier COST = ffpa_sc_aid_education_provider_modifier INCOME = ffpa_sc_aid_education_income_modifier } }
-ffpa_sc_aid_education_tick = { ffpa_sc_aid_tick_pool = { POOL = education ID = 4 READY = ffpa_sc_aid_education_ready BENEFIT = ffpa_sc_aid_education_benefit_modifier COST = ffpa_sc_aid_education_provider_modifier INCOME = ffpa_sc_aid_education_income_modifier } }
-ffpa_sc_aid_education_withdraw = { ffpa_sc_aid_withdraw = { POOL = education ID = 4 READY = ffpa_sc_aid_education_ready BENEFIT = ffpa_sc_aid_education_benefit_modifier COST = ffpa_sc_aid_education_provider_modifier INCOME = ffpa_sc_aid_education_income_modifier } }
-ffpa_sc_aid_education_reduce = { ffpa_sc_aid_reduce = { POOL = education ID = 4 READY = ffpa_sc_aid_education_ready BENEFIT = ffpa_sc_aid_education_benefit_modifier COST = ffpa_sc_aid_education_provider_modifier INCOME = ffpa_sc_aid_education_income_modifier } }
+ffpa_sc_aid_education_refresh = { ffpa_sc_aid_settle_pool = { POOL = education ID = 4 READY = ffpa_sc_aid_education_ready BENEFIT = ffpa_sc_aid_education_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_education_benefit_modifier_alternative COST = ffpa_sc_aid_education_provider_modifier INCOME = ffpa_sc_aid_education_income_modifier } }
+ffpa_sc_aid_education_tick = { ffpa_sc_aid_tick_pool = { POOL = education ID = 4 READY = ffpa_sc_aid_education_ready BENEFIT = ffpa_sc_aid_education_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_education_benefit_modifier_alternative COST = ffpa_sc_aid_education_provider_modifier INCOME = ffpa_sc_aid_education_income_modifier } }
+ffpa_sc_aid_education_withdraw = { ffpa_sc_aid_withdraw = { POOL = education ID = 4 READY = ffpa_sc_aid_education_ready BENEFIT = ffpa_sc_aid_education_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_education_benefit_modifier_alternative COST = ffpa_sc_aid_education_provider_modifier INCOME = ffpa_sc_aid_education_income_modifier } }
+ffpa_sc_aid_education_reduce = { ffpa_sc_aid_reduce = { POOL = education ID = 4 READY = ffpa_sc_aid_education_ready BENEFIT = ffpa_sc_aid_education_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_education_benefit_modifier_alternative COST = ffpa_sc_aid_education_provider_modifier INCOME = ffpa_sc_aid_education_income_modifier } }
 ffpa_sc_aid_talent_propose = { ffpa_sc_agenda_endorse = { ID = 5 } }
 ffpa_sc_aid_talent_open = {
  if = { limit = { ffpa_sc_aid_talent_enabled = yes }
@@ -24,10 +24,10 @@ ffpa_sc_aid_talent_register = {
   ffpa_sc_aid_register = { POOL = talent ID = 5 READY = ffpa_sc_aid_talent_ready RATE = ffpa_sc_aid_talent_rate }
  }
 }
-ffpa_sc_aid_talent_refresh = { ffpa_sc_aid_settle_pool = { POOL = talent ID = 5 READY = ffpa_sc_aid_talent_ready BENEFIT = ffpa_sc_aid_talent_benefit_modifier COST = ffpa_sc_aid_talent_provider_modifier INCOME = ffpa_sc_aid_talent_income_modifier } }
-ffpa_sc_aid_talent_tick = { ffpa_sc_aid_tick_pool = { POOL = talent ID = 5 READY = ffpa_sc_aid_talent_ready BENEFIT = ffpa_sc_aid_talent_benefit_modifier COST = ffpa_sc_aid_talent_provider_modifier INCOME = ffpa_sc_aid_talent_income_modifier } }
-ffpa_sc_aid_talent_withdraw = { ffpa_sc_aid_withdraw = { POOL = talent ID = 5 READY = ffpa_sc_aid_talent_ready BENEFIT = ffpa_sc_aid_talent_benefit_modifier COST = ffpa_sc_aid_talent_provider_modifier INCOME = ffpa_sc_aid_talent_income_modifier } }
-ffpa_sc_aid_talent_reduce = { ffpa_sc_aid_reduce = { POOL = talent ID = 5 READY = ffpa_sc_aid_talent_ready BENEFIT = ffpa_sc_aid_talent_benefit_modifier COST = ffpa_sc_aid_talent_provider_modifier INCOME = ffpa_sc_aid_talent_income_modifier } }
+ffpa_sc_aid_talent_refresh = { ffpa_sc_aid_settle_pool = { POOL = talent ID = 5 READY = ffpa_sc_aid_talent_ready BENEFIT = ffpa_sc_aid_talent_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_talent_benefit_modifier_alternative COST = ffpa_sc_aid_talent_provider_modifier INCOME = ffpa_sc_aid_talent_income_modifier } }
+ffpa_sc_aid_talent_tick = { ffpa_sc_aid_tick_pool = { POOL = talent ID = 5 READY = ffpa_sc_aid_talent_ready BENEFIT = ffpa_sc_aid_talent_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_talent_benefit_modifier_alternative COST = ffpa_sc_aid_talent_provider_modifier INCOME = ffpa_sc_aid_talent_income_modifier } }
+ffpa_sc_aid_talent_withdraw = { ffpa_sc_aid_withdraw = { POOL = talent ID = 5 READY = ffpa_sc_aid_talent_ready BENEFIT = ffpa_sc_aid_talent_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_talent_benefit_modifier_alternative COST = ffpa_sc_aid_talent_provider_modifier INCOME = ffpa_sc_aid_talent_income_modifier } }
+ffpa_sc_aid_talent_reduce = { ffpa_sc_aid_reduce = { POOL = talent ID = 5 READY = ffpa_sc_aid_talent_ready BENEFIT = ffpa_sc_aid_talent_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_talent_benefit_modifier_alternative COST = ffpa_sc_aid_talent_provider_modifier INCOME = ffpa_sc_aid_talent_income_modifier } }
 ffpa_sc_aid_production_propose = { ffpa_sc_agenda_endorse = { ID = 6 } }
 ffpa_sc_aid_production_open = {
  if = { limit = { ffpa_sc_aid_production_enabled = yes }
@@ -39,10 +39,10 @@ ffpa_sc_aid_production_register = {
   ffpa_sc_aid_register = { POOL = production ID = 6 READY = ffpa_sc_aid_production_ready RATE = ffpa_sc_aid_production_rate }
  }
 }
-ffpa_sc_aid_production_refresh = { ffpa_sc_aid_settle_pool = { POOL = production ID = 6 READY = ffpa_sc_aid_production_ready BENEFIT = ffpa_sc_aid_production_benefit_modifier COST = ffpa_sc_aid_production_provider_modifier INCOME = ffpa_sc_aid_production_income_modifier } }
-ffpa_sc_aid_production_tick = { ffpa_sc_aid_tick_pool = { POOL = production ID = 6 READY = ffpa_sc_aid_production_ready BENEFIT = ffpa_sc_aid_production_benefit_modifier COST = ffpa_sc_aid_production_provider_modifier INCOME = ffpa_sc_aid_production_income_modifier } }
-ffpa_sc_aid_production_withdraw = { ffpa_sc_aid_withdraw = { POOL = production ID = 6 READY = ffpa_sc_aid_production_ready BENEFIT = ffpa_sc_aid_production_benefit_modifier COST = ffpa_sc_aid_production_provider_modifier INCOME = ffpa_sc_aid_production_income_modifier } }
-ffpa_sc_aid_production_reduce = { ffpa_sc_aid_reduce = { POOL = production ID = 6 READY = ffpa_sc_aid_production_ready BENEFIT = ffpa_sc_aid_production_benefit_modifier COST = ffpa_sc_aid_production_provider_modifier INCOME = ffpa_sc_aid_production_income_modifier } }
+ffpa_sc_aid_production_refresh = { ffpa_sc_aid_settle_pool = { POOL = production ID = 6 READY = ffpa_sc_aid_production_ready BENEFIT = ffpa_sc_aid_production_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_production_benefit_modifier_alternative COST = ffpa_sc_aid_production_provider_modifier INCOME = ffpa_sc_aid_production_income_modifier } }
+ffpa_sc_aid_production_tick = { ffpa_sc_aid_tick_pool = { POOL = production ID = 6 READY = ffpa_sc_aid_production_ready BENEFIT = ffpa_sc_aid_production_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_production_benefit_modifier_alternative COST = ffpa_sc_aid_production_provider_modifier INCOME = ffpa_sc_aid_production_income_modifier } }
+ffpa_sc_aid_production_withdraw = { ffpa_sc_aid_withdraw = { POOL = production ID = 6 READY = ffpa_sc_aid_production_ready BENEFIT = ffpa_sc_aid_production_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_production_benefit_modifier_alternative COST = ffpa_sc_aid_production_provider_modifier INCOME = ffpa_sc_aid_production_income_modifier } }
+ffpa_sc_aid_production_reduce = { ffpa_sc_aid_reduce = { POOL = production ID = 6 READY = ffpa_sc_aid_production_ready BENEFIT = ffpa_sc_aid_production_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_production_benefit_modifier_alternative COST = ffpa_sc_aid_production_provider_modifier INCOME = ffpa_sc_aid_production_income_modifier } }
 ffpa_sc_aid_society_propose = { ffpa_sc_agenda_endorse = { ID = 7 } }
 ffpa_sc_aid_society_open = {
  if = { limit = { ffpa_sc_aid_society_enabled = yes }
@@ -54,10 +54,10 @@ ffpa_sc_aid_society_register = {
   ffpa_sc_aid_register = { POOL = society ID = 7 READY = ffpa_sc_aid_society_ready RATE = ffpa_sc_aid_society_rate }
  }
 }
-ffpa_sc_aid_society_refresh = { ffpa_sc_aid_settle_pool = { POOL = society ID = 7 READY = ffpa_sc_aid_society_ready BENEFIT = ffpa_sc_aid_society_benefit_modifier COST = ffpa_sc_aid_society_provider_modifier INCOME = ffpa_sc_aid_society_income_modifier } }
-ffpa_sc_aid_society_tick = { ffpa_sc_aid_tick_pool = { POOL = society ID = 7 READY = ffpa_sc_aid_society_ready BENEFIT = ffpa_sc_aid_society_benefit_modifier COST = ffpa_sc_aid_society_provider_modifier INCOME = ffpa_sc_aid_society_income_modifier } }
-ffpa_sc_aid_society_withdraw = { ffpa_sc_aid_withdraw = { POOL = society ID = 7 READY = ffpa_sc_aid_society_ready BENEFIT = ffpa_sc_aid_society_benefit_modifier COST = ffpa_sc_aid_society_provider_modifier INCOME = ffpa_sc_aid_society_income_modifier } }
-ffpa_sc_aid_society_reduce = { ffpa_sc_aid_reduce = { POOL = society ID = 7 READY = ffpa_sc_aid_society_ready BENEFIT = ffpa_sc_aid_society_benefit_modifier COST = ffpa_sc_aid_society_provider_modifier INCOME = ffpa_sc_aid_society_income_modifier } }
+ffpa_sc_aid_society_refresh = { ffpa_sc_aid_settle_pool = { POOL = society ID = 7 READY = ffpa_sc_aid_society_ready BENEFIT = ffpa_sc_aid_society_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_society_benefit_modifier_alternative COST = ffpa_sc_aid_society_provider_modifier INCOME = ffpa_sc_aid_society_income_modifier } }
+ffpa_sc_aid_society_tick = { ffpa_sc_aid_tick_pool = { POOL = society ID = 7 READY = ffpa_sc_aid_society_ready BENEFIT = ffpa_sc_aid_society_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_society_benefit_modifier_alternative COST = ffpa_sc_aid_society_provider_modifier INCOME = ffpa_sc_aid_society_income_modifier } }
+ffpa_sc_aid_society_withdraw = { ffpa_sc_aid_withdraw = { POOL = society ID = 7 READY = ffpa_sc_aid_society_ready BENEFIT = ffpa_sc_aid_society_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_society_benefit_modifier_alternative COST = ffpa_sc_aid_society_provider_modifier INCOME = ffpa_sc_aid_society_income_modifier } }
+ffpa_sc_aid_society_reduce = { ffpa_sc_aid_reduce = { POOL = society ID = 7 READY = ffpa_sc_aid_society_ready BENEFIT = ffpa_sc_aid_society_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_society_benefit_modifier_alternative COST = ffpa_sc_aid_society_provider_modifier INCOME = ffpa_sc_aid_society_income_modifier } }
 ffpa_sc_aid_military_propose = { ffpa_sc_agenda_endorse = { ID = 8 } }
 ffpa_sc_aid_military_open = {
  if = { limit = { ffpa_sc_aid_military_enabled = yes }
@@ -69,10 +69,10 @@ ffpa_sc_aid_military_register = {
   ffpa_sc_aid_register = { POOL = military ID = 8 READY = ffpa_sc_aid_military_ready RATE = ffpa_sc_aid_military_rate }
  }
 }
-ffpa_sc_aid_military_refresh = { ffpa_sc_aid_settle_pool = { POOL = military ID = 8 READY = ffpa_sc_aid_military_ready BENEFIT = ffpa_sc_aid_military_benefit_modifier COST = ffpa_sc_aid_military_provider_modifier INCOME = ffpa_sc_aid_military_income_modifier } }
-ffpa_sc_aid_military_tick = { ffpa_sc_aid_tick_pool = { POOL = military ID = 8 READY = ffpa_sc_aid_military_ready BENEFIT = ffpa_sc_aid_military_benefit_modifier COST = ffpa_sc_aid_military_provider_modifier INCOME = ffpa_sc_aid_military_income_modifier } }
-ffpa_sc_aid_military_withdraw = { ffpa_sc_aid_withdraw = { POOL = military ID = 8 READY = ffpa_sc_aid_military_ready BENEFIT = ffpa_sc_aid_military_benefit_modifier COST = ffpa_sc_aid_military_provider_modifier INCOME = ffpa_sc_aid_military_income_modifier } }
-ffpa_sc_aid_military_reduce = { ffpa_sc_aid_reduce = { POOL = military ID = 8 READY = ffpa_sc_aid_military_ready BENEFIT = ffpa_sc_aid_military_benefit_modifier COST = ffpa_sc_aid_military_provider_modifier INCOME = ffpa_sc_aid_military_income_modifier } }
+ffpa_sc_aid_military_refresh = { ffpa_sc_aid_settle_pool = { POOL = military ID = 8 READY = ffpa_sc_aid_military_ready BENEFIT = ffpa_sc_aid_military_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_military_benefit_modifier_alternative COST = ffpa_sc_aid_military_provider_modifier INCOME = ffpa_sc_aid_military_income_modifier } }
+ffpa_sc_aid_military_tick = { ffpa_sc_aid_tick_pool = { POOL = military ID = 8 READY = ffpa_sc_aid_military_ready BENEFIT = ffpa_sc_aid_military_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_military_benefit_modifier_alternative COST = ffpa_sc_aid_military_provider_modifier INCOME = ffpa_sc_aid_military_income_modifier } }
+ffpa_sc_aid_military_withdraw = { ffpa_sc_aid_withdraw = { POOL = military ID = 8 READY = ffpa_sc_aid_military_ready BENEFIT = ffpa_sc_aid_military_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_military_benefit_modifier_alternative COST = ffpa_sc_aid_military_provider_modifier INCOME = ffpa_sc_aid_military_income_modifier } }
+ffpa_sc_aid_military_reduce = { ffpa_sc_aid_reduce = { POOL = military ID = 8 READY = ffpa_sc_aid_military_ready BENEFIT = ffpa_sc_aid_military_benefit_modifier BENEFIT_ALT = ffpa_sc_aid_military_benefit_modifier_alternative COST = ffpa_sc_aid_military_provider_modifier INCOME = ffpa_sc_aid_military_income_modifier } }
 ffpa_sc_aid_tick_all = {
  if = { limit = { has_global_variable = ffpa_sc_aid_education_phase } ffpa_sc_aid_education_tick = yes }
  if = { limit = { has_global_variable = ffpa_sc_aid_talent_phase } ffpa_sc_aid_talent_tick = yes }

@@ -1,6 +1,6 @@
 # Shared engine for five real categories, not a second parliament clock.
 # POOL: stable category suffix; ID: task id above 3; READY: country trigger.
-# BENEFIT, COST, INCOME: category-specific static modifier IDs.
+# BENEFIT, BENEFIT_ALT, COST, INCOME: category-specific static modifier IDs.
 # Concrete callers: ffpa_compact_aid_integration.txt; monthly owner is ffpa_sc_monthly.
 
 ffpa_sc_aid_collect_providers = {
@@ -68,14 +68,14 @@ ffpa_sc_aid_drop_recipient = {
   remove_variable = ffpa_sc_aid_alternative
   if = { limit = { has_modifier = ffpa_sc_aid_fee_modifier } remove_modifier = ffpa_sc_aid_fee_modifier }
   if = { limit = { has_modifier = $BENEFIT$ } remove_modifier = $BENEFIT$ }
-  if = { limit = { has_modifier = $BENEFIT$_alternative } remove_modifier = $BENEFIT$_alternative }
+  if = { limit = { has_modifier = $BENEFIT_ALT$ } remove_modifier = $BENEFIT_ALT$ }
   # ffpa_sc_works_retry survives all forms of exit, including war and default.
  }
 }
 
 ffpa_sc_aid_end_pool = {
  every_country = {
-  ffpa_sc_aid_drop_recipient = { ID = $ID$ BENEFIT = $BENEFIT$ }
+  ffpa_sc_aid_drop_recipient = { ID = $ID$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ }
   remove_variable = ffpa_sc_aid_$POOL$_provider
   remove_variable = ffpa_sc_aid_$POOL$_income
   remove_variable = ffpa_sc_aid_$POOL$_paid_income
@@ -112,7 +112,7 @@ ffpa_sc_aid_settle_pool = {
       }
      }
     }
-    ffpa_sc_aid_drop_recipient = { ID = $ID$ BENEFIT = $BENEFIT$ }
+    ffpa_sc_aid_drop_recipient = { ID = $ID$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ }
    }
    else = { change_global_variable = { name = ffpa_sc_aid_$POOL$_recipients add = 1 } }
   }
@@ -123,7 +123,7 @@ ffpa_sc_aid_settle_pool = {
      AND = { global_var:ffpa_sc_aid_$POOL$_phase = 2 global_var:ffpa_sc_aid_$POOL$_recipients = 0 }
     }
    }
-   ffpa_sc_aid_end_pool = { POOL = $POOL$ ID = $ID$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+   ffpa_sc_aid_end_pool = { POOL = $POOL$ ID = $ID$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ COST = $COST$ INCOME = $INCOME$ }
   }
   else_if = {
    limit = { global_var:ffpa_sc_aid_$POOL$_phase = 2 }
@@ -139,17 +139,17 @@ ffpa_sc_aid_settle_pool = {
     if = { limit = { global_var:ffpa_sc_aid_$POOL$_providers = 1 } set_variable = { name = ffpa_sc_aid_strength value = 0.5 } }
     else_if = { limit = { global_var:ffpa_sc_aid_$POOL$_providers = 2 } set_variable = { name = ffpa_sc_aid_strength value = 0.75 } }
     if = { limit = { has_variable = ffpa_sc_aid_reduced } change_variable = { name = ffpa_sc_aid_strength multiply = 0.5 } }
-    change_global_variable = { name = ffpa_sc_aid_$POOL$_total add = ffpa_sc_aid_weekly_fee }
-    # Bookkeeping is not proof of the persisted modifier's actual multiplier.
+    set_variable = { name = ffpa_sc_aid_paid_fee value = var:ffpa_sc_aid_quote }
+    change_variable = { name = ffpa_sc_aid_paid_fee multiply = var:ffpa_sc_aid_strength }
+    change_global_variable = { name = ffpa_sc_aid_$POOL$_total add = var:ffpa_sc_aid_paid_fee }
     # Rebuild on settlement so stale saves recover even when quotes are unchanged.
     if = { limit = { has_modifier = ffpa_sc_aid_fee_modifier } remove_modifier = ffpa_sc_aid_fee_modifier }
-    add_modifier = { name = ffpa_sc_aid_fee_modifier multiplier = ffpa_sc_aid_weekly_fee }
-    set_variable = { name = ffpa_sc_aid_paid_fee value = ffpa_sc_aid_weekly_fee }
+    add_modifier = { name = ffpa_sc_aid_fee_modifier multiplier = var:ffpa_sc_aid_paid_fee }
     if = { limit = { has_modifier = $BENEFIT$ } remove_modifier = $BENEFIT$ }
-    if = { limit = { has_modifier = $BENEFIT$_alternative } remove_modifier = $BENEFIT$_alternative }
+    if = { limit = { has_modifier = $BENEFIT_ALT$ } remove_modifier = $BENEFIT_ALT$ }
     if = {
      limit = { has_variable = ffpa_sc_aid_alternative }
-     add_modifier = { name = $BENEFIT$_alternative multiplier = var:ffpa_sc_aid_strength }
+     add_modifier = { name = $BENEFIT_ALT$ multiplier = var:ffpa_sc_aid_strength }
     }
     else = { add_modifier = { name = $BENEFIT$ multiplier = var:ffpa_sc_aid_strength } }
     set_variable = { name = ffpa_sc_aid_applied_strength value = var:ffpa_sc_aid_strength }
@@ -187,9 +187,9 @@ ffpa_sc_aid_settle_pool = {
      if = { limit = { NOT = { has_modifier = $COST$ } } add_modifier = $COST$ }
      if = {
       limit = { var:ffpa_sc_aid_$POOL$_income > 0 }
-      if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
-      add_modifier = { name = $INCOME$ multiplier = ffpa_sc_aid_$POOL$_income_multiplier }
       set_variable = { name = ffpa_sc_aid_$POOL$_paid_income value = var:ffpa_sc_aid_$POOL$_income }
+      if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
+      add_modifier = { name = $INCOME$ multiplier = var:ffpa_sc_aid_$POOL$_paid_income }
      }
      else = {
       if = { limit = { has_modifier = $INCOME$ } remove_modifier = $INCOME$ }
@@ -211,8 +211,8 @@ ffpa_sc_aid_settle_pool = {
 }
 
 ffpa_sc_aid_withdraw = {
- ffpa_sc_aid_drop_recipient = { ID = $ID$ BENEFIT = $BENEFIT$ }
- ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+ ffpa_sc_aid_drop_recipient = { ID = $ID$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ }
+ ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ COST = $COST$ INCOME = $INCOME$ }
 }
 
 ffpa_sc_aid_reduce = {
@@ -224,7 +224,7 @@ ffpa_sc_aid_reduce = {
   }
   set_variable = ffpa_sc_aid_reduced
   set_variable = ffpa_sc_aid_reviewed
-  ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+  ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ COST = $COST$ INCOME = $INCOME$ }
  }
 }
 
@@ -236,10 +236,10 @@ ffpa_sc_aid_tick_pool = {
   change_global_variable = { name = ffpa_sc_aid_$POOL$_months add = -1 }
   if = {
    limit = { global_var:ffpa_sc_aid_$POOL$_months <= 0 global_var:ffpa_sc_aid_$POOL$_phase = 2 }
-   ffpa_sc_aid_end_pool = { POOL = $POOL$ ID = $ID$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+   ffpa_sc_aid_end_pool = { POOL = $POOL$ ID = $ID$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ COST = $COST$ INCOME = $INCOME$ }
   }
   else = {
-   ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+   ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ COST = $COST$ INCOME = $INCOME$ }
    if = {
     limit = { global_var:ffpa_sc_aid_$POOL$_phase = 1 global_var:ffpa_sc_aid_$POOL$_months <= 0 }
     if = {
@@ -248,9 +248,9 @@ ffpa_sc_aid_tick_pool = {
      set_global_variable = { name = ffpa_sc_aid_$POOL$_months value = 36 }
      set_global_variable = { name = ffpa_sc_aid_$POOL$_result value = 1 }
      every_country = { limit = { var:ffpa_sc_aid_kind = $ID$ } set_variable = { name = ffpa_sc_works_retry years = 5 } }
-     ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ }
+     ffpa_sc_aid_settle_pool = { POOL = $POOL$ ID = $ID$ READY = $READY$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ COST = $COST$ INCOME = $INCOME$ }
     }
-    else = { ffpa_sc_aid_end_pool = { POOL = $POOL$ ID = $ID$ BENEFIT = $BENEFIT$ COST = $COST$ INCOME = $INCOME$ } }
+    else = { ffpa_sc_aid_end_pool = { POOL = $POOL$ ID = $ID$ BENEFIT = $BENEFIT$ BENEFIT_ALT = $BENEFIT_ALT$ COST = $COST$ INCOME = $INCOME$ } }
    }
   }
  }

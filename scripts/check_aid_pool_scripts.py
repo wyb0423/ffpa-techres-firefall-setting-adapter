@@ -36,13 +36,16 @@ class World:
     def number(self, value, country):
         if isinstance(value, list):
             result = F(0)
+            taken = False
             for e in value:
-                if e.key == 'if':
-                    if self.test(child(e, 'limit').value, country):
+                if e.key in ('if', 'else_if', 'else'):
+                    if e.key == 'if': taken = False
+                    if not taken and (e.key == 'else' or self.test(child(e, 'limit').value, country)):
                         body = [x for x in e.value if x.key != 'limit']
-                        assert all(x.key in ('add', 'subtract') for x in body)
-                        result += sum(self.number(x.value, country) * (1 if x.key == 'add' else -1) for x in body)
+                        result += self.number(body, country)
+                        taken = True
                     continue
+                taken = False
                 if e.key == 'floor':
                     assert e.value == 'yes'
                     result = F(math.floor(result))
@@ -192,11 +195,12 @@ def check():
         if path.name != 'ffpa_compact_aid_debug.txt':
             assert 'ffpa_sc_aid_debug' not in path.read_text(encoding='utf-8-sig'), 'Debug probe must stay manual'
     settle = parse(EFFECTS['ffpa_sc_aid_settle_pool'])[0]
+    fee_add = next(e for e in walk(settle.value) if e.key == 'add_modifier' and isinstance(e.value, list) and child(e, 'name').value == 'ffpa_sc_aid_fee_modifier')
     income_add = next(e for e in walk(settle.value) if e.key == 'add_modifier' and isinstance(e.value, list) and child(e, 'name').value == '$INCOME$')
-    assert child(income_add, 'multiplier').value == 'ffpa_sc_aid_$POOL$_income_multiplier'
+    assert child(fee_add, 'multiplier').value == 'var:ffpa_sc_aid_paid_fee'
+    assert child(income_add, 'multiplier').value == 'var:ffpa_sc_aid_$POOL$_paid_income'
     for pool in 'education talent production society military'.split():
-        value = VALUES[f'ffpa_sc_aid_{pool}_income_multiplier']
-        assert [(e.key, e.value) for e in value] == [('value', f'var:ffpa_sc_aid_{pool}_income')]
+        assert f'ffpa_sc_aid_{pool}_income_multiplier' not in VALUES
     main = {e.key: e for e in parse((ROOT / 'common/scripted_effects/ffpa_survivor_compact.txt').read_text())}
     pulse = list(walk(main['ffpa_sc_monthly'].value))
     tick = next(e.start for e in pulse if e.key == 'ffpa_sc_aid_tick_all')
@@ -211,7 +215,7 @@ def check():
     assert not any(e.key == 'ffpa_sc_aid_tick_all' for e in walk(hooks['ffpa_sc_aid_war_refresh'].value))
     # Category thresholds and modifier semantics are deliberately explicit inputs.
     args = dict(POOL='education', ID='4', READY='test_ready', BENEFIT='test_benefit',
-                COST='test_provider_cost', INCOME='test_income')
+                BENEFIT_ALT='test_benefit_alt', COST='test_provider_cost', INCOME='test_income')
     fee = 'ffpa_sc_aid_fee_modifier'
     phase = 'ffpa_sc_aid_education_phase'
     months = 'ffpa_sc_aid_education_months'
@@ -328,7 +332,7 @@ def check():
     w = setup()
     register(w, 'X'); w.tick(args)
     other = dict(args, POOL='talent', ID='5', BENEFIT='talent_benefit',
-                 COST='talent_cost', INCOME='talent_income')
+                 BENEFIT_ALT='talent_benefit_alt', COST='talent_cost', INCOME='talent_income')
     w.run('ffpa_sc_aid_open_registration', **other)
     w.run('ffpa_sc_aid_register', 'Y', RATE='0.01', **other)
     w.tick(other)
